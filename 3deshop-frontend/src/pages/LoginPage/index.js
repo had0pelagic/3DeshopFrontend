@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./styles.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Login() {
+  const { onLogin } = useAuth();
+
   const [state, setState] = useState({
     username: "",
     password: "",
@@ -19,9 +22,9 @@ export default function Login() {
 
   const handleSubmitClick = (e) => {
     e.preventDefault();
-    // check if password is correct
     if (state.password === "123") {
       console.log("logging in");
+      onLogin();
     } else {
       console.log("error, bad password");
     }
