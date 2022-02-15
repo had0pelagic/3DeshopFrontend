@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Account", "Dashboard"];
 const menuItems = [
   {
     title: "Home",
@@ -37,9 +37,7 @@ const menuItems = [
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const { token, onLogout } = useAuth();
-
-  console.log("logged in as (appbar):" + token);
+  const { onLogout, getToken, token } = useAuth();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -154,7 +152,6 @@ const ResponsiveAppBar = () => {
             LOGO
           </Typography>
           <NavItems />
-          <div>Authenticated as {token}</div>
           {token && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
@@ -165,6 +162,7 @@ const ResponsiveAppBar = () => {
                   />
                 </IconButton>
               </Tooltip>
+              <Typography>{token["data"]}</Typography>
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"

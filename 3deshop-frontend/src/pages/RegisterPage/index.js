@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
 export default function Register() {
+  const [registeredUsers, setRegisteredUsers] = useState();
   const [state, setState] = useState({
     username: "",
     firstName: "",
@@ -21,8 +22,19 @@ export default function Register() {
     }));
   };
 
+  // const tryRegister = async () => {
+  //   if (!state.username) {
+  //     console.log("Error: No username");
+  //   }
+  //   if (state.password != state.confirmPassword) {
+  //     console.log("Error: passwords are not matching");
+  //   }
+  //   return;
+  // };
+
   const handleSubmitClick = (e) => {
     e.preventDefault();
+    // tryRegister();
     if (state.password === state.confirmPassword) {
       console.log("registering");
     } else {
