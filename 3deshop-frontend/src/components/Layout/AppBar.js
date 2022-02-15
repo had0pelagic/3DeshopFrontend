@@ -37,7 +37,7 @@ const menuItems = [
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const { onLogout, getToken, token } = useAuth();
+  const { onLogout, getToken } = useAuth();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -115,8 +115,9 @@ const ResponsiveAppBar = () => {
           },
         }}
       >
-        {menuItems.map((item) => (
+        {menuItems.map((item, index) => (
           <Button
+            key={index}
             component={Link}
             to={item.url}
             style={{
@@ -152,7 +153,7 @@ const ResponsiveAppBar = () => {
             LOGO
           </Typography>
           <NavItems />
-          {token && (
+          {getToken().data && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -162,7 +163,7 @@ const ResponsiveAppBar = () => {
                   />
                 </IconButton>
               </Tooltip>
-              <Typography>{token["data"]}</Typography>
+              <Typography>{getToken().data}</Typography>
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"

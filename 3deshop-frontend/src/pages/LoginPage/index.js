@@ -30,10 +30,6 @@ export default function Login() {
     }
   };
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-
   return (
     <div className="flexContainer">
       <TextField

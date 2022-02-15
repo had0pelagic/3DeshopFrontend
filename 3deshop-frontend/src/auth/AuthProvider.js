@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "./AuthContext";
 
@@ -9,21 +9,26 @@ const fakeAuth = () => {
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState({ data: null, expiresIn: null });
 
-  const getToken = () => {
+  useEffect(() => {
+    setToken(getToken());
+  }, []);
+
+  function getToken() {
     const tokenData = localStorage.getItem("jwtToken");
-    // const userToken = JSON.parse(tokenData);
-    return tokenData;
-  };
+    const tokenExpire = localStorage.getItem("tokenExpiresInMilliseconds");
+    return { data: tokenData, expiresIn: tokenExpire };
+  }
 
   const saveTokenToStorage = (response) => {
     console.log("saving token to storage");
     localStorage.setItem("jwtToken", response.data);
-    localStorage.setItem(
-      "tokenExpiresInMilliseconds",
-      Date.now() + response.expiresIn * 1000
-    );
+    localStorage.setItem("tokenExpiresInMilliseconds", response.expiresIn);
+    // localStorage.setItem(
+    //   "tokenExpiresInMilliseconds",
+    //   Date.now() + response.expiresIn * 1000
+    // );
   };
 
   const removeTokenFromStorage = () => {

@@ -13,7 +13,12 @@ const user = {
 };
 
 export default function Register() {
-  const [state, setState] = useState({ users: [user] });
+  const [state, setState] = useState(user);
+  const [error, setError] = useState(user);
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -26,37 +31,78 @@ export default function Register() {
   const tryRegister = async () => {
     if (!state.username) {
       console.log("Error: Username is empty");
+      setError((prev) => ({
+        ...prev,
+        username: "Error: Username is empty",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        username: "",
+      }));
     }
+
     if (state.password !== state.confirmPassword) {
       console.log("Error: Passwords are not matching");
+      setError((prev) => ({
+        ...prev,
+        password: "Error: Passwords are not matching",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        password: "",
+      }));
     }
+
     if (state.username.length < 4 || state.username.length > 14) {
       console.log("Error: Username must be between 4 and 14 symbols");
+      setError((prev) => ({
+        ...prev,
+        username: "Error: Username must be between 4 and 14 symbols",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        username: "",
+      }));
     }
+
     if (state.password.length < 4 || state.password.length > 14) {
       console.log("Error: Password must be between 4 and 14 symbols");
+      setError((prev) => ({
+        ...prev,
+        password: "Error: Password must be between 4 and 14 symbols",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        password: "",
+      }));
     }
-    return;
-  };
 
-  const saveUser = () => {
-    let { users } = state;
-    users.push(state);
+    if (state.password !== state.confirmPassword) {
+      console.log("Error: Passwords must match");
+      setError((prev) => ({
+        ...prev,
+        confirmPassword: "Error: Passwords must match",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        confirmPassword: "",
+      }));
+    }
+
+    return;
   };
 
   const handleSubmitClick = (e) => {
     e.preventDefault();
     tryRegister();
-    if (state.password === state.confirmPassword) {
-      saveUser();
-    } else {
-      console.log("error, passwords are not matching");
-    }
+    //handle not valid registration
+    console.log("Registering");
   };
-
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
 
   return (
     <div className="flexContainer">
@@ -68,6 +114,8 @@ export default function Register() {
         margin="normal"
         value={state.username}
         onChange={handleChange}
+        error={!error.username ? false : true}
+        helperText={error.username}
       />
       <TextField
         required
@@ -106,6 +154,8 @@ export default function Register() {
         type="password"
         value={state.password}
         onChange={handleChange}
+        error={!error.password ? false : true}
+        helperText={error.password}
       />
       <TextField
         required
@@ -116,6 +166,8 @@ export default function Register() {
         type="password"
         value={state.confirmPassword}
         onChange={handleChange}
+        error={!error.confirmPassword ? false : true}
+        helperText={error.confirmPassword}
       />
       <div className="mt40">
         <Button variant="contained" onClick={handleSubmitClick}>
