@@ -3,16 +3,17 @@ import "./styles.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
+const user = {
+  username: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
 export default function Register() {
-  const [registeredUsers, setRegisteredUsers] = useState();
-  const [state, setState] = useState({
-    username: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [state, setState] = useState({ users: [user] });
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -22,21 +23,32 @@ export default function Register() {
     }));
   };
 
-  // const tryRegister = async () => {
-  //   if (!state.username) {
-  //     console.log("Error: No username");
-  //   }
-  //   if (state.password != state.confirmPassword) {
-  //     console.log("Error: passwords are not matching");
-  //   }
-  //   return;
-  // };
+  const tryRegister = async () => {
+    if (!state.username) {
+      console.log("Error: Username is empty");
+    }
+    if (state.password !== state.confirmPassword) {
+      console.log("Error: Passwords are not matching");
+    }
+    if (state.username.length < 4 || state.username.length > 14) {
+      console.log("Error: Username must be between 4 and 14 symbols");
+    }
+    if (state.password.length < 4 || state.password.length > 14) {
+      console.log("Error: Password must be between 4 and 14 symbols");
+    }
+    return;
+  };
+
+  const saveUser = () => {
+    let { users } = state;
+    users.push(state);
+  };
 
   const handleSubmitClick = (e) => {
     e.preventDefault();
-    // tryRegister();
+    tryRegister();
     if (state.password === state.confirmPassword) {
-      console.log("registering");
+      saveUser();
     } else {
       console.log("error, passwords are not matching");
     }
