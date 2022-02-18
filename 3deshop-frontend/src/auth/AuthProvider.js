@@ -2,10 +2,6 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "./AuthContext";
 
-const fakeAuth = () => {
-  return { data: "nojauthkeytokenjwt123", expiresIn: 10 };
-};
-
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,10 +17,13 @@ const AuthProvider = ({ children }) => {
     return { data: tokenData, expiresIn: tokenExpire };
   }
 
-  const saveTokenToStorage = (response) => {
+  const saveTokenToStorage = async (response) => {
     console.log("saving token to storage");
-    localStorage.setItem("jwtToken", response.data);
-    localStorage.setItem("tokenExpiresInMilliseconds", response.expiresIn);
+    await localStorage.setItem("jwtToken", response.token);
+    await localStorage.setItem(
+      "tokenExpiresInMilliseconds",
+      response.expirationDate
+    );
     // localStorage.setItem(
     //   "tokenExpiresInMilliseconds",
     //   Date.now() + response.expiresIn * 1000
@@ -36,12 +35,12 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("tokenExpiresInMilliseconds");
   };
 
-  const handleLogin = async () => {
-    const token = /*await*/ fakeAuth();
+  const handleLogin = async (response) => {
     const origin = location.state?.from?.pathname || "/";
-    setToken(token);
+    console.log("AuthProvider.js: %o", response);
+    setToken(response.token);
+    await saveTokenToStorage(response);
     navigate(origin);
-    saveTokenToStorage(token);
   };
 
   const handleLogout = () => {

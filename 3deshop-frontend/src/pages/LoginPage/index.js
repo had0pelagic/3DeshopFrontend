@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./styles.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useAuth } from "../../hooks/useAuth";
+import api from "../../api";
 
 export default function Login() {
   const { onLogin } = useAuth();
@@ -11,6 +12,16 @@ export default function Login() {
     username: "",
     password: "",
   });
+
+  const userLogin = async () => {
+    const response = await api.users.userLogin(state);
+    if (response.status === 200) {
+      console.log("Login.js: %o", response.data.token);
+      await onLogin(response.data);
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+  };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -22,12 +33,7 @@ export default function Login() {
 
   const handleSubmitClick = (e) => {
     e.preventDefault();
-    if (state.password === "123") {
-      console.log("logging in");
-      onLogin();
-    } else {
-      console.log("error, bad password");
-    }
+    userLogin();
   };
 
   return (

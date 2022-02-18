@@ -1,6 +1,6 @@
 const ResponseHandling = async (apiResponse) => {
   return {
-    response: apiResponse.data,
+    data: apiResponse.data,
     status: 200,
   };
 };
