@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./styles.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import api from "../../api";
+import { useAuth } from "../../hooks/useAuth";
 
 const user = {
   username: "",
@@ -15,6 +17,7 @@ const user = {
 export default function Register() {
   const [state, setState] = useState(user);
   const [error, setError] = useState(user);
+  const { onLogin } = useAuth();
 
   useEffect(() => {
     console.log(error);
@@ -26,6 +29,23 @@ export default function Register() {
       ...prevState,
       [id]: value,
     }));
+  };
+
+  const userRegistration = async () => {
+    const registerResponse = await api.users.userRegister(state);
+    if (registerResponse.status === 200) {
+      const loginResponse = await api.users.userLogin({
+        username: state.username,
+        password: state.password,
+      });
+      if (loginResponse.status === 200) {
+        await onLogin(loginResponse.data);
+      } else {
+        console.log("Error, while trying to login after registration");
+      }
+    } else {
+      console.log("Error at registration, didn't return 200");
+    }
   };
 
   const tryRegister = async () => {
@@ -100,8 +120,7 @@ export default function Register() {
   const handleSubmitClick = (e) => {
     e.preventDefault();
     tryRegister();
-    //handle not valid registration
-    console.log("Registering");
+    userRegistration();
   };
 
   return (

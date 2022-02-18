@@ -7,7 +7,6 @@ import api from "../../api";
 
 export default function Login() {
   const { onLogin } = useAuth();
-
   const [state, setState] = useState({
     username: "",
     password: "",
@@ -16,7 +15,6 @@ export default function Login() {
   const userLogin = async () => {
     const response = await api.users.userLogin(state);
     if (response.status === 200) {
-      console.log("Login.js: %o", response.data.token);
       await onLogin(response.data);
     } else {
       console.log("error at products, didn't return 200");

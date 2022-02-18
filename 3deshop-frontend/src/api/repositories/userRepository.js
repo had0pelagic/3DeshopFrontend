@@ -5,4 +5,7 @@ export default (axios) => ({
   async userLogin(data) {
     return axios.post("/user/authenticate", data);
   },
+  async userRegister(data) {
+    return axios.post("/user", data);
+  },
 });

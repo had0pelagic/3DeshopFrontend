@@ -37,7 +37,6 @@ const AuthProvider = ({ children }) => {
 
   const handleLogin = async (response) => {
     const origin = location.state?.from?.pathname || "/";
-    console.log("AuthProvider.js: %o", response);
     setToken(response.token);
     await saveTokenToStorage(response);
     navigate(origin);
