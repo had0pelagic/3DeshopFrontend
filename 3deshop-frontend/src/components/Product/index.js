@@ -5,16 +5,20 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardMedia } from "@mui/material";
-import "./style.css";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import "./style.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Product({
+  id,
   name,
   categories,
   creator,
   price,
   imageUrl,
 }) {
+  const navigate = useNavigate();
+
   return (
     <Card
       className="card"
@@ -55,6 +59,9 @@ export default function Product({
         <Button
           sx={{
             color: "black",
+          }}
+          onClick={() => {
+            navigate(`/product/${id}`);
           }}
         >
           <ExpandMoreIcon />

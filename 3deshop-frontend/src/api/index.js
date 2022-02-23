@@ -2,6 +2,7 @@ import axios from "axios";
 import config from "../config/config";
 import userRepository from "./repositories/userRepository";
 import productRepository from "./repositories/productRepository";
+import commentRepository from "./repositories/commentRepository";
 import basicHelper from "../utils/basic.helper";
 import errorHandling from "./utils/errorHandling";
 import responseHandling from "./utils/responseHandling";
@@ -57,6 +58,7 @@ const axiosMiddleware = {
 const repositories = {
   users: userRepository(axiosMiddleware),
   products: productRepository(axiosMiddleware),
+  comments: commentRepository(axiosMiddleware),
 };
 
 export default { ...repositories };

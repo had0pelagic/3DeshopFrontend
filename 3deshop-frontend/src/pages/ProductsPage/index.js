@@ -7,8 +7,8 @@ import api from "../../api";
 export default function Products() {
   const [products, setProducts] = useState([]);
 
-  useEffect(() => {
-    getProducts();
+  useEffect(async () => {
+    await getProducts();
   }, []);
 
   const getProducts = async () => {
@@ -33,6 +33,7 @@ export default function Products() {
         {products.map((product, index) => (
           <Grid item xs={2} sm={2} md={2} key={index}>
             <Product
+              id={product.id}
               name={product.name}
               categories={product.categories}
               creator={product.username}
