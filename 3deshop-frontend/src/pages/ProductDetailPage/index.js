@@ -15,13 +15,6 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
-const { payment } = {
-  productId: "",
-  sender: "",
-  amount: "",
-  currencyCode: "EUR",
-};
-
 export default function ProductDetails() {
   let { id } = useParams();
   const [productDetails, setDetails] = useState();
@@ -29,11 +22,11 @@ export default function ProductDetails() {
   const [isLoadingDetails, setLoadingDetails] = useState(true);
   const [isLoadingComments, setLoadingComments] = useState(true);
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const [state, setState] = useState({
     cardNumber: "",
   });
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(async () => {
     await getProductDetails();
@@ -51,10 +44,13 @@ export default function ProductDetails() {
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    payment.productId = id;
-    payment.sender = state.cardNumber;
-    payment.amount = productDetails.about.price;
-    await postPayment();
+    const payment = {
+      productId: id,
+      sender: state.cardNumber,
+      amount: productDetails.about.price,
+      currencyCode: "EUR",
+    };
+    await postPayment(payment);
   };
 
   const getProductDetails = async () => {
@@ -77,7 +73,7 @@ export default function ProductDetails() {
     setLoadingComments(false);
   };
 
-  const postPayment = async () => {
+  const postPayment = async (payment) => {
     const response = await api.payments.postPayment(payment);
     if (response.status === 200) {
       console.log("payment sent!");
