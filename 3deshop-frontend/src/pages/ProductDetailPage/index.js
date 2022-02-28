@@ -11,18 +11,51 @@ import CardMedia from "@mui/material/CardMedia";
 import Loader from "../../components/Loader/index.js";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Carousel from "react-material-ui-carousel";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+
+const { payment } = {
+  productId: "",
+  sender: "",
+  amount: "",
+  currencyCode: "EUR",
+};
 
 export default function ProductDetails() {
+  let { id } = useParams();
   const [productDetails, setDetails] = useState();
   const [comments, setComments] = useState();
   const [isLoadingDetails, setLoadingDetails] = useState(true);
   const [isLoadingComments, setLoadingComments] = useState(true);
-  let { id } = useParams();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [state, setState] = useState({
+    cardNumber: "",
+  });
 
   useEffect(async () => {
     await getProductDetails();
     await getProductComments();
   }, []);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setState((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+    console.log(state);
+  };
+
+  const handleSubmitClick = async (e) => {
+    e.preventDefault();
+    payment.productId = id;
+    payment.sender = state.cardNumber;
+    payment.amount = productDetails.about.price;
+    await postPayment();
+  };
 
   const getProductDetails = async () => {
     const response = await api.products.getProduct(id);
@@ -44,6 +77,15 @@ export default function ProductDetails() {
     setLoadingComments(false);
   };
 
+  const postPayment = async () => {
+    const response = await api.payments.postPayment(payment);
+    if (response.status === 200) {
+      console.log("payment sent!");
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+  };
+
   return (
     <div className="flexContainer p50">
       {isLoadingDetails ? (
@@ -53,12 +95,17 @@ export default function ProductDetails() {
           {productDetails.images.length > 0 && (
             <Card sx={{ minWidth: 300 }}>
               <CardContent>
-                <CardMedia
-                  component="img"
-                  height="300"
-                  image={productDetails.images[0].data}
-                  alt={productDetails.images[0].data}
-                />
+                <Carousel>
+                  {productDetails.images.map((image, index) => (
+                    <CardMedia
+                      component="img"
+                      height="300"
+                      image={image.data}
+                      alt={image.data}
+                      key={index}
+                    />
+                  ))}
+                </Carousel>
               </CardContent>
             </Card>
           )}
@@ -72,17 +119,11 @@ export default function ProductDetails() {
               >
                 {productDetails.about.name}
               </Typography>
-              <Carousel>
-                {productDetails.categories.map((category, index) => (
-                  <Typography
-                    sx={{ mb: 1.5 }}
-                    color="text.secondary"
-                    key={index}
-                  >
-                    {category.name}
-                  </Typography>
-                ))}
-              </Carousel>
+              {productDetails.categories.map((category, index) => (
+                <Typography sx={{ mb: 1.5 }} color="text.secondary" key={index}>
+                  {category.name}
+                </Typography>
+              ))}
               <Typography variant="h6" component="div">
                 {productDetails.about.description}
               </Typography>
@@ -124,12 +165,50 @@ export default function ProductDetails() {
                 sx={{
                   color: "black",
                 }}
-                onClick={() => {
-                  alert("buying");
-                }}
+                onClick={handleOpen}
               >
                 <ShoppingCartIcon />
               </Button>
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                BackdropProps={{
+                  timeout: 600,
+                }}
+              >
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    border: "2px solid #000",
+                    boxShadow: 24,
+                    p: 4,
+                  }}
+                >
+                  <div className="flexContainer">
+                    <TextField
+                      required
+                      id="cardNumber"
+                      label="Card number"
+                      variant="standard"
+                      margin="normal"
+                      value={state.cardNumber}
+                      onChange={handleChange}
+                    />
+                    <div className="mt40">
+                      <Button variant="contained" onClick={handleSubmitClick}>
+                        Purchase
+                      </Button>
+                    </div>
+                  </div>
+                </Box>
+              </Modal>
               {productDetails.about.price === 0 ? (
                 <Typography style={{ fontSize: 20 }}>Free</Typography>
               ) : (
