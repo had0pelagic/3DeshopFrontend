@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import api from "../../api";
+import JwtHelper from "../../utils/jwt.helper";
 import { useParams } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -14,9 +15,11 @@ import Carousel from "react-material-ui-carousel";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function ProductDetails() {
   let { id } = useParams();
+  const { getToken } = useAuth();
   const [productDetails, setDetails] = useState();
   const [comments, setComments] = useState();
   const [isLoadingDetails, setLoadingDetails] = useState(true);
@@ -39,12 +42,14 @@ export default function ProductDetails() {
       ...prevState,
       [id]: value,
     }));
-    console.log(state);
   };
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
     const payment = {
+      userId: jwtUserId,
       productId: id,
       sender: state.cardNumber,
       amount: productDetails.about.price,
@@ -77,6 +82,7 @@ export default function ProductDetails() {
     const response = await api.payments.postPayment(payment);
     if (response.status === 200) {
       console.log("payment sent!");
+      handleClose();
     } else {
       console.log("error at products, didn't return 200");
     }
