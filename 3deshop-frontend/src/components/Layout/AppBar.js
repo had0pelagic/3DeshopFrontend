@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import JwtHelper from "../../utils/jwt.helper";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -37,7 +38,21 @@ const menuItems = [
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [username, setUsername] = useState("");
   const { onLogout, getToken } = useAuth();
+
+  useEffect(() => {
+    if (getToken().data !== null) {
+      const token = getToken().data;
+      const jwtUsername = JwtHelper.getUser(token).username;
+      setUsername(jwtUsername);
+    }
+  }, [getToken]);
+
+  const handleLogout = () => {
+    onLogout();
+    setUsername("");
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -153,7 +168,7 @@ const ResponsiveAppBar = () => {
             LOGO
           </Typography>
           <NavItems />
-          {getToken().data && (
+          {username && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -163,7 +178,7 @@ const ResponsiveAppBar = () => {
                   />
                 </IconButton>
               </Tooltip>
-              <Typography>{getToken().data}</Typography>
+              <Typography>{username}</Typography>
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
@@ -186,7 +201,7 @@ const ResponsiveAppBar = () => {
                   </MenuItem>
                 ))}
                 <MenuItem key={"Logout"} onClick={handleCloseUserMenu}>
-                  <Button onClick={onLogout}>Logout</Button>
+                  <Button onClick={handleLogout}>Logout</Button>
                 </MenuItem>
               </Menu>
             </Box>
