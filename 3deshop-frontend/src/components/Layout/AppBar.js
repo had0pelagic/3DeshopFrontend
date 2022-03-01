@@ -15,7 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
-const settings = ["Profile", "Account", "Dashboard"];
+const settings = ["Profile", "Dashboard"];
 const menuItems = [
   {
     title: "Home",
@@ -39,19 +39,22 @@ const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [username, setUsername] = useState("");
+  const [id, setId] = useState("");
   const { onLogout, getToken } = useAuth();
 
   useEffect(() => {
     if (getToken().data !== null) {
       const token = getToken().data;
-      const jwtUsername = JwtHelper.getUser(token).username;
-      setUsername(jwtUsername);
+      const jwt = JwtHelper.getUser(token);
+      setUsername(jwt.username);
+      setId(jwt.userId);
     }
   }, [getToken]);
 
   const handleLogout = () => {
     onLogout();
     setUsername("");
+    setId("");
   };
 
   const handleOpenNavMenu = (event) => {
@@ -200,6 +203,11 @@ const ResponsiveAppBar = () => {
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
+                <MenuItem>
+                  <Button key={"Account"} component={Link} to={`/account/${id}`}>
+                    Account
+                  </Button>
+                </MenuItem>
                 <MenuItem key={"Logout"} onClick={handleCloseUserMenu}>
                   <Button onClick={handleLogout}>Logout</Button>
                 </MenuItem>

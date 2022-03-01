@@ -58,6 +58,27 @@ const axiosMiddleware = {
     };
     return axiosInstance.post(path, data, config);
   },
+
+  put: async (path, data, token) => {
+    const config = {
+      headers: await basicHelper.defaultHeaders(token),
+    };
+    return axiosInstance
+      .put(path, data, config)
+      .then(async function (response) {
+        return responseHandling(response);
+      })
+      .catch(async function (error) {
+        return errorHandling(error, path);
+      });
+  },
+
+  putDefault: async (path, data, token) => {
+    let config = {
+      headers: await basicHelper.defaultHeaders(token),
+    };
+    return axiosInstance.put(path, data, config);
+  },
 };
 
 const axiosPaymentMiddleware = {

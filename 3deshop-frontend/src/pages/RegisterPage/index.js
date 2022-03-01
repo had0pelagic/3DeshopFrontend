@@ -5,16 +5,15 @@ import TextField from "@mui/material/TextField";
 import api from "../../api";
 import { useAuth } from "../../hooks/useAuth";
 
-const user = {
-  username: "",
-  firstName: "",
-  lastName: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-};
-
 export default function Register() {
+  const user = {
+    username: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
   const [state, setState] = useState(user);
   const [error, setError] = useState(user);
   const { onLogin } = useAuth();

@@ -5,6 +5,7 @@ import Register from "./pages/RegisterPage";
 import Home from "./pages/HomePage";
 import Layout from "./components/Layout";
 import Login from "./pages/LoginPage";
+import Account from "./pages/AccountPage";
 import ProductDetails from "./pages/ProductDetailPage";
 import Products from "./pages/ProductsPage";
 import AuthProvider from "./auth/AuthProvider";
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/" element={<Layout page={<Home />} />} />
           <Route path="/register" element={<Layout page={<Register />} />} />
           <Route path="/login" element={<Layout page={<Login />} />} />
+          <Route path="/account/:id" element={<Layout page={<Account />} />} />
           <Route
             path="/product/:id"
             element={<Layout page={<ProductDetails />} />}
