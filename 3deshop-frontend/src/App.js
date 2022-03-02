@@ -10,6 +10,7 @@ import ProductDetails from "./pages/ProductDetailPage";
 import Products from "./pages/ProductsPage";
 import AuthProvider from "./auth/AuthProvider";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import ChangePassword from "./pages/ChangePasswordPage";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/register" element={<Layout page={<Register />} />} />
           <Route path="/login" element={<Layout page={<Login />} />} />
           <Route path="/account/:id" element={<Layout page={<Account />} />} />
+          <Route path="/change-password/:id" element={<Layout page={<ChangePassword />} />} />
           <Route
             path="/product/:id"
             element={<Layout page={<ProductDetails />} />}

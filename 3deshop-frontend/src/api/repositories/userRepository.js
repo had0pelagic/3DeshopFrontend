@@ -14,4 +14,7 @@ export default (axios) => ({
   async userUpdate(id, data) {
     return axios.put(`/user/${id}`, data);
   },
+  async userChangePassword(id, data) {
+    return axios.post(`/user/${id}/change-password`, data);
+  },
 });
