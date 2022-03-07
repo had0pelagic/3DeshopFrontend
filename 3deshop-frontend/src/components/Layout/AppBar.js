@@ -204,8 +204,21 @@ const ResponsiveAppBar = () => {
                   </MenuItem>
                 ))}
                 <MenuItem>
-                  <Button key={"Account"} component={Link} to={`/account/${id}`}>
+                  <Button
+                    key={"Account"}
+                    component={Link}
+                    to={`/account/${id}`}
+                  >
                     Account
+                  </Button>
+                </MenuItem>
+                <MenuItem>
+                  <Button
+                    key={"Bought products"}
+                    component={Link}
+                    to={`/user-downloads/${id}`}
+                  >
+                    Bought products
                   </Button>
                 </MenuItem>
                 <MenuItem key={"Logout"} onClick={handleCloseUserMenu}>
