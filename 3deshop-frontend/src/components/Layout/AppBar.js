@@ -33,6 +33,10 @@ const menuItems = [
     title: "Products",
     url: "/products",
   },
+  {
+    title: "Upload product",
+    url: "/upload-product",
+  },
 ];
 
 const ResponsiveAppBar = () => {

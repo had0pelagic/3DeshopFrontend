@@ -25,7 +25,6 @@ export default function PurchasedProducts() {
   const getPurchasedProducts = async () => {
     const response = await api.products.getPurchasedProducts(id);
     if (response.status === 200) {
-      console.log(response.data);
       setProducts(response.data);
     } else {
       console.log("error at products, didn't return 200");

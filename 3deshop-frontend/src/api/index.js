@@ -4,6 +4,7 @@ import userRepository from "./repositories/userRepository";
 import productRepository from "./repositories/productRepository";
 import commentRepository from "./repositories/commentRepository";
 import paymentRepository from "./repositories/paymentRepository";
+import productDetailRepository from "./repositories/productDetailRepository";
 import basicHelper from "../utils/basic.helper";
 import errorHandling from "./utils/errorHandling";
 import responseHandling from "./utils/responseHandling";
@@ -129,6 +130,7 @@ const repositories = {
   users: userRepository(axiosMiddleware),
   products: productRepository(axiosMiddleware),
   comments: commentRepository(axiosMiddleware),
+  productDetails: productDetailRepository(axiosMiddleware),
   payments: paymentRepository(axiosPaymentMiddleware),
 };
 
