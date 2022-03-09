@@ -14,25 +14,28 @@ import {
   Typography,
 } from "@mui/material";
 import JwtHelper from "../../utils/jwt.helper";
+import FileUpload from "react-material-file-upload";
+import FormatHelper from "../../utils/format.helper";
 
 export default function Upload() {
   const { getToken } = useAuth();
+  const [file, setFile] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [formats, setFormats] = useState([]);
+  const [selectedFormats, setSelectedFormats] = useState([]);
   const [productAbout, setProductAboutState] = useState({
     name: "",
     price: "",
     description: "",
   });
   const [productSpecification, setProductSpecificationState] = useState({
-    data: "000000x0000000x000000x0x0011x11x1x0x0001x1x1x1x00",
+    data: "",
     textures: false,
     animation: false,
     rig: false,
     materials: false,
   });
-  const [categories, setCategories] = useState([]);
-  const [formats, setFormats] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedFormats, setSelectedFormats] = useState([]);
 
   useEffect(async () => {
     await getCategories();
@@ -41,6 +44,7 @@ export default function Upload() {
 
   const getCategories = async () => {
     const response = await api.productDetails.getCategories();
+
     if (response.status === 200) {
       setCategories(response.data);
     } else {
@@ -50,6 +54,7 @@ export default function Upload() {
 
   const getFormats = async () => {
     const response = await api.productDetails.getFormats();
+
     if (response.status === 200) {
       setFormats(response.data);
     } else {
@@ -60,6 +65,8 @@ export default function Upload() {
   const uploadProduct = async () => {
     const token = getToken().data;
     const jwt = JwtHelper.getUser(token);
+    const base64 = await FormatHelper.encodeBase64Bytes(file[0]);
+    handleSpecificationFileUpdate(base64);
     const product = {
       userId: jwt.userId,
       about: productAbout,
@@ -68,14 +75,16 @@ export default function Upload() {
       formats: selectedFormats,
       images: [
         {
-          data: "https://c4ddownload.com/wp-content/uploads/Bmw-8-3D-model.jpg",
+          data: "https://static.3dbaza.com/models/26223/6466bcc63bee461da93cb287.jpg",
         },
         {
-          data: "https://3dfree.top/uploads/posts/2019-09/1567955433_bmw-8-series-g15-soupe-m850i-2019.jpg",
+          data: "https://media.sketchfab.com/models/c765caf7d1ea454fab08a95fdccd715a/thumbnails/72b2ed8e4ae94fd8948f9290ac79bf2f/1920x1080.jpeg",
         },
       ],
     };
+
     const response = await api.products.uploadProduct(product);
+
     if (response.status === 200) {
       console.log("Product uploaded!");
     } else {
@@ -85,14 +94,17 @@ export default function Upload() {
 
   const handleAboutChange = (e) => {
     const { id, value } = e.target;
+
     setProductAboutState((prevState) => ({
       ...prevState,
       [id]: value,
     }));
+    console.log(file);
   };
 
   const handleSpecificationChange = (e) => {
     const { id, value } = e.target;
+
     if (["textures", "rig", "animation", "materials"].includes(value)) {
       setProductSpecificationState((prevState) => ({
         ...prevState,
@@ -106,13 +118,19 @@ export default function Upload() {
     }
   };
 
+  const handleSpecificationFileUpdate = (value) => {
+    setProductSpecificationState((prevState) => {
+      const newState = Object.assign(productSpecification, { data: value });
+      return { ...prevState, ...newState };
+    });
+  };
+
   const handleCheckboxes = (id, setState) => {
     setState((prevState) =>
       prevState.includes(id)
         ? prevState.filter((x) => x !== id)
         : [...prevState, id]
     );
-    console.log(selectedCategories);
   };
 
   const handleSubmitClick = async (e) => {
@@ -133,7 +151,6 @@ export default function Upload() {
       />
 
       <TextField
-        inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
         type="text"
         required
         id="price"
@@ -165,6 +182,7 @@ export default function Upload() {
         sx={{ bgcolor: "white", border: 2, width: 800, height: 400, mt: 5 }}
       >
         <Typography>Upload file...</Typography>
+        <FileUpload value={file} onChange={setFile} />
       </Card>
 
       <Card

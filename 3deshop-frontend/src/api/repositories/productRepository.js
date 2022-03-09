@@ -9,7 +9,6 @@ export default (axios) => ({
     return axios.get(`/product/${id}/purchases`);
   },
   async uploadProduct(data) {
-    console.log(data);
     return axios.post("/product/upload-product", data);
   },
 });
