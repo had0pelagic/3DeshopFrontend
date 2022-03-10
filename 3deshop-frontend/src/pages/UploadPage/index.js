@@ -19,7 +19,7 @@ import FormatHelper from "../../utils/format.helper";
 
 export default function Upload() {
   const { getToken } = useAuth();
-  const [file, setFile] = useState([]);
+  const [files, setFiles] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [formats, setFormats] = useState([]);
@@ -65,24 +65,35 @@ export default function Upload() {
   const uploadProduct = async () => {
     const token = getToken().data;
     const jwt = JwtHelper.getUser(token);
-    const base64 = await FormatHelper.encodeBase64Bytes(file[0]);
-    handleSpecificationFileUpdate(base64);
+    const fileData = await Promise.all(
+      files.map(async (file) => {
+        try {
+          const base64 = await FormatHelper.encodeBase64(file);
+          return {
+            data: base64.bytes,
+            format: base64.type,
+          };
+        } catch (error) {
+          throw error;
+        }
+      })
+    );
     const product = {
       userId: jwt.userId,
       about: productAbout,
+      files: fileData,
       specifications: productSpecification,
       categories: selectedCategories,
       formats: selectedFormats,
       images: [
         {
-          data: "https://static.3dbaza.com/models/26223/6466bcc63bee461da93cb287.jpg",
+          data: "https://static.3dbaza.com/models/0/6c2877c6ad2f4741aff851b6.jpg",
         },
         {
-          data: "https://media.sketchfab.com/models/c765caf7d1ea454fab08a95fdccd715a/thumbnails/72b2ed8e4ae94fd8948f9290ac79bf2f/1920x1080.jpeg",
+          data: "https://static.3dbaza.com/models/0/c9cf60bffffd42869fbf4e37.jpg",
         },
       ],
     };
-
     const response = await api.products.uploadProduct(product);
 
     if (response.status === 200) {
@@ -99,7 +110,6 @@ export default function Upload() {
       ...prevState,
       [id]: value,
     }));
-    console.log(file);
   };
 
   const handleSpecificationChange = (e) => {
@@ -118,12 +128,12 @@ export default function Upload() {
     }
   };
 
-  const handleSpecificationFileUpdate = (value) => {
-    setProductSpecificationState((prevState) => {
-      const newState = Object.assign(productSpecification, { data: value });
-      return { ...prevState, ...newState };
-    });
-  };
+  // const handleSpecificationFileUpdate = (value) => {
+  //   setProductSpecificationState((prevState) => {
+  //     const newState = Object.assign(productSpecification, { data: value });
+  //     return { ...prevState, ...newState };
+  //   });
+  // };
 
   const handleCheckboxes = (id, setState) => {
     setState((prevState) =>
@@ -182,7 +192,7 @@ export default function Upload() {
         sx={{ bgcolor: "white", border: 2, width: 800, height: 400, mt: 5 }}
       >
         <Typography>Upload file...</Typography>
-        <FileUpload value={file} onChange={setFile} />
+        <FileUpload value={files} onChange={setFiles} />
       </Card>
 
       <Card
