@@ -16,6 +16,7 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { useAuth } from "../../hooks/useAuth";
+import DefaultImage from "../../images/defaultProductImage.png";
 
 export default function ProductDetails() {
   let { id } = useParams();
@@ -102,8 +103,8 @@ export default function ProductDetails() {
                     <CardMedia
                       component="img"
                       height="300"
-                      image={image.data}
-                      alt={image.data}
+                      image={`${image.format},${image.data}`}
+                      alt={DefaultImage}
                       key={index}
                     />
                   ))}

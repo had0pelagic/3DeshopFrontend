@@ -15,7 +15,7 @@ export default function Product({
   categories,
   creator,
   price,
-  imageUrl,
+  image,
 }) {
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ export default function Product({
             }}
             component="img"
             height="250"
-            image={imageUrl}
+            image={`${image.format},${image.data}`}
             alt="No image"
           />
         </Typography>

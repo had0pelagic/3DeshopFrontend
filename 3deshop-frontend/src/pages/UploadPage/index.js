@@ -20,6 +20,7 @@ import FormatHelper from "../../utils/format.helper";
 export default function Upload() {
   const { getToken } = useAuth();
   const [files, setFiles] = useState([]);
+  const [images, setImages] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [formats, setFormats] = useState([]);
@@ -62,11 +63,9 @@ export default function Upload() {
     }
   };
 
-  const uploadProduct = async () => {
-    const token = getToken().data;
-    const jwt = JwtHelper.getUser(token);
-    const fileData = await Promise.all(
-      files.map(async (file) => {
+  function encodeData(array) {
+    return Promise.all(
+      array.map(async (file) => {
         try {
           const base64 = await FormatHelper.encodeBase64(file);
           return {
@@ -78,6 +77,13 @@ export default function Upload() {
         }
       })
     );
+  }
+
+  const uploadProduct = async () => {
+    const token = getToken().data;
+    const jwt = JwtHelper.getUser(token);
+    const fileData = await encodeData(files);
+    const imageData = await encodeData(images);
     const product = {
       userId: jwt.userId,
       about: productAbout,
@@ -85,14 +91,7 @@ export default function Upload() {
       specifications: productSpecification,
       categories: selectedCategories,
       formats: selectedFormats,
-      images: [
-        {
-          data: "https://static.3dbaza.com/models/0/6c2877c6ad2f4741aff851b6.jpg",
-        },
-        {
-          data: "https://static.3dbaza.com/models/0/c9cf60bffffd42869fbf4e37.jpg",
-        },
-      ],
+      images: imageData,
     };
     const response = await api.products.uploadProduct(product);
 
@@ -103,7 +102,7 @@ export default function Upload() {
     }
   };
 
-  const handleAboutChange = (e) => {
+  const handleAboutChange = async (e) => {
     const { id, value } = e.target;
 
     setProductAboutState((prevState) => ({
@@ -127,13 +126,6 @@ export default function Upload() {
       }));
     }
   };
-
-  // const handleSpecificationFileUpdate = (value) => {
-  //   setProductSpecificationState((prevState) => {
-  //     const newState = Object.assign(productSpecification, { data: value });
-  //     return { ...prevState, ...newState };
-  //   });
-  // };
 
   const handleCheckboxes = (id, setState) => {
     setState((prevState) =>
@@ -199,6 +191,7 @@ export default function Upload() {
         sx={{ bgcolor: "white", border: 2, width: 800, height: 400, mt: 5 }}
       >
         <Typography>Upload images...</Typography>
+        <FileUpload value={images} onChange={setImages} />
       </Card>
 
       <ProductCheckBoxes

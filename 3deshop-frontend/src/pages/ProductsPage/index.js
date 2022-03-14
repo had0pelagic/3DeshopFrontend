@@ -38,7 +38,7 @@ export default function Products() {
               categories={product.categories}
               creator={product.username}
               price={product.price}
-              imageUrl={product.imageUrl}
+              image={product.image}
             />
           </Grid>
         ))}

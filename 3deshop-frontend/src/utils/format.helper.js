@@ -7,7 +7,11 @@ const FormatHelper = {
 
       fileReader.onload = () => {
         const fileData = fileReader.result.split(",");
-        resolve({ type: fileData[0], bytes: fileData[1] });
+        resolve({
+          type: fileData[0],
+          bytes: fileData[1],
+          full: fileReader.result,
+        });
       };
 
       fileReader.onerror = (error) => {
