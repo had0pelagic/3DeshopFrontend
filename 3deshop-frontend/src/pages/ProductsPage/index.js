@@ -24,14 +24,14 @@ export default function Products() {
     <div className="flexContainer p50">
       <Grid
         container
-        spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 2, sm: 3, md: 10 }}
+        spacing={{ xs: 2, md: 2 }}
+        columns={{ xs: 2, sm: 4, md: 10 }}
         direction="row"
         justifyContent="center"
         alignItems="center"
       >
         {products.map((product, index) => (
-          <Grid item xs={2} sm={2} md={2} key={index}>
+          <Grid item xs={2} sm={4} md={2} key={index}>
             <Product
               id={product.id}
               name={product.name}

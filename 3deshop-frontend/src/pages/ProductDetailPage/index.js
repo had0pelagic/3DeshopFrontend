@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import CardMedia from "@mui/material/CardMedia";
 import Loader from "../../components/Loader/index.js";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import DownloadingIcon from "@mui/icons-material/Downloading";
 import Carousel from "react-material-ui-carousel";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
@@ -84,6 +85,7 @@ export default function ProductDetails() {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
+
     setState((prevState) => ({
       ...prevState,
       [id]: value,
@@ -120,6 +122,11 @@ export default function ProductDetails() {
     }));
   };
 
+  const handleDownload = async (e) => {
+    e.preventDefault();
+    alert("Downloading...");
+  };
+
   return (
     <div className="flexContainer p50">
       {isLoadingDetails ? (
@@ -138,6 +145,7 @@ export default function ProductDetails() {
             handleOpen,
             open,
             handleClose,
+            handleDownload,
             state,
             handleChange,
             handleSubmitClick,
@@ -184,6 +192,7 @@ function ProductActions(
   handleOpen,
   open,
   handleClose,
+  handleDownload,
   state,
   handleChange,
   handleSubmitClick,
@@ -198,14 +207,43 @@ function ProductActions(
             justifyContent: "center",
           }}
         >
-          <Button
-            sx={{
-              color: "black",
-            }}
-            onClick={handleOpen}
-          >
-            <ShoppingCartIcon />
-          </Button>
+          {productDetails.isBoughtByUser ? (
+            <Button
+              sx={{
+                color: "black",
+              }}
+              onClick={handleDownload}
+            >
+              <DownloadingIcon sx={{ fontSize: 50 }} />
+            </Button>
+          ) : productDetails.about.price === 0 ? (
+            <Typography style={{ fontSize: 20 }}>Free</Typography>
+          ) : (
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              <div style={{ flex: 2 }}>
+                <Button
+                  sx={{
+                    color: "black",
+                  }}
+                  onClick={handleOpen}
+                >
+                  <ShoppingCartIcon sx={{ fontSize: 50 }} />
+                </Button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  flex: 1,
+                }}
+              >
+                <Typography style={{ fontSize: 20 }}>
+                  {productDetails.about.price}$
+                </Typography>
+              </div>
+            </div>
+          )}
           <Modal
             open={open}
             onClose={handleClose}
@@ -246,13 +284,6 @@ function ProductActions(
               </div>
             </Box>
           </Modal>
-          {productDetails.about.price === 0 ? (
-            <Typography style={{ fontSize: 20 }}>Free</Typography>
-          ) : (
-            <Typography style={{ fontSize: 20 }}>
-              {productDetails.about.price}$
-            </Typography>
-          )}
         </CardActions>
       </Card>
     </div>
@@ -352,8 +383,13 @@ function ProductAbout(productDetails) {
             {productDetails.about.name}
           </Typography>
           {productDetails.categories.map((category, index) => (
-            <Typography sx={{ mb: 1.5 }} color="text.secondary" key={index}>
-              {category.name}
+            <Typography
+              variant="h7"
+              sx={{ mb: 1.5 }}
+              color="text.secondary"
+              key={index}
+            >
+              {category.name + " "}
             </Typography>
           ))}
           <Typography variant="h6" component="div" sx={{ inlineSize: 800 }}>

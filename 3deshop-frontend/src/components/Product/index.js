@@ -2,10 +2,8 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardMedia } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
 import DefaultImage from "../../images/defaultProductImage.png";
@@ -23,7 +21,16 @@ export default function Product({
   return (
     <Card
       className="card"
-      sx={{ minWidth: 300, maxWidth: 350, minHeight: 300, maxHeight: 500 }}
+      sx={{
+        minWidth: 300,
+        maxWidth: 350,
+        minHeight: 300,
+        maxHeight: 500,
+        cursor: "pointer",
+      }}
+      onClick={() => {
+        navigate(`/product/${id}`);
+      }}
     >
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
@@ -46,9 +53,17 @@ export default function Product({
         <Typography variant="h5" component="div">
           {name}
         </Typography>
-        <Typography variant="h7" sx={{ mb: 1.5 }} color="text.secondary">
-          {categories.map((category, index) => category.name + " ")}
-        </Typography>
+        {categories.map((category, index) => (
+          <Typography
+            variant="h7"
+            sx={{ mb: 1.5, wordWrap: "break-word" }}
+            color="text.secondary"
+            key={index}
+          >
+            {category.name + " "}
+          </Typography>
+        ))}
+
         <Typography sx={{ color: "black" }} component="div">
           by {creator}
         </Typography>
@@ -59,16 +74,6 @@ export default function Product({
           justifyContent: "center",
         }}
       >
-        <Button
-          sx={{
-            color: "black",
-          }}
-          onClick={() => {
-            navigate(`/product/${id}`);
-          }}
-        >
-          <ExpandMoreIcon />
-        </Button>
         {price === 0 ? (
           <Typography style={{ fontSize: 20 }}>Free</Typography>
         ) : (
