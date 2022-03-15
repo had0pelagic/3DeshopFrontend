@@ -14,8 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import JwtHelper from "../../utils/jwt.helper";
-import FileUpload from "react-material-file-upload";
 import FormatHelper from "../../utils/format.helper";
+import { FilePond } from "react-filepond";
+import "filepond/dist/filepond.min.css";
 
 export default function Upload() {
   const { getToken } = useAuth();
@@ -65,9 +66,9 @@ export default function Upload() {
 
   function encodeData(array) {
     return Promise.all(
-      array.map(async (file) => {
+      array.map(async (item) => {
         try {
-          const base64 = await FormatHelper.encodeBase64(file);
+          const base64 = await FormatHelper.encodeBase64(item.file);
           return {
             data: base64.bytes,
             format: base64.type,
@@ -137,6 +138,8 @@ export default function Upload() {
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
+    console.log(files);
+    console.log(images);
     await uploadProduct();
   };
 
@@ -184,14 +187,26 @@ export default function Upload() {
         sx={{ bgcolor: "white", border: 2, width: 800, height: 400, mt: 5 }}
       >
         <Typography>Upload file...</Typography>
-        <FileUpload value={files} onChange={setFiles} />
+        <FilePond
+          stylePanelLayout="compact"
+          files={files}
+          allowMultiple={true}
+          onupdatefiles={setFiles}
+          labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+        />
       </Card>
 
       <Card
         sx={{ bgcolor: "white", border: 2, width: 800, height: 400, mt: 5 }}
       >
         <Typography>Upload images...</Typography>
-        <FileUpload value={images} onChange={setImages} />
+        <FilePond
+          stylePanelLayout="compact"
+          files={images}
+          allowMultiple={true}
+          onupdatefiles={setImages}
+          labelIdle='Drag & Drop your images or <span class="filepond--label-action">Browse</span>'
+        />
       </Card>
 
       <ProductCheckBoxes
