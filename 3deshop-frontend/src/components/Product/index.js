@@ -8,6 +8,7 @@ import { CardMedia } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
+import DefaultImage from "../../images/defaultProductImage.png";
 
 export default function Product({
   id,
@@ -15,7 +16,7 @@ export default function Product({
   categories,
   creator,
   price,
-  image,
+  image = "",
 }) {
   const navigate = useNavigate();
 
@@ -36,7 +37,9 @@ export default function Product({
             }}
             component="img"
             height="250"
-            image={`${image.format},${image.data}`}
+            src={
+              image !== null ? `${image.format},${image.data}` : DefaultImage
+            }
             alt="No image"
           />
         </Typography>
