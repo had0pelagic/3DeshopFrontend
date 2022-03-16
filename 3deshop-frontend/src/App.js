@@ -13,6 +13,7 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import ChangePassword from "./pages/ChangePasswordPage";
 import PurchasedProducts from "./pages/PurchasedProductsPage";
 import Upload from "./pages/UploadPage";
+import ProductDownload from "./pages/ProductDownloadPage";
 
 export default function App() {
   return (
@@ -52,6 +53,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Layout page={<ProductDetails />} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/product-download/:id"
+            element={
+              <ProtectedRoute>
+                <Layout page={<ProductDownload />} />
               </ProtectedRoute>
             }
           />

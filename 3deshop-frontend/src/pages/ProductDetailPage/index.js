@@ -127,276 +127,250 @@ export default function ProductDetails() {
     alert("Downloading...");
   };
 
+  function ProductImages() {
+    return (
+      <div style={{ minWidth: 400 }}>
+        <Card>
+          <CardContent>
+            {productDetails.images.length > 0 ? (
+              <Carousel>
+                {productDetails.images.map((image, index) => (
+                  <CardMedia
+                    component="img"
+                    height="300"
+                    image={`${image.format},${image.data}`}
+                    key={index}
+                  />
+                ))}
+              </Carousel>
+            ) : (
+              <CardMedia component="img" height="300" image={DefaultImage} />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  function ProductActions() {
+    return (
+      <div style={{ paddingTop: "60px" }}>
+        <Card>
+          <CardActions
+            sx={{
+              color: "black",
+              justifyContent: "center",
+            }}
+          >
+            {productDetails.isBoughtByUser ? (
+              <Button
+                sx={{
+                  color: "black",
+                }}
+                onClick={handleDownload}
+              >
+                <DownloadingIcon sx={{ fontSize: 50 }} />
+              </Button>
+            ) : productDetails.about.price === 0 ? (
+              <Typography style={{ fontSize: 20 }}>Free</Typography>
+            ) : (
+              <div style={{ display: "flex", flexWrap: "wrap" }}>
+                <div style={{ flex: 2 }}>
+                  <Button
+                    sx={{
+                      color: "black",
+                    }}
+                    onClick={handleOpen}
+                  >
+                    <ShoppingCartIcon sx={{ fontSize: 50 }} />
+                  </Button>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    flex: 1,
+                  }}
+                >
+                  <Typography style={{ fontSize: 20 }}>
+                    {productDetails.about.price}$
+                  </Typography>
+                </div>
+              </div>
+            )}
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+              BackdropProps={{
+                timeout: 600,
+              }}
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 400,
+                  bgcolor: "background.paper",
+                  border: "2px solid #000",
+                  boxShadow: 24,
+                  p: 4,
+                }}
+              >
+                <div className="flexContainer">
+                  <TextField
+                    required
+                    id="cardNumber"
+                    label="Card number"
+                    variant="standard"
+                    margin="normal"
+                    value={state.cardNumber}
+                    onChange={handleChange}
+                  />
+                  <div className="mt40">
+                    <Button variant="contained" onClick={handleSubmitClick}>
+                      Purchase
+                    </Button>
+                  </div>
+                </div>
+              </Box>
+            </Modal>
+          </CardActions>
+        </Card>
+      </div>
+    );
+  }
+
+  function ProductComments() {
+    return (
+      <div style={{ paddingTop: "60px" }}>
+        <Card
+          sx={{ minWidth: 800, maxWidth: 800, backgroundColor: "transparent" }}
+        >
+          <CardContent>
+            <Typography sx={{ fontSize: 25 }} color="text.primary" gutterBottom>
+              Comments
+            </Typography>
+            {comments.map((comment, index) => (
+              <Grid
+                container
+                spacing={1}
+                key={index}
+                sx={{
+                  marginTop: 2,
+                  display: "flex",
+                  justifyContent: "left",
+                }}
+              >
+                <Grid item sx={{ marginTop: "8px", marginBottom: "10px" }}>
+                  <Avatar
+                    src={comment.user.imageURL}
+                    alt="User avatar"
+                    sx={{ width: 60, height: 60 }}
+                  />
+                </Grid>
+                <Grid item xs={8}>
+                  <Typography>{comment.user.username}</Typography>
+                  <Typography
+                    style={{ wordWrap: "break-word", paddingTop: 15 }}
+                  >
+                    {comment.description}
+                  </Typography>
+                </Grid>
+              </Grid>
+            ))}
+            <div
+              style={
+                comments.length > 0 ? { paddingTop: 100 } : { paddingTop: 20 }
+              }
+            >
+              <TextField
+                id="description"
+                variant="standard"
+                multiline
+                rows={4}
+                sx={{ width: 600 }}
+                value={comment.description}
+                onChange={handleCommentChange}
+              />
+              <Button
+                variant="outlined"
+                sx={{
+                  background: "#222831",
+                  color: "white",
+                  borderStyle: "none",
+                  "&:hover": {
+                    background: "#30475E",
+                    borderStyle: "none",
+                  },
+                }}
+                onClick={handleCommentSubmit}
+              >
+                Post comment
+              </Button>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                paddingTop: 10,
+              }}
+            ></div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  function ProductAbout() {
+    return (
+      <div style={{ paddingTop: "60px" }}>
+        <Card sx={{ minWidth: 100 }}>
+          <CardContent>
+            <Typography sx={{ fontSize: 30 }} color="text.primary" gutterBottom>
+              {productDetails.about.name}
+            </Typography>
+            {productDetails.categories.map((category, index) => (
+              <Typography
+                variant="h7"
+                sx={{ mb: 1.5 }}
+                color="text.secondary"
+                key={index}
+              >
+                {category.name + " "}
+              </Typography>
+            ))}
+            <Typography variant="h6" component="div" sx={{ inlineSize: 800 }}>
+              {productDetails.about.description}
+            </Typography>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="flexContainer p50">
       {isLoadingDetails ? (
         <Loader />
       ) : (
         <div>
-          {ProductImages(productDetails)}
-          {ProductAbout(productDetails)}
+          <ProductImages />
+          <ProductAbout />
         </div>
       )}
       {isLoadingComments ? (
         <Loader />
       ) : (
         <div>
-          {ProductActions(
-            handleOpen,
-            open,
-            handleClose,
-            handleDownload,
-            state,
-            handleChange,
-            handleSubmitClick,
-            productDetails
-          )}
-          {ProductComments(
-            comments,
-            comment,
-            handleCommentChange,
-            handleCommentSubmit
-          )}
+          <ProductActions />
+          <ProductComments />
         </div>
       )}
-    </div>
-  );
-}
-
-function ProductImages(productDetails) {
-  return (
-    <div style={{ minWidth: 400 }}>
-      <Card>
-        <CardContent>
-          {productDetails.images.length > 0 ? (
-            <Carousel>
-              {productDetails.images.map((image, index) => (
-                <CardMedia
-                  component="img"
-                  height="300"
-                  image={`${image.format},${image.data}`}
-                  key={index}
-                />
-              ))}
-            </Carousel>
-          ) : (
-            <CardMedia component="img" height="300" image={DefaultImage} />
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-function ProductActions(
-  handleOpen,
-  open,
-  handleClose,
-  handleDownload,
-  state,
-  handleChange,
-  handleSubmitClick,
-  productDetails
-) {
-  return (
-    <div style={{ paddingTop: "60px" }}>
-      <Card>
-        <CardActions
-          sx={{
-            color: "black",
-            justifyContent: "center",
-          }}
-        >
-          {productDetails.isBoughtByUser ? (
-            <Button
-              sx={{
-                color: "black",
-              }}
-              onClick={handleDownload}
-            >
-              <DownloadingIcon sx={{ fontSize: 50 }} />
-            </Button>
-          ) : productDetails.about.price === 0 ? (
-            <Typography style={{ fontSize: 20 }}>Free</Typography>
-          ) : (
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
-              <div style={{ flex: 2 }}>
-                <Button
-                  sx={{
-                    color: "black",
-                  }}
-                  onClick={handleOpen}
-                >
-                  <ShoppingCartIcon sx={{ fontSize: 50 }} />
-                </Button>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  flex: 1,
-                }}
-              >
-                <Typography style={{ fontSize: 20 }}>
-                  {productDetails.about.price}$
-                </Typography>
-              </div>
-            </div>
-          )}
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            BackdropProps={{
-              timeout: 600,
-            }}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                border: "2px solid #000",
-                boxShadow: 24,
-                p: 4,
-              }}
-            >
-              <div className="flexContainer">
-                <TextField
-                  required
-                  id="cardNumber"
-                  label="Card number"
-                  variant="standard"
-                  margin="normal"
-                  value={state.cardNumber}
-                  onChange={handleChange}
-                />
-                <div className="mt40">
-                  <Button variant="contained" onClick={handleSubmitClick}>
-                    Purchase
-                  </Button>
-                </div>
-              </div>
-            </Box>
-          </Modal>
-        </CardActions>
-      </Card>
-    </div>
-  );
-}
-
-function ProductComments(
-  comments,
-  comment,
-  handleCommentChange,
-  handleCommentSubmit
-) {
-  return (
-    <div style={{ paddingTop: "60px" }}>
-      <Card
-        sx={{ minWidth: 800, maxWidth: 800, backgroundColor: "transparent" }}
-      >
-        <CardContent>
-          <Typography sx={{ fontSize: 25 }} color="text.primary" gutterBottom>
-            Comments
-          </Typography>
-          {comments.map((comment, index) => (
-            <Grid
-              container
-              spacing={1}
-              key={index}
-              sx={{
-                marginTop: 2,
-                display: "flex",
-                justifyContent: "left",
-              }}
-            >
-              <Grid item sx={{ marginTop: "8px", marginBottom: "10px" }}>
-                <Avatar
-                  src={comment.user.imageURL}
-                  alt="User avatar"
-                  sx={{ width: 60, height: 60 }}
-                />
-              </Grid>
-              <Grid item xs={8}>
-                <Typography>{comment.user.username}</Typography>
-                <Typography style={{ wordWrap: "break-word", paddingTop: 15 }}>
-                  {comment.description}
-                </Typography>
-              </Grid>
-            </Grid>
-          ))}
-          <div
-            style={
-              comments.length > 0 ? { paddingTop: 100 } : { paddingTop: 20 }
-            }
-          >
-            <TextField
-              id="description"
-              variant="standard"
-              multiline
-              rows={4}
-              sx={{ width: 600 }}
-              value={comment.description}
-              onChange={handleCommentChange}
-            />
-            <Button
-              variant="outlined"
-              sx={{
-                background: "#222831",
-                color: "white",
-                borderStyle: "none",
-                "&:hover": {
-                  background: "#30475E",
-                  borderStyle: "none",
-                },
-              }}
-              onClick={handleCommentSubmit}
-            >
-              Post comment
-            </Button>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "end",
-              paddingTop: 10,
-            }}
-          ></div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-function ProductAbout(productDetails) {
-  return (
-    <div style={{ paddingTop: "60px" }}>
-      <Card sx={{ minWidth: 100 }}>
-        <CardContent>
-          <Typography sx={{ fontSize: 30 }} color="text.primary" gutterBottom>
-            {productDetails.about.name}
-          </Typography>
-          {productDetails.categories.map((category, index) => (
-            <Typography
-              variant="h7"
-              sx={{ mb: 1.5 }}
-              color="text.secondary"
-              key={index}
-            >
-              {category.name + " "}
-            </Typography>
-          ))}
-          <Typography variant="h6" component="div" sx={{ inlineSize: 800 }}>
-            {productDetails.about.description}
-          </Typography>
-        </CardContent>
-      </Card>
     </div>
   );
 }

@@ -11,4 +11,7 @@ export default (axios) => ({
   async uploadProduct(data) {
     return axios.post("/product/upload-product", data);
   },
+  async downloadImage(id) {
+    return axios.getBlob(`/product/download/${id}`);
+  },
 });

@@ -39,6 +39,21 @@ const axiosMiddleware = {
     return axiosInstance.get(path, config);
   },
 
+  getBlob: async (path, token) => {
+    const config = {
+      headers: await basicHelper.defaultHeaders(token),
+      responseType: "blob",
+    };
+    return axiosInstance
+      .get(path, config)
+      .then(async function (response) {
+        return responseHandling(response);
+      })
+      .catch(async function (error) {
+        return errorHandling(error, path);
+      });
+  },
+
   post: async (path, data, token) => {
     const config = {
       headers: await basicHelper.defaultHeaders(token),

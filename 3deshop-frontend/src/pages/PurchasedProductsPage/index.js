@@ -25,6 +25,7 @@ export default function PurchasedProducts() {
   const getPurchasedProducts = async () => {
     const response = await api.products.getPurchasedProducts(id);
     if (response.status === 200) {
+      console.log(response);
       setProducts(response.data);
     } else {
       console.log("error at products, didn't return 200");
@@ -37,6 +38,70 @@ export default function PurchasedProducts() {
     alert("downloading...");
   };
 
+  function PurchasedProduct({ product }) {
+    return (
+      <ListItem
+        alignItems="flex-start"
+        sx={{
+          bgcolor: "#F2D0A9",
+          margin: 4,
+          mb: 4,
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar alt="Default image" src={product.imageURL} />
+        </ListItemAvatar>
+        <ListItemText
+          primary={product.name}
+          secondary={
+            <>
+              {product.categories.map((category, index) => (
+                <Typography
+                  sx={{
+                    display: "inline",
+                  }}
+                  component="span"
+                  variant="body2"
+                  color="text.primary"
+                  key={index}
+                >
+                  {`${category.name} `}
+                </Typography>
+              ))}
+            </>
+          }
+        />
+        <ListItemButton
+          sx={{
+            backgroundColor: "#FFC27B",
+            borderRadius: 2,
+            margin: 1,
+            width: 2,
+          }}
+          variant="contained"
+          key={"Download"}
+          component={Link}
+          to={`/product-download/${product.id}`}
+        >
+          Download
+        </ListItemButton>
+
+        <ListItemButton
+          sx={{
+            backgroundColor: "#FFC27B",
+            borderRadius: 2,
+            margin: 1,
+            width: 3,
+          }}
+          key={"Store page"}
+          component={Link}
+          to={`/product/${product.id}`}
+        >
+          Product store page
+        </ListItemButton>
+      </ListItem>
+    );
+  }
   return (
     <div className="flexContainer mt40">
       {isLoading ? (
@@ -47,77 +112,11 @@ export default function PurchasedProducts() {
             sx={{ width: "150%", maxWidth: 800, bgcolor: "background.paper" }}
           >
             {products.map((product, index) => (
-              <PurchasedProduct
-                handleSubmitClick={handleSubmitClick}
-                product={product}
-                key={index}
-              />
+              <PurchasedProduct product={product} key={index} />
             ))}
           </List>
         </div>
       )}
     </div>
-  );
-}
-
-function PurchasedProduct({ handleSubmitClick, product }) {
-  return (
-    <ListItem
-      alignItems="flex-start"
-      sx={{
-        bgcolor: "#F2D0A9",
-        margin: 4,
-        mb: 4,
-      }}
-    >
-      <ListItemAvatar>
-        <Avatar alt="Default image" src={product.imageURL} />
-      </ListItemAvatar>
-      <ListItemText
-        primary={product.name}
-        secondary={
-          <>
-            {product.categories.map((category, index) => (
-              <Typography
-                sx={{
-                  display: "inline",
-                }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-                key={index}
-              >
-                {`${category.name} `}
-              </Typography>
-            ))}
-          </>
-        }
-      />
-      <ListItemButton
-        sx={{
-          bgcolor: "#FFC27B",
-          borderRadius: 2,
-          margin: 1,
-          width: 2,
-        }}
-        variant="contained"
-        onClick={handleSubmitClick}
-      >
-        Download
-      </ListItemButton>
-      <ListItemButton
-        sx={{
-          bgcolor: "#FFC27B",
-          borderRadius: 2,
-          margin: 1,
-          width: 3,
-        }}
-        key={"Store page"}
-        component={Link}
-        to={`/product/${product.id}`}
-      >
-        Product store page
-      </ListItemButton>
-    </ListItem>
   );
 }

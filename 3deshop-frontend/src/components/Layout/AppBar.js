@@ -225,6 +225,15 @@ const ResponsiveAppBar = () => {
                     Bought products
                   </Button>
                 </MenuItem>
+                <MenuItem>
+                  <Button
+                    key={"Change password"}
+                    component={Link}
+                    to={`/change-password/${id}`}
+                  >
+                    Change password
+                  </Button>
+                </MenuItem>
                 <MenuItem key={"Logout"} onClick={handleCloseUserMenu}>
                   <Button onClick={handleLogout}>Logout</Button>
                 </MenuItem>
