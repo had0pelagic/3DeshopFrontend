@@ -70,6 +70,7 @@ export default function Upload() {
         try {
           const base64 = await FormatHelper.encodeBase64(item.file);
           return {
+            name: item.filename,
             data: base64.bytes,
             format: base64.type,
           };
