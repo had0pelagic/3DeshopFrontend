@@ -8,6 +8,11 @@ import {
   ListItemButton,
   ListItemText,
   Typography,
+  Divider,
+  Box,
+  Card,
+  CardContent,
+  Grid,
 } from "@mui/material";
 import api from "../../api";
 import DownloadHelper from "../../utils/download.helper";
@@ -46,20 +51,49 @@ export default function ProductDownload() {
         <Loader />
       ) : (
         <div>
-          <List
-            sx={{ width: "150%", maxWidth: 800, bgcolor: "background.paper" }}
-          >
-            {files.map((file, index) => (
-              <a
-                href={file.url}
-                download={file.filename}
-                key={index}
-                style={{ textDecoration: "none" }}
-              >
-                {file.filename + " "}
-              </a>
-            ))}
-          </List>
+          <Card>
+            <CardContent>
+              {files.map((file, index) => (
+                <Grid
+                  container
+                  spacing={1}
+                  key={index}
+                  sx={{
+                    marginTop: 2,
+                    display: "flex",
+                    justifyContent: "left",
+                  }}
+                >
+                  <Grid item sx={{ marginTop: "8px", marginBottom: "10px", width:600 }}>
+                    <a
+                      href={file.url}
+                      download={file.filename}
+                      style={{ textDecoration: "none" }}
+                    >
+                      {file.filename + " "}
+                    </a>
+                  </Grid>
+                </Grid>
+              ))}
+            </CardContent>
+          </Card>
+          {/* <Box sx={{ width: 300, maxWidth: 360, bgcolor: "background.paper" }}>
+            <List
+              sx={{ width: "150%", maxWidth: 800, bgcolor: "background.paper" }}
+            >
+              {files.map((file, index) => (
+                <ListItemText sx={{ backgroundColor: "#FFC27B" }} key={index}>
+                  <a
+                    href={file.url}
+                    download={file.filename}
+                    style={{ textDecoration: "none" }}
+                  >
+                    {file.filename + " "}
+                  </a>
+                </ListItemText>
+              ))}
+            </List>
+          </Box> */}
         </div>
       )}
     </div>

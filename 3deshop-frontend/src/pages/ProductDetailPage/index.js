@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./styles.css";
 import api from "../../api";
 import JwtHelper from "../../utils/jwt.helper";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -18,6 +18,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { useAuth } from "../../hooks/useAuth";
 import DefaultImage from "../../images/defaultProductImage.png";
+import Divider from "@mui/material/Divider";
 import { Avatar, Grid } from "@mui/material";
 
 export default function ProductDetails() {
@@ -122,11 +123,6 @@ export default function ProductDetails() {
     }));
   };
 
-  const handleDownload = async (e) => {
-    e.preventDefault();
-    alert("Downloading...");
-  };
-
   function ProductImages() {
     return (
       <div style={{ minWidth: 400 }}>
@@ -167,7 +163,8 @@ export default function ProductDetails() {
                 sx={{
                   color: "black",
                 }}
-                onClick={handleDownload}
+                component={Link}
+                to={`/product-download/${id}`}
               >
                 <DownloadingIcon sx={{ fontSize: 50 }} />
               </Button>
@@ -280,46 +277,58 @@ export default function ProductDetails() {
                   >
                     {comment.description}
                   </Typography>
+                  <Divider />
                 </Grid>
               </Grid>
             ))}
             <div
               style={
-                comments.length > 0 ? { paddingTop: 100 } : { paddingTop: 20 }
+                comments.length > 0
+                  ? {
+                      paddingTop: 10,
+                    }
+                  : {
+                      paddingTop: 30,
+                    }
               }
             >
-              <TextField
-                id="description"
-                variant="standard"
-                multiline
-                rows={4}
-                sx={{ width: 600 }}
-                value={comment.description}
-                onChange={handleCommentChange}
-              />
-              <Button
-                variant="outlined"
-                sx={{
-                  background: "#222831",
-                  color: "white",
-                  borderStyle: "none",
-                  "&:hover": {
-                    background: "#30475E",
-                    borderStyle: "none",
-                  },
+              <div>
+                <TextField
+                  id="description"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  sx={{
+                    width: "100%",
+                  }}
+                  value={comment.description}
+                  onChange={handleCommentChange}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  paddingTop: 10,
                 }}
-                onClick={handleCommentSubmit}
               >
-                Post comment
-              </Button>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    background: "#222831",
+                    color: "white",
+                    borderStyle: "none",
+                    "&:hover": {
+                      background: "#30475E",
+                      borderStyle: "none",
+                    },
+                  }}
+                  onClick={handleCommentSubmit}
+                >
+                  Post comment
+                </Button>
+              </div>
             </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "end",
-                paddingTop: 10,
-              }}
-            ></div>
           </CardContent>
         </Card>
       </div>
