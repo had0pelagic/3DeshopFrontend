@@ -14,6 +14,9 @@ import ChangePassword from "./pages/ChangePasswordPage";
 import PurchasedProducts from "./pages/PurchasedProductsPage";
 import Upload from "./pages/UploadPage";
 import ProductDownload from "./pages/ProductDownloadPage";
+import Orders from "./pages/OrderPage";
+import OrderRegistration from "./pages/OrderRegistration";
+import Offer from "./pages/OfferPage";
 
 export default function App() {
   return (
@@ -24,6 +27,30 @@ export default function App() {
           <Route path="/register" element={<Layout page={<Register />} />} />
           <Route path="/login" element={<Layout page={<Login />} />} />
           <Route path="/account/:id" element={<Layout page={<Account />} />} />
+          <Route
+            path="/offer/:id"
+            element={
+              <ProtectedRoute>
+                <Layout page={<Offer />} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <Layout page={<Orders />} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/order-registration"
+            element={
+              <ProtectedRoute>
+                <Layout page={<OrderRegistration />} />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/upload-product"
             element={

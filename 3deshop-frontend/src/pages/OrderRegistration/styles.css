@@ -1,0 +1,16 @@
+.flexContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mt40 {
+  margin-top: 40px;
+}
+
+.p50 {
+  padding: 50px;
+}
+

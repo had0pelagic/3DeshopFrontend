@@ -26,7 +26,9 @@ export default function ProductDetails() {
   const { getToken } = useAuth();
   const [productDetails, setDetails] = useState();
   const [comments, setComments] = useState();
-  const [comment, setComment] = useState({ description: "" });
+  const [comment, setComment] = useState({
+    description: "",
+  });
   const [isLoadingDetails, setLoadingDetails] = useState(true);
   const [isLoadingComments, setLoadingComments] = useState(true);
   const [open, setOpen] = useState(false);
@@ -91,6 +93,7 @@ export default function ProductDetails() {
       ...prevState,
       [id]: value,
     }));
+    console.log(value);
   };
 
   const handleSubmitClick = async (e) => {
@@ -114,13 +117,14 @@ export default function ProductDetails() {
     await postComment(id, jwtUserId, comment);
   };
 
-  const handleCommentChange = async (e) => {
+  const handleCommentChange = (e) => {
     const { id, value } = e.target;
 
     setComment((prevState) => ({
       ...prevState,
       [id]: value,
     }));
+    console.log(value);
   };
 
   function ProductImages() {
@@ -212,7 +216,7 @@ export default function ProductDetails() {
                   left: "50%",
                   transform: "translate(-50%, -50%)",
                   width: 400,
-                  bgcolor: "background.paper",
+                  backgroundColor: "background.paper",
                   border: "2px solid #000",
                   boxShadow: 24,
                   p: 4,
@@ -225,7 +229,7 @@ export default function ProductDetails() {
                     label="Card number"
                     variant="standard"
                     margin="normal"
-                    value={state.cardNumber}
+                    defaultValue={state.cardNumber}
                     onChange={handleChange}
                   />
                   <div className="mt40">
@@ -242,11 +246,42 @@ export default function ProductDetails() {
     );
   }
 
+  function ProductAbout() {
+    return (
+      <div style={{ paddingTop: "60px" }}>
+        <Card sx={{ minWidth: 100 }}>
+          <CardContent>
+            <Typography sx={{ fontSize: 30 }} color="text.primary" gutterBottom>
+              {productDetails.about.name}
+            </Typography>
+            {productDetails.categories.map((category, index) => (
+              <Typography
+                variant="h7"
+                sx={{ mb: 1.5 }}
+                color="text.secondary"
+                key={index}
+              >
+                {category.name + " "}
+              </Typography>
+            ))}
+            <Typography variant="h6" component="div" sx={{ inlineSize: 800 }}>
+              {productDetails.about.description}
+            </Typography>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   function ProductComments() {
     return (
       <div style={{ paddingTop: "60px" }}>
         <Card
-          sx={{ minWidth: 800, maxWidth: 800, backgroundColor: "transparent" }}
+          sx={{
+            minWidth: 800,
+            maxWidth: 800,
+            backgroundColor: "transparent",
+          }}
         >
           <CardContent>
             <Typography sx={{ fontSize: 25 }} color="text.primary" gutterBottom>
@@ -335,40 +370,13 @@ export default function ProductDetails() {
     );
   }
 
-  function ProductAbout() {
-    return (
-      <div style={{ paddingTop: "60px" }}>
-        <Card sx={{ minWidth: 100 }}>
-          <CardContent>
-            <Typography sx={{ fontSize: 30 }} color="text.primary" gutterBottom>
-              {productDetails.about.name}
-            </Typography>
-            {productDetails.categories.map((category, index) => (
-              <Typography
-                variant="h7"
-                sx={{ mb: 1.5 }}
-                color="text.secondary"
-                key={index}
-              >
-                {category.name + " "}
-              </Typography>
-            ))}
-            <Typography variant="h6" component="div" sx={{ inlineSize: 800 }}>
-              {productDetails.about.description}
-            </Typography>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="flexContainer p50">
       {isLoadingDetails ? (
         <Loader />
       ) : (
         <div>
-          <ProductImages />
+          {ProductImages()}
           <ProductAbout />
         </div>
       )}
@@ -376,8 +384,8 @@ export default function ProductDetails() {
         <Loader />
       ) : (
         <div>
-          <ProductActions />
-          <ProductComments />
+          {ProductActions()}
+          {ProductComments()}
         </div>
       )}
     </div>
