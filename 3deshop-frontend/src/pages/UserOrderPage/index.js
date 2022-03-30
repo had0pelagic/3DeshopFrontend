@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
+import { useAuth } from "../../hooks/useAuth";
 import {
   Typography,
   Button,
@@ -15,26 +16,30 @@ import Carousel from "react-material-ui-carousel";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
 import "filepond/dist/filepond.min.css";
+import JwtHelper from "../../utils/jwt.helper";
 import DefaultImage from "../../images/defaultProductImage.png";
 
-export default function Orders() {
+export default function UserOrders() {
+  const { getToken } = useAuth();
   const [orders, setOrders] = useState([]);
   const [isLoadingOrders, setLoadingOrders] = useState(true);
   const [isLoadingOrder, setLoadingOrder] = useState(true);
   const [order, setOrder] = useState();
   const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
   const handleOpen = async (id) => {
     await getDisplayOrder(id);
     setOpen(true);
   };
-  const handleClose = () => setOpen(false);
 
   useEffect(async () => {
-    await getOrders();
+    await getUserOrders();
   }, []);
 
-  const getOrders = async () => {
-    const response = await api.orders.getInactiveOrders();
+  const getUserOrders = async () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    const response = await api.orders.getUserOrders(jwtUserId);
 
     if (response.status === 200) {
       setOrders(response.data);
@@ -89,7 +94,7 @@ export default function Orders() {
         <Loader />
       ) : (
         <div className="flexContainer">
-          <h1>Orders</h1>
+          <h1>User orders</h1>
           <Button
             sx={{
               color: "#fff",
@@ -193,10 +198,10 @@ export default function Orders() {
                   width: 400,
                 }}
                 component={Link}
-                to={`/offer/${order.id}`}
+                to={`/user-offers/${order.id}`}
                 state={{ name: order.name }}
               >
-                <Typography>Offer</Typography>
+                <Typography>Offers</Typography>
               </Button>
             </div>
           </Box>

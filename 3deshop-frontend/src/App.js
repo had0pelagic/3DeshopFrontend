@@ -17,6 +17,8 @@ import ProductDownload from "./pages/ProductDownloadPage";
 import Orders from "./pages/OrderPage";
 import OrderRegistration from "./pages/OrderRegistration";
 import Offer from "./pages/OfferPage";
+import UserOrders from "./pages/UserOrderPage";
+import UserOffers from "./pages/UserOfferPage";
 
 export default function App() {
   return (
@@ -32,6 +34,22 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Layout page={<Offer />} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user-offers/:id"
+            element={
+              <ProtectedRoute>
+                <Layout page={<UserOffers />} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user-orders/:id"
+            element={
+              <ProtectedRoute>
+                <Layout page={<UserOrders />} />
               </ProtectedRoute>
             }
           />

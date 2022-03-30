@@ -1,0 +1,25 @@
+.button {
+  background-color: blue;
+}
+
+.flexContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+}
+
+.priceDateContainer {
+  display: flex;
+  padding-top: 10px;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+  width: 395px;
+}
+
+.mt40 {
+  margin-top: 40px;
+}
