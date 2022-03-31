@@ -19,6 +19,8 @@ import OrderRegistration from "./pages/OrderRegistration";
 import Offer from "./pages/OfferPage";
 import UserOrders from "./pages/UserOrderPage";
 import UserOffers from "./pages/UserOfferPage";
+import UserJobs from "./pages/UserJobPage";
+import JobProgress from "./pages/JobProgressPage";
 
 export default function App() {
   return (
@@ -30,10 +32,26 @@ export default function App() {
           <Route path="/login" element={<Layout page={<Login />} />} />
           <Route path="/account/:id" element={<Layout page={<Account />} />} />
           <Route
+            path="/job-progress/:id"
+            element={
+              <ProtectedRoute>
+                <Layout page={<JobProgress />} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/offer/:id"
             element={
               <ProtectedRoute>
                 <Layout page={<Offer />} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user-jobs"
+            element={
+              <ProtectedRoute>
+                <Layout page={<UserJobs />} />
               </ProtectedRoute>
             }
           />

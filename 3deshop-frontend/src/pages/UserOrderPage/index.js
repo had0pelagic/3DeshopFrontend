@@ -203,6 +203,22 @@ export default function UserOrders() {
               >
                 <Typography>Offers</Typography>
               </Button>
+              <Button
+                sx={{
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#30475E",
+                    color: "#F05454",
+                  },
+                  backgroundColor: "#30475E",
+                  marginTop: 5,
+                  width: 400,
+                }}
+                component={Link}
+                to={`/job-progress/${order.id}`}
+              >
+                <Typography>Progress</Typography>
+              </Button>
             </div>
           </Box>
         )}

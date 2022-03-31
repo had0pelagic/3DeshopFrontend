@@ -3,7 +3,7 @@ export default (axios) => ({
     return axios.post(`/order/post-order`, data);
   },
   async getOrders() {
-    return axios.get(`/order/get-orders`);
+    return axios.get("/order/get-orders");
   },
   async getOrderOffers(id) {
     return axios.get(`/order/get-order-offers/${id}`);
@@ -28,5 +28,17 @@ export default (axios) => ({
   },
   async declineOffer(userId, offerId) {
     return axios.post(`/order/decline-offer/${userId}/${offerId}`);
+  },
+  async getUserJobs(userId) {
+    return axios.get(`/order/get-user-jobs/${userId}`);
+  },
+  async setJobProgress(data) {
+    return axios.post("/order/set-progress", data);
+  },
+  async workerAbandonJob(data) {
+    return axios.post("/order/worker-abandon-job", data);
+  },
+  async getJobProgress(userId, orderId) {
+    return axios.get(`/order/get-job-progress/${userId}/${orderId}`);
   },
 });
