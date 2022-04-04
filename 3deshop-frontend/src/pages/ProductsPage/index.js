@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Product from "../../components/Product";
 import "./styles.css";
-import Grid from "@mui/material/Grid";
 import api from "../../api";
+import { Tiles } from "@rebass/layout";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -22,27 +22,18 @@ export default function Products() {
 
   return (
     <div className="flexContainer p50">
-      <Grid
-        container
-        spacing={{ xs: 2, md: 2 }}
-        columns={{ xs: 2, sm: 4, md: 10 }}
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Tiles columns={[1, 2, 3, 4]}>
         {products.map((product, index) => (
-          <Grid item xs={2} sm={4} md={2} key={index}>
-            <Product
-              id={product.id}
-              name={product.name}
-              categories={product.categories}
-              creator={product.username}
-              price={product.price}
-              image={product.image}
-            />
-          </Grid>
+          <Product
+            id={product.id}
+            name={product.name}
+            categories={product.categories}
+            creator={product.username}
+            price={product.price}
+            image={product.image}
+          />
         ))}
-      </Grid>
+      </Tiles>
     </div>
   );
 }

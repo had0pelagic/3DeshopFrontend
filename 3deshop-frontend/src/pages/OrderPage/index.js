@@ -9,12 +9,20 @@ import {
   CardContent,
   CardMedia,
   TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
 import "filepond/dist/filepond.min.css";
+import moment from "moment";
 import DefaultImage from "../../images/defaultProductImage.png";
 
 export default function Orders() {
@@ -90,51 +98,85 @@ export default function Orders() {
       ) : (
         <div className="flexContainer">
           <h1>Orders</h1>
-          <Button
-            sx={{
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "#30475E",
-                color: "#F05454",
-              },
-              backgroundColor: "#30475E",
-              marginTop: 5,
-              marginLeft: "auto",
-              marginRight: 0,
-              alignItems: "right",
-              width: 200,
-            }}
-            component={Link}
-            to={`/order-registration`}
-          >
-            Add new order
-          </Button>
-          {orders.map((order, index) => (
-            <div
-              style={{
-                backgroundColor: "#F05454",
-                marginTop: 30,
-                width: 500,
-                display: "flex",
-                flex: 1,
-                justifyContent: "space-between",
-                padding: "6px 12px 6px 12px",
-                borderRadius: 10,
-                cursor: "pointer",
-              }}
-              key={index}
-              onClick={() => handleOpen(order.id)}
-            >
-              <div style={{ marginTop: 10 }}>
-                <Typography style={{ fontSize: 30 }}>{order.name}</Typography>
-              </div>
-              <div>
-                <Typography style={{ fontSize: 30, marginTop: 5 }}>
-                  {order.price}$
-                </Typography>
-              </div>
+
+          {orders && orders.length > 0 ? (
+            <div className="flexContainer">
+              <Button
+                sx={{
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#30475E",
+                    color: "#F05454",
+                  },
+                  backgroundColor: "#30475E",
+                  marginTop: 5,
+                  marginLeft: "auto",
+                  marginRight: 15,
+                  marginBottom: 5,
+                  alignItems: "right",
+                  width: 200,
+                }}
+                component={Link}
+                to={`/order-registration`}
+              >
+                Add new order
+              </Button>
+
+              <TableContainer component={Paper} sx={{ width: "80%" }}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell align="left">Description</TableCell>
+                      <TableCell align="left">Creation date</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {orders.map((order, index) => (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleOpen(order.id)}
+                      >
+                        <TableCell component="th" scope="row">
+                          {order.name}
+                        </TableCell>
+                        <TableCell align="left">{order.description}</TableCell>
+                        <TableCell align="left">
+                          {moment(order.created).format("YYYY-MM-DD")}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
-          ))}
+          ) : (
+            <div className="flexContainer">
+              <h2>No orders yet</h2>
+              <Button
+                sx={{
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#30475E",
+                    color: "#F05454",
+                  },
+                  backgroundColor: "#30475E",
+                  marginTop: 1,
+                  marginBottom: 5,
+                  alignItems: "center",
+                  width: 200,
+                }}
+                component={Link}
+                to={`/order-registration`}
+              >
+                Add new order
+              </Button>
+            </div>
+          )}
         </div>
       )}
 
@@ -163,7 +205,7 @@ export default function Orders() {
           >
             <div className="flexContainer">
               <Typography style={{ fontSize: 30 }}>{order.name}</Typography>
-              <OrderImages />
+              {OrderImages()}
               <TextField
                 id="description"
                 variant="outlined"

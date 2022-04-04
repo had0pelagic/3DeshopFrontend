@@ -3,7 +3,6 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { CardMedia } from "@mui/material";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
 import DefaultImage from "../../images/defaultProductImage.png";
@@ -22,9 +21,9 @@ export default function Product({
     <Card
       className="card"
       sx={{
-        minWidth: 300,
+        minWidth: 200,
         maxWidth: 350,
-        minHeight: 300,
+        minHeight: 250,
         maxHeight: 500,
         cursor: "pointer",
       }}
@@ -34,21 +33,23 @@ export default function Product({
     >
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          <CardMedia
-            sx={{
-              minWidth: 200,
-              maxWidth: 300,
-              minHeight: 200,
-              maxHeight: 250,
-              borderRadius: "2%",
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-            component="img"
-            height="250"
-            src={
-              image !== null ? `${image.format},${image.data}` : DefaultImage
-            }
-            alt="No image"
-          />
+          >
+            <img
+              style={{ objectFit: "contain" }}
+              src={
+                image !== null ? `${image.format},${image.data}` : DefaultImage
+              }
+              height="200"
+              width="300"
+              alt="none"
+            />
+          </div>
         </Typography>
         <Typography variant="h5" component="div">
           {name}

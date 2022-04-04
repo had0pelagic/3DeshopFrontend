@@ -9,6 +9,13 @@ import {
   CardContent,
   CardMedia,
   TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
@@ -23,7 +30,8 @@ export default function JobProgress() {
   const { id } = useParams();
   const { getToken } = useAuth();
   const [isLoading, setLoading] = useState(true);
-  const [progresses, setProgresses] = useState();
+  const [progresses, setProgresses] = useState([]);
+  const [lastProgressValue, setLastProgressValue] = useState(0);
 
   useEffect(async () => {
     await getProgress();
@@ -35,13 +43,34 @@ export default function JobProgress() {
     const response = await api.orders.getJobProgress(jwtUserId, id);
 
     if (response.status === 200) {
-      setProgresses(response.data);
+      if (response.data.length > 0) {
+        response.data.sort(function (a, b) {
+          return new Date(a.created) - new Date(b.created);
+        });
+        setLastProgressValue(response.data[response.data.length - 1].progress);
+        setProgresses(response.data);
+      }
       console.log("Progress returned!");
     } else {
       console.log("error at products, didn't return 200");
     }
     setLoading(false);
   };
+
+  function LinearProgressWithLabel() {
+    return (
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ width: "100%", mr: 1 }}>
+          <LinearProgress variant="determinate" value={lastProgressValue} />
+        </Box>
+        <Box sx={{ minWidth: 35 }}>
+          <Typography variant="body2" color="text.secondary">{`${Math.round(
+            lastProgressValue
+          )}%`}</Typography>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <div className="flexContainer">
@@ -50,35 +79,48 @@ export default function JobProgress() {
       ) : (
         <div className="flexContainer">
           <h1>Order progress</h1>
-          {progresses.map((progress, index) => (
-            <div
-              style={{
-                backgroundColor: "#F05454",
-                marginTop: 30,
-                width: 500,
-                display: "flex",
-                flex: 1,
-                justifyContent: "space-between",
-                padding: "6px 12px 6px 12px",
-                borderRadius: 10,
-                cursor: "pointer",
-              }}
-              key={index}
-            >
-              <div
-                style={{
-                  marginTop: 10,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  width: "25rem",
-                }}
-              >
-                <Typography noWrap style={{ fontSize: 30 }}>
-                  {progress.description}
-                </Typography>
-              </div>
+          {progresses && progresses.length > 0 ? (
+            <div className="flexContainer">
+              <Box sx={{ width: "100%" }}>
+                <LinearProgressWithLabel value={lastProgressValue} />
+              </Box>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Note</TableCell>
+                      <TableCell align="left">Progress</TableCell>
+                      <TableCell align="left">Date</TableCell>
+                      <TableCell align="left">User</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {progresses.map((progress, index) => (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {progress.description}
+                        </TableCell>
+                        <TableCell align="left">{progress.progress}%</TableCell>
+                        <TableCell align="left">
+                          {moment(progress.created).format("YYYY-MM-DD")}
+                        </TableCell>
+                        <TableCell align="left">{progress.userId}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
-          ))}
+          ) : (
+            <div className="flexContainer">
+              <h2>No progress yet</h2>
+            </div>
+          )}
         </div>
       )}
     </div>

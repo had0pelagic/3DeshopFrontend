@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.css";
 import {
   Typography,
@@ -9,6 +9,13 @@ import {
   CardContent,
   CardMedia,
   TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
@@ -58,7 +65,6 @@ export default function UserJobs() {
 
     if (response.status === 200) {
       setJobs(response.data);
-      console.log(response);
       console.log("Offers returned!");
     } else {
       console.log("error at products, didn't return 200");
@@ -69,7 +75,6 @@ export default function UserJobs() {
   const setJobProgress = async () => {
     const token = getToken().data;
     const jwtUserId = JwtHelper.getUser(token).userId;
-
     const request = {
       id: job.id,
       orderId: order.id,
@@ -77,7 +82,6 @@ export default function UserJobs() {
       comment: form.comment,
       progress: form.progress,
     };
-    console.log(request);
     const response = await api.orders.setJobProgress(request);
 
     if (response.status === 200) {
@@ -170,7 +174,6 @@ export default function UserJobs() {
       ...prevState,
       ["progress"]: e.target.value,
     }));
-    console.log(e);
   };
 
   const handleNoteChange = (e) => {
@@ -180,7 +183,6 @@ export default function UserJobs() {
       ...prevState,
       [id]: value,
     }));
-    console.log(e);
   };
 
   return (
@@ -190,36 +192,40 @@ export default function UserJobs() {
       ) : (
         <div className="flexContainer">
           <h1>Active jobs</h1>
-          {jobs.map((job, index) => (
-            <div
-              style={{
-                backgroundColor: "#F05454",
-                marginTop: 30,
-                width: 500,
-                display: "flex",
-                flex: 1,
-                justifyContent: "space-between",
-                padding: "6px 12px 6px 12px",
-                borderRadius: 10,
-                cursor: "pointer",
-              }}
-              key={index}
-              onClick={() => handleOpen(job)}
-            >
-              <div
-                style={{
-                  marginTop: 10,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  width: "25rem",
-                }}
-              >
-                <Typography noWrap style={{ fontSize: 30 }}>
-                  {job.order.name}
-                </Typography>
-              </div>
-            </div>
-          ))}
+
+          <TableContainer component={Paper} sx={{ width: "100%" }}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell align="left">Creation date</TableCell>
+                  <TableCell align="left">Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {jobs.map((job, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleOpen(job)}
+                  >
+                    <TableCell component="th" scope="row">
+                      {job.order.name}
+                    </TableCell>
+                    <TableCell align="left">
+                      {moment(job.created).format("YYYY-MM-DD")}
+                    </TableCell>
+                    <TableCell align="left">
+                      {job.active ? "Active" : "Inactive"}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       )}
 
@@ -248,7 +254,7 @@ export default function UserJobs() {
           >
             <div className="flexContainer">
               <Typography style={{ fontSize: 30 }}>{order.name}</Typography>
-              <OrderImages />
+              {OrderImages()}
               <TextField
                 id="description"
                 variant="outlined"

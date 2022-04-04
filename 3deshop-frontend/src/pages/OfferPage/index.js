@@ -43,8 +43,6 @@ export default function Offer() {
       ...prevState,
       [id]: value,
     }));
-
-    console.log(state);
   };
 
   const handleSubmitClick = async (e) => {
