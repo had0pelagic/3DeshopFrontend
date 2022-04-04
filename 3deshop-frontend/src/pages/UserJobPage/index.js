@@ -17,12 +17,14 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
+import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { useAuth } from "../../hooks/useAuth";
 import JwtHelper from "../../utils/jwt.helper";
+import FormatHelper from "../../utils/format.helper";
 import Carousel from "react-material-ui-carousel";
 import DefaultImage from "../../images/defaultProductImage.png";
 import moment from "moment";
@@ -30,9 +32,9 @@ import Slider from "@mui/material/Slider";
 import LinearProgress from "@mui/material/LinearProgress";
 
 export default function UserJobs() {
-  const { id } = useParams();
   const { getToken } = useAuth();
   const [jobs, setJobs] = useState([]);
+  const [files, setFiles] = useState();
   const [isLoadingJobs, setLoadingJobs] = useState(true);
   const [isLoadingOrder, setLoadingOrder] = useState(true);
   const [order, setOrder] = useState();
@@ -91,9 +93,53 @@ export default function UserJobs() {
     }
   };
 
+  function encodeData(array) {
+    return Promise.all(
+      array.map(async (item) => {
+        try {
+          const base64 = await FormatHelper.encodeBase64(item.file);
+          return {
+            name: item.filename,
+            data: base64.bytes,
+            format: base64.type,
+          };
+        } catch (error) {
+          throw error;
+        }
+      })
+    );
+  }
+
+  const setJobCompletion = async () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    const fileData = await encodeData(files);
+    const request = {
+      id: job.id,
+      orderId: order.id,
+      userId: jwtUserId,
+      comment: form.comment,
+      progress: form.progress,
+      files: fileData,
+    };
+
+    const response = await api.orders.setJobCompletion(request);
+
+    if (response.status === 200) {
+      console.log("Job has been completed!");
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+  };
+
   const handleSubmitClick = async (e) => {
     e.preventDefault();
     await setJobProgress();
+  };
+
+  const handleJobCompletion = async (e) => {
+    e.preventDefault();
+    await setJobCompletion();
   };
 
   const getDisplayOrder = async (job) => {
@@ -190,7 +236,10 @@ export default function UserJobs() {
       {isLoadingJobs ? (
         <Loader />
       ) : (
-        <div className="flexContainer">
+        <div
+          className="flexContainer"
+          style={{ marginLeft: 30, marginRight: 30 }}
+        >
           <h1>Active jobs</h1>
 
           <TableContainer component={Paper} sx={{ width: "100%" }}>
@@ -200,11 +249,13 @@ export default function UserJobs() {
                   <TableCell>Name</TableCell>
                   <TableCell align="left">Creation date</TableCell>
                   <TableCell align="left">Status</TableCell>
+                  <TableCell align="left">Completed</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {jobs.map((job, index) => (
                   <TableRow
+                    hover
                     key={index}
                     sx={{
                       "&:last-child td, &:last-child th": { border: 0 },
@@ -220,6 +271,9 @@ export default function UserJobs() {
                     </TableCell>
                     <TableCell align="left">
                       {job.active ? "Active" : "Inactive"}
+                    </TableCell>
+                    <TableCell align="left">
+                      {job.progress === 100 ? "Yes" : "No"}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -347,7 +401,8 @@ export default function UserJobs() {
               value={form.progress}
               onChange={handleProgressChange}
             />
-            <div style={{ marginTop: 60 }}>
+
+            <div style={{ marginTop: 20 }}>
               <TextField
                 id="comment"
                 label="Comment"
@@ -355,27 +410,56 @@ export default function UserJobs() {
                 multiline
                 rows={4}
                 sx={{
-                  width: 260,
+                  width: 400,
                 }}
                 value={form.comment}
                 onChange={handleNoteChange}
               />
             </div>
-            <Button
-              sx={{
-                color: "#fff",
-                "&:hover": {
+            {form.progress === 100 ? (
+              <div>
+                <div style={{ marginTop: 20 }}>
+                  <FilePond
+                    stylePanelLayout="compact"
+                    files={files}
+                    allowMultiple={true}
+                    onupdatefiles={setFiles}
+                    labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                  />
+                </div>
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
+                    backgroundColor: "#30475E",
+                    marginTop: 5,
+                    width: 400,
+                  }}
+                  onClick={handleJobCompletion}
+                >
+                  <Typography>Set progress & upload files</Typography>
+                </Button>
+              </div>
+            ) : (
+              <Button
+                sx={{
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#30475E",
+                    color: "#F05454",
+                  },
                   backgroundColor: "#30475E",
-                  color: "#F05454",
-                },
-                backgroundColor: "#30475E",
-                marginTop: 5,
-                width: 400,
-              }}
-              onClick={handleSubmitClick}
-            >
-              <Typography>Set progress</Typography>
-            </Button>
+                  marginTop: 5,
+                  width: 400,
+                }}
+                onClick={handleSubmitClick}
+              >
+                <Typography>Set progress</Typography>
+              </Button>
+            )}
           </div>
         </Box>
       </Modal>

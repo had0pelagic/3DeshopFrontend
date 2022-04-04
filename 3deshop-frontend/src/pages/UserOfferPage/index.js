@@ -9,6 +9,13 @@ import {
   CardContent,
   CardMedia,
   TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
@@ -16,6 +23,7 @@ import api from "../../api";
 import "filepond/dist/filepond.min.css";
 import { useAuth } from "../../hooks/useAuth";
 import JwtHelper from "../../utils/jwt.helper";
+import moment from "moment";
 
 export default function UserOffers() {
   const { id } = useParams();
@@ -88,38 +96,48 @@ export default function UserOffers() {
       {isLoadingOffers ? (
         <Loader />
       ) : (
-        <div className="flexContainer">
+        <div
+          className="flexContainer"
+          style={{ marginLeft: 30, marginRight: 30 }}
+        >
           <h1>Offers</h1>
-          {offers.map((offer, index) => (
-            <div
-              style={{
-                backgroundColor: "#F05454",
-                marginTop: 30,
-                width: 500,
-                display: "flex",
-                flex: 1,
-                justifyContent: "space-between",
-                padding: "6px 12px 6px 12px",
-                borderRadius: 10,
-                cursor: "pointer",
-              }}
-              key={index}
-              onClick={() => handleOpen(offer.id)}
-            >
-              <div
-                style={{
-                  marginTop: 10,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  width: "25rem",
-                }}
-              >
-                <Typography noWrap style={{ fontSize: 30 }}>
-                  {offer.description}
-                </Typography>
-              </div>
-            </div>
-          ))}
+
+          <TableContainer component={Paper} sx={{ width: "100%" }}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Description</TableCell>
+                  <TableCell align="left">Creation date</TableCell>
+                  <TableCell align="left">Complete till</TableCell>
+                  <TableCell align="left">User id</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {offers.map((offer, index) => (
+                  <TableRow
+                    hover
+                    key={index}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleOpen(offer.id)}
+                  >
+                    <TableCell component="th" scope="row">
+                      {offer.description}
+                    </TableCell>
+                    <TableCell align="left">
+                      {moment(offer.created).format("YYYY-MM-DD")}
+                    </TableCell>
+                    <TableCell align="left">
+                      {moment(offer.completeTill).format("YYYY-MM-DD")}
+                    </TableCell>
+                    <TableCell align="left">{offer.userId}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       )}
 
@@ -159,7 +177,8 @@ export default function UserOffers() {
               />
               <div className="priceDateContainer">
                 <Typography sx={{ fontSize: 20 }} variant="h5">
-                  Completion till: {offer.completeTill}
+                  Completion till:{" "}
+                  {moment(offer.completeTill).format("YYYY-MM-DD")}
                 </Typography>
               </div>
               <Button

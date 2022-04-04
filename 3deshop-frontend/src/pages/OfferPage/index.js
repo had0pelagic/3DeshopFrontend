@@ -51,7 +51,10 @@ export default function Offer() {
   };
 
   return (
-    <div className="flexContainer p50">
+    <div
+      className="flexContainer p50"
+      style={{ marginLeft: 30, marginRight: 30 }}
+    >
       <h1>Offer for: {state.name}</h1>
       <div style={{ marginTop: 60 }}>
         <TextField

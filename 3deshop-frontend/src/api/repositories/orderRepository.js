@@ -35,6 +35,9 @@ export default (axios) => ({
   async setJobProgress(data) {
     return axios.post("/order/set-progress", data);
   },
+  async setJobCompletion(data) {
+    return axios.post("/order/set-job-completion", data);
+  },
   async workerAbandonJob(data) {
     return axios.post("/order/worker-abandon-job", data);
   },

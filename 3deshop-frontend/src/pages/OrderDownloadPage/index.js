@@ -15,7 +15,7 @@ import JwtHelper from "../../utils/jwt.helper";
 import { useAuth } from "../../hooks/useAuth";
 import Loader from "../../components/Loader";
 
-export default function ProductDownload() {
+export default function OrderDownload() {
   let { id } = useParams();
   const { getToken } = useAuth();
   const [files, setFiles] = useState([]);
@@ -28,7 +28,7 @@ export default function ProductDownload() {
   const getFiles = async () => {
     const token = getToken().data;
     const jwtUserId = JwtHelper.getUser(token).userId;
-    const response = await api.files.getFiles(id, jwtUserId);
+    const response = await api.files.getOrderFiles(id, jwtUserId);
     if (response.status === 200) {
       const files = response.data.map((file) => {
         return DownloadHelper.getFileData(file);

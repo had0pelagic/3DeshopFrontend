@@ -21,6 +21,7 @@ import UserOrders from "./pages/UserOrderPage";
 import UserOffers from "./pages/UserOfferPage";
 import UserJobs from "./pages/UserJobPage";
 import JobProgress from "./pages/JobProgressPage";
+import OrderDownload from "./pages/OrderDownloadPage";
 
 export default function App() {
   return (
@@ -31,6 +32,14 @@ export default function App() {
           <Route path="/register" element={<Layout page={<Register />} />} />
           <Route path="/login" element={<Layout page={<Login />} />} />
           <Route path="/account/:id" element={<Layout page={<Account />} />} />
+          <Route
+            path="/order-download/:id"
+            element={
+              <ProtectedRoute>
+                <Layout page={<OrderDownload />} />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/job-progress/:id"
             element={

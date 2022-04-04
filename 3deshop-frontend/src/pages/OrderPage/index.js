@@ -100,7 +100,10 @@ export default function Orders() {
           <h1>Orders</h1>
 
           {orders && orders.length > 0 ? (
-            <div className="flexContainer">
+            <div
+              className="flexContainer"
+              style={{ marginLeft: 30, marginRight: 30 }}
+            >
               <Button
                 sx={{
                   color: "#fff",
@@ -122,7 +125,7 @@ export default function Orders() {
                 Add new order
               </Button>
 
-              <TableContainer component={Paper} sx={{ width: "80%" }}>
+              <TableContainer component={Paper} sx={{ width: "100%" }}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
@@ -134,6 +137,7 @@ export default function Orders() {
                   <TableBody>
                     {orders.map((order, index) => (
                       <TableRow
+                        hover
                         key={index}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },

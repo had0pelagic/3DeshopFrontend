@@ -104,7 +104,10 @@ export default function UserOrders() {
         <div className="flexContainer">
           <h1>User orders</h1>
           {orders && orders.length > 0 ? (
-            <div className="flexContainer">
+            <div
+              className="flexContainer"
+              style={{ marginLeft: 30, marginRight: 30 }}
+            >
               <Button
                 sx={{
                   color: "#fff",
@@ -138,6 +141,7 @@ export default function UserOrders() {
                   <TableBody>
                     {orders.map((order, index) => (
                       <TableRow
+                        hover
                         key={index}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },

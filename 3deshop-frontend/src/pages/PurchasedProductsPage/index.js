@@ -33,11 +33,6 @@ export default function PurchasedProducts() {
     setLoading(false);
   };
 
-  const handleSubmitClick = (e) => {
-    e.preventDefault();
-    alert("downloading...");
-  };
-
   function PurchasedProduct({ product }) {
     return (
       <ListItem
