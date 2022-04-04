@@ -27,6 +27,7 @@ export default function JobProgress() {
   const { getToken } = useAuth();
   const [isLoading, setLoading] = useState(true);
   const [progresses, setProgresses] = useState([]);
+  const [order, setOrder] = useState();
   const [lastProgressValue, setLastProgressValue] = useState(0);
 
   const [open, setOpen] = useState(false);
@@ -37,6 +38,7 @@ export default function JobProgress() {
 
   useEffect(async () => {
     await getProgress();
+    await getOrder();
   }, []);
 
   const getProgress = async () => {
@@ -53,6 +55,31 @@ export default function JobProgress() {
         setProgresses(response.data);
       }
       console.log("Progress returned!");
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+    setLoading(false);
+  };
+
+  const getOrder = async () => {
+    const response = await api.orders.getOrder(id);
+
+    if (response.status === 200) {
+      setOrder(response.data);
+      console.log("Progress returned!");
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+    setLoading(false);
+  };
+
+  const approveOrder = async () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    const response = await api.orders.approveOrder(id, jwtUserId);
+
+    if (response.status === 200) {
+      console.log("Order has been approved!");
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -81,6 +108,12 @@ export default function JobProgress() {
       ) : (
         <div className="flexContainer">
           <h1>Order progress</h1>
+          {order && order.approved ? (
+            <h1>Approved & completed</h1>
+          ) : (
+            <div></div>
+          )}
+
           {progresses && progresses.length > 0 ? (
             <div className="flexContainer">
               <Box sx={{ width: "100%" }}>
@@ -138,7 +171,7 @@ export default function JobProgress() {
                     </Button>
                   </div>
                 ) : (
-                  <h1>b</h1>
+                  <div></div>
                 )}
               </div>
             </div>
@@ -186,37 +219,44 @@ export default function JobProgress() {
             >
               <Typography style={{ fontSize: 30 }}>Get files</Typography>
             </Button>
-
-            <Button
-              sx={{
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: "#30475E",
-                  color: "#F05454",
-                },
-                backgroundColor: "#30475E",
-                marginTop: 5,
-                width: 400,
-              }}
-              onClick={() => alert("approving")}
-            >
-              <Typography style={{ fontSize: 30 }}>Approve</Typography>
-            </Button>
-
-            <Button
-              sx={{
-                color: "#fff",
-                "&:hover": {
-                  backgroundColor: "#30475E",
-                  color: "#F05454",
-                },
-                backgroundColor: "#30475E",
-                marginTop: 5,
-                width: 400,
-              }}
-            >
-              <Typography style={{ fontSize: 30 }}>Ask for changes</Typography>
-            </Button>
+            {order && order.approved ? (
+              <div></div>
+            ) : (
+              <div>
+                {" "}
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
+                    backgroundColor: "#30475E",
+                    marginTop: 5,
+                    width: 400,
+                  }}
+                  onClick={() => approveOrder()}
+                >
+                  <Typography style={{ fontSize: 30 }}>Approve</Typography>
+                </Button>
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
+                    backgroundColor: "#30475E",
+                    marginTop: 5,
+                    width: 400,
+                  }}
+                >
+                  <Typography style={{ fontSize: 30 }}>
+                    Ask for changes
+                  </Typography>
+                </Button>
+              </div>
+            )}
           </div>
         </Box>
       </Modal>

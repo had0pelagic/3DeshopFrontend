@@ -19,6 +19,7 @@ export default function OrderRegistration() {
     price: "",
     description: "",
     completeTill: new Date(),
+    cardNumber: "",
   });
   const [images, setImages] = useState([]);
 
@@ -54,6 +55,8 @@ export default function OrderRegistration() {
     const response = await api.orders.postOrder(order);
 
     if (response.status === 200) {
+      console.log(response.data);
+      await postPayment(response.data.orderId);
       console.log("Order uploaded!");
     } else {
       console.log("error at products, didn't return 200");
@@ -72,6 +75,25 @@ export default function OrderRegistration() {
   const handleSubmitClick = async (e) => {
     e.preventDefault();
     await uploadOrder();
+  };
+
+  const postPayment = async (id) => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    const request = {
+      userId: jwtUserId,
+      orderId: id,
+      sender: orderForm.cardNumber,
+      amount: orderForm.price,
+      currencyCode: "EUR",
+    };
+    const response = await api.payments.postOrderPayment(request);
+
+    if (response.status === 200) {
+      console.log("Payment sent!");
+    } else {
+      console.log("error at products, didn't return 200");
+    }
   };
 
   return (
@@ -114,9 +136,23 @@ export default function OrderRegistration() {
                 target: { value: orderForm, id: "completeTill" },
               })
             }
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params) => (
+              <TextField {...params} sx={{ width: 300 }} />
+            )}
           />
         </LocalizationProvider>
+      </div>
+      <div className="flexContainer">
+        <TextField
+          required
+          id="cardNumber"
+          label="Card number"
+          variant="standard"
+          margin="normal"
+          defaultValue={orderForm.cardNumber}
+          onChange={handleChange}
+          sx={{ width: 300 }}
+        />
       </div>
       <div style={{ marginTop: 60 }}>
         <TextField
@@ -126,11 +162,10 @@ export default function OrderRegistration() {
           multiline
           rows={4}
           sx={{
-            width: "100%",
+            width: 300,
           }}
           value={orderForm.description}
           onChange={handleChange}
-          sx={{ width: 300 }}
         />
       </div>
       <Card

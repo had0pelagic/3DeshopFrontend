@@ -5,6 +5,9 @@ export default (axios) => ({
   async getOrders() {
     return axios.get("/order/get-orders");
   },
+  async getOrder(id) {
+    return axios.get(`/order/get-order/${id}`);
+  },
   async getOrderOffers(id) {
     return axios.get(`/order/get-order-offers/${id}`);
   },
@@ -16,6 +19,9 @@ export default (axios) => ({
   },
   async getUserOrders(id) {
     return axios.get(`/order/get-user-orders/${id}`);
+  },
+  async approveOrder(orderId, userId) {
+    return axios.get(`/order/approve-order/${orderId}/${userId}`);
   },
   async postOffer(data) {
     return axios.post(`/order/post-offer`, data);
@@ -43,5 +49,8 @@ export default (axios) => ({
   },
   async getJobProgress(userId, orderId) {
     return axios.get(`/order/get-job-progress/${userId}/${orderId}`);
+  },
+  async isOrderJobActive(orderId) {
+    return axios.get(`/order/is-order-job-active/${orderId}`);
   },
 });

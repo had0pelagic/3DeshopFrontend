@@ -33,10 +33,12 @@ export default function UserOrders() {
   const [isLoadingOrders, setLoadingOrders] = useState(true);
   const [isLoadingOrder, setLoadingOrder] = useState(true);
   const [order, setOrder] = useState();
+  const [isJobActive, setIsJobActive] = useState();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = async (id) => {
     await getDisplayOrder(id);
+    await isOrderJobActive(id);
     setOpen(true);
   };
 
@@ -51,6 +53,18 @@ export default function UserOrders() {
 
     if (response.status === 200) {
       setOrders(response.data);
+      console.log("Orders returned!");
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+    setLoadingOrders(false);
+  };
+
+  const isOrderJobActive = async (id) => {
+    const response = await api.orders.isOrderJobActive(id);
+
+    if (response.status === 200) {
+      setIsJobActive(response.data);
       console.log("Orders returned!");
     } else {
       console.log("error at products, didn't return 200");
@@ -229,26 +243,33 @@ export default function UserOrders() {
                   {order.price}$
                 </Typography>
                 <Typography sx={{ fontSize: 20 }} variant="h5">
-                  Completion till: {order.completeTill}
+                  Completion till:{" "}
+                  {moment(order.completeTill).format("YYYY-MM-DD")}
                 </Typography>
               </div>
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
+
+              {isJobActive ? (
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
                     backgroundColor: "#30475E",
-                    color: "#F05454",
-                  },
-                  backgroundColor: "#30475E",
-                  marginTop: 5,
-                  width: 400,
-                }}
-                component={Link}
-                to={`/user-offers/${order.id}`}
-                state={{ name: order.name }}
-              >
-                <Typography>Offers</Typography>
-              </Button>
+                    marginTop: 5,
+                    width: 400,
+                  }}
+                  component={Link}
+                  to={`/user-offers/${order.id}`}
+                  state={{ name: order.name }}
+                >
+                  <Typography>Offers</Typography>
+                </Button>
+              ) : (
+                <div></div>
+              )}
+
               <Button
                 sx={{
                   color: "#fff",

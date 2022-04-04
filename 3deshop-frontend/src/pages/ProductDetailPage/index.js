@@ -65,8 +65,17 @@ export default function ProductDetails() {
     setLoadingComments(false);
   };
 
-  const postPayment = async (payment) => {
-    const response = await api.payments.postPayment(payment);
+  const postPayment = async () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    const request = {
+      userId: jwtUserId,
+      productId: id,
+      sender: state.cardNumber,
+      amount: productDetails.about.price,
+      currencyCode: "EUR",
+    };
+    const response = await api.payments.postPayment(request);
 
     if (response.status === 200) {
       console.log("payment sent!");
@@ -98,16 +107,7 @@ export default function ProductDetails() {
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    const token = getToken().data;
-    const jwtUserId = JwtHelper.getUser(token).userId;
-    const payment = {
-      userId: jwtUserId,
-      productId: id,
-      sender: state.cardNumber,
-      amount: productDetails.about.price,
-      currencyCode: "EUR",
-    };
-    await postPayment(payment);
+    await postPayment();
   };
 
   const handleCommentSubmit = async (e) => {
