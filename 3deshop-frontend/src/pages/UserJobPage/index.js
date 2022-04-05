@@ -88,6 +88,8 @@ export default function UserJobs() {
 
     if (response.status === 200) {
       console.log("Job has been updated!");
+      handleProgressClose();
+      window.location.reload();
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -127,6 +129,8 @@ export default function UserJobs() {
 
     if (response.status === 200) {
       console.log("Job has been completed!");
+      handleProgressClose();
+      window.location.reload();
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -169,6 +173,7 @@ export default function UserJobs() {
 
     if (response.status === 200) {
       console.log("Job has been abandoned!");
+      window.location.reload();
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -332,26 +337,31 @@ export default function UserJobs() {
                   Offer completion date: {offerFormattedDate}
                 </Typography>
               </div>
-
+              {console.log(job)}
               {job.progress === 100 ? (
                 <div></div>
               ) : (
                 <div>
-                  <Button
-                    sx={{
-                      color: "#fff",
-                      "&:hover": {
+                  {job && job.active ? (
+                    <Button
+                      sx={{
+                        color: "#fff",
+                        "&:hover": {
+                          backgroundColor: "#30475E",
+                          color: "#F05454",
+                        },
                         backgroundColor: "#30475E",
-                        color: "#F05454",
-                      },
-                      backgroundColor: "#30475E",
-                      marginTop: 5,
-                      width: 400,
-                    }}
-                    onClick={abandonJob}
-                  >
-                    <Typography>Abandon the job</Typography>
-                  </Button>
+                        marginTop: 5,
+                        width: 400,
+                      }}
+                      onClick={abandonJob}
+                    >
+                      <Typography>Abandon the job</Typography>
+                    </Button>
+                  ) : (
+                    <div></div>
+                  )}
+
                   <Button
                     sx={{
                       color: "#fff",

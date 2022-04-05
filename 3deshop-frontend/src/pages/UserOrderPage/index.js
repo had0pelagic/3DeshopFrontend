@@ -120,6 +120,7 @@ export default function UserOrders() {
 
     if (response.status === 200) {
       console.log("Order removed!");
+      window.location.reload()
     } else {
       console.log("error at products, didn't return 200");
     }

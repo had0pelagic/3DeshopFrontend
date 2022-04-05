@@ -3,7 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import api from "../../api";
 import JwtHelper from "../../utils/jwt.helper";
 import "./styles.css";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -11,6 +11,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
 export default function Offer() {
   let { id } = useParams();
+  const navigate = useNavigate();
   let { state } = useLocation();
   const { getToken } = useAuth();
   const [offerForm, setOfferForm] = useState({
@@ -31,6 +32,7 @@ export default function Offer() {
 
     if (response.status === 200) {
       console.log("Offer sent!");
+      navigate("/orders");
     } else {
       console.log("error at products, didn't return 200");
     }

@@ -4,7 +4,7 @@ import api from "../../api";
 import JwtHelper from "../../utils/jwt.helper";
 import FormatHelper from "../../utils/format.helper";
 import "./styles.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Card, TextField, Button } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -14,6 +14,7 @@ import "filepond/dist/filepond.min.css";
 
 export default function OrderRegistration() {
   const { getToken } = useAuth();
+  const navigate = useNavigate();
   const [orderForm, setOrderForm] = useState({
     name: "",
     price: "",
@@ -55,9 +56,9 @@ export default function OrderRegistration() {
     const response = await api.orders.postOrder(order);
 
     if (response.status === 200) {
-      console.log(response.data);
       await postPayment(response.data.orderId);
       console.log("Order uploaded!");
+      navigate("/orders");
     } else {
       console.log("error at products, didn't return 200");
     }
