@@ -26,6 +26,7 @@ import "filepond/dist/filepond.min.css";
 import JwtHelper from "../../utils/jwt.helper";
 import moment from "moment";
 import DefaultImage from "../../images/defaultProductImage.png";
+import ConfirmationDialog from "../../components/ConfirmationDialog";
 
 export default function UserOrders() {
   const { getToken } = useAuth();
@@ -34,6 +35,7 @@ export default function UserOrders() {
   const [isLoadingOrder, setLoadingOrder] = useState(true);
   const [order, setOrder] = useState();
   const [isJobActive, setIsJobActive] = useState();
+
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = async (id) => {
@@ -76,6 +78,7 @@ export default function UserOrders() {
     const response = await api.orders.getDisplayOrder(id);
 
     if (response.status === 200) {
+      console.log(response.data);
       setOrder(response.data);
       console.log("Order returned!");
     } else {
@@ -109,6 +112,19 @@ export default function UserOrders() {
       </div>
     );
   }
+
+  const removeOrder = async () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    const response = await api.orders.removeOrder(jwtUserId, order.id);
+
+    if (response.status === 200) {
+      console.log("Order removed!");
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+    setLoadingOrders(false);
+  };
 
   return (
     <div className="flexContainer">
@@ -166,7 +182,7 @@ export default function UserOrders() {
                         <TableCell component="th" scope="row">
                           {order.name}
                         </TableCell>
-                        <TableCell align="left">{order.description}%</TableCell>
+                        <TableCell align="left">{order.description}</TableCell>
                         <TableCell align="left">
                           {moment(order.created).format("YYYY-MM-DD")}
                         </TableCell>
@@ -249,43 +265,53 @@ export default function UserOrders() {
               </div>
 
               {isJobActive ? (
-                <Button
-                  sx={{
-                    color: "#fff",
-                    "&:hover": {
+                <div>
+                  <Button
+                    sx={{
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "#30475E",
+                        color: "#F05454",
+                      },
                       backgroundColor: "#30475E",
-                      color: "#F05454",
-                    },
-                    backgroundColor: "#30475E",
-                    marginTop: 5,
-                    width: 400,
-                  }}
-                  component={Link}
-                  to={`/user-offers/${order.id}`}
-                  state={{ name: order.name }}
-                >
-                  <Typography>Offers</Typography>
-                </Button>
+                      marginTop: 5,
+                      width: 400,
+                    }}
+                    component={Link}
+                    to={`/job-progress/${order.id}`}
+                  >
+                    <Typography>Progress</Typography>
+                  </Button>
+                </div>
               ) : (
-                <div></div>
+                <div>
+                  <Button
+                    sx={{
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "#30475E",
+                        color: "#F05454",
+                      },
+                      backgroundColor: "#30475E",
+                      marginTop: 5,
+                      width: 400,
+                    }}
+                    component={Link}
+                    to={`/user-offers/${order.id}`}
+                    state={{ name: order.name }}
+                  >
+                    <Typography>Offers</Typography>
+                  </Button>
+                  <ConfirmationDialog
+                    buttonText="Remove"
+                    mainText="Order will be removed"
+                    questionText="Are you sure?"
+                    agreeText="Yes"
+                    disagreeText="No"
+                    action={removeOrder}
+                  />
+                </div>
               )}
-
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#30475E",
-                    color: "#F05454",
-                  },
-                  backgroundColor: "#30475E",
-                  marginTop: 5,
-                  width: 400,
-                }}
-                component={Link}
-                to={`/job-progress/${order.id}`}
-              >
-                <Typography>Progress</Typography>
-              </Button>
             </div>
           </Box>
         )}
