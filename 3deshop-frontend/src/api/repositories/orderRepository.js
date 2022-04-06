@@ -56,4 +56,7 @@ export default (axios) => ({
   async removeOrder(userId, orderId) {
     return axios.get(`/order/remove-order/${userId}/${orderId}`);
   },
+  async isOrderOwner(userId, orderId) {
+    return axios.get(`/order/is-order-owner/${userId}/${orderId}`);
+  },
 });

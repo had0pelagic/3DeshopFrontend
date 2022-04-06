@@ -4,6 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import ViewInArIcon from "@mui/icons-material/ViewInAr";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -15,31 +16,10 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
-const settings = ["Profile", "Dashboard"];
 const menuItems = [
-  {
-    title: "Home",
-    url: "/",
-  },
-  {
-    title: "Register",
-    url: "/register",
-  },
-  {
-    title: "Login",
-    url: "/login",
-  },
   {
     title: "Products",
     url: "/products",
-  },
-  {
-    title: "Upload product",
-    url: "/upload-product",
-  },
-  {
-    title: "Orders",
-    url: "/orders",
   },
 ];
 
@@ -113,18 +93,20 @@ const ResponsiveAppBar = () => {
           }}
         >
           {menuItems.map((item) => (
-            <MenuItem key={item.title} onClick={handleCloseNavMenu}>
-              <Button
-                component={Link}
-                to={item.url}
-                style={{
-                  color: "black",
-                }}
-              >
-                {item.title}
-              </Button>
+            <MenuItem key={item.title} component={Link} to={item.url}>
+              <Typography>{item.title}</Typography>
             </MenuItem>
           ))}
+
+          {username ? (
+            <div style={{ display: "flex" }}>
+              <MenuItem key={"Orders"} component={Link} to={"/orders"}>
+                <Typography>Orders</Typography>
+              </MenuItem>
+            </div>
+          ) : (
+            <div></div>
+          )}
         </Menu>
       </Box>
     );
@@ -141,55 +123,62 @@ const ResponsiveAppBar = () => {
           },
         }}
       >
-        {menuItems.map((item, index) => (
-          <Button
-            key={index}
-            component={Link}
-            to={item.url}
-            style={{
-              color: "white",
-            }}
-          >
-            {item.title}
-          </Button>
+        {menuItems.map((item) => (
+          <MenuItem key={item.title} component={Link} to={item.url}>
+            <Typography>{item.title}</Typography>
+          </MenuItem>
         ))}
+
+        {username ? (
+          <div style={{ display: "flex" }}>
+            <MenuItem key={"Orders"} component={Link} to={"/orders"}>
+              <Typography>Orders</Typography>
+            </MenuItem>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </Box>
     );
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: "#262A53" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
             variant="h6"
             noWrap
-            component="div"
             sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+            component={Link}
+            to={`/`}
           >
-            LOGO
+            <ViewInArIcon sx={{ fontSize: 50, color: "white" }} />
           </Typography>
           <Drawer />
           <Typography
             variant="h6"
             noWrap
-            component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            component={Link}
+            to={`/`}
           >
-            LOGO
+            <ViewInArIcon sx={{ fontSize: 50, color: "white" }} />
           </Typography>
           <NavItems />
-          {username && (
+          {username ? (
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
+              <Tooltip title="User">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
                     alt="Avatar"
                     src="https://w7.pngwing.com/pngs/605/198/png-transparent-computer-icons-avatar-avatar-web-design-heroes-development.png"
                   />
+                  <Typography style={{ marginLeft: 20, color: "white" }}>
+                    {username}
+                  </Typography>
                 </IconButton>
               </Tooltip>
-              <Typography>{username}</Typography>
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
@@ -206,57 +195,56 @@ const ResponsiveAppBar = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-                <MenuItem>
-                  <Button
-                    key={"Account"}
-                    component={Link}
-                    to={`/account/${id}`}
-                  >
-                    Account
-                  </Button>
+                <MenuItem
+                  key={"Account"}
+                  component={Link}
+                  to={`/account/${id}`}
+                >
+                  <Typography> My account</Typography>
                 </MenuItem>
-                <MenuItem>
-                  <Button
-                    key={"Bought products"}
-                    component={Link}
-                    to={`/user-downloads/${id}`}
-                  >
-                    Bought products
-                  </Button>
+
+                <MenuItem
+                  key={"Bought products"}
+                  component={Link}
+                  to={`/user-downloads/${id}`}
+                >
+                  <Typography>My bought products</Typography>
                 </MenuItem>
-                <MenuItem>
-                  <Button
-                    key={"User orders"}
-                    component={Link}
-                    to={`/user-orders/${id}`}
-                  >
-                    User orders
-                  </Button>
+
+                <MenuItem
+                  key={"User orders"}
+                  component={Link}
+                  to={`/user-orders/${id}`}
+                >
+                  <Typography>My orders</Typography>
                 </MenuItem>
-                <MenuItem>
-                  <Button key={"User jobs"} component={Link} to={`/user-jobs`}>
-                    User jobs
-                  </Button>
+
+                <MenuItem key={"User jobs"} component={Link} to={`/user-jobs`}>
+                  <Typography>My jobs</Typography>
                 </MenuItem>
-                <MenuItem>
-                  <Button
-                    key={"Change password"}
-                    component={Link}
-                    to={`/change-password/${id}`}
-                  >
-                    Change password
-                  </Button>
+
+                <MenuItem
+                  key={"Change password"}
+                  component={Link}
+                  to={`/change-password/${id}`}
+                >
+                  <Typography>Change password</Typography>
                 </MenuItem>
-                <MenuItem key={"Logout"} onClick={handleCloseUserMenu}>
-                  <Button onClick={handleLogout}>Logout</Button>
+
+                <MenuItem key={"Logout"} onClick={handleLogout}>
+                  <Typography>Logout</Typography>
                 </MenuItem>
               </Menu>
             </Box>
+          ) : (
+            <div style={{ display: "flex" }}>
+              <MenuItem key={"Login"} component={Link} to={"/login"}>
+                <Typography>Login</Typography>
+              </MenuItem>
+              <MenuItem key={"Register"} component={Link} to={"/register"}>
+                <Typography>Register</Typography>
+              </MenuItem>
+            </div>
           )}
         </Toolbar>
       </Container>

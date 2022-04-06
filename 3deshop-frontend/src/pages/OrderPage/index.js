@@ -24,15 +24,20 @@ import api from "../../api";
 import "filepond/dist/filepond.min.css";
 import moment from "moment";
 import DefaultImage from "../../images/defaultProductImage.png";
+import { useAuth } from "../../hooks/useAuth";
+import JwtHelper from "../../utils/jwt.helper";
 
 export default function Orders() {
+  const { getToken } = useAuth();
   const [orders, setOrders] = useState([]);
   const [isLoadingOrders, setLoadingOrders] = useState(true);
   const [isLoadingOrder, setLoadingOrder] = useState(true);
   const [order, setOrder] = useState();
   const [open, setOpen] = useState(false);
+  const [isOrderOwner, setIsOrderOwner] = useState();
   const handleOpen = async (id) => {
     await getDisplayOrder(id);
+    await checkIfOrderOwner(id);
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
@@ -40,6 +45,20 @@ export default function Orders() {
   useEffect(async () => {
     await getOrders();
   }, []);
+
+  const checkIfOrderOwner = async (id) => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    const response = await api.orders.isOrderOwner(jwtUserId, id);
+
+    if (response.status === 200) {
+      setIsOrderOwner(response.data);
+      console.log("(Is order owner) request complete!");
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+    setLoadingOrders(false);
+  };
 
   const getOrders = async () => {
     const response = await api.orders.getInactiveOrders();
@@ -227,23 +246,27 @@ export default function Orders() {
                   Completion till: {order.completeTill}
                 </Typography>
               </div>
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
+              {isOrderOwner ? (
+                <div></div>
+              ) : (
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
                     backgroundColor: "#30475E",
-                    color: "#F05454",
-                  },
-                  backgroundColor: "#30475E",
-                  marginTop: 5,
-                  width: 400,
-                }}
-                component={Link}
-                to={`/offer/${order.id}`}
-                state={{ name: order.name }}
-              >
-                <Typography>Offer</Typography>
-              </Button>
+                    marginTop: 5,
+                    width: 400,
+                  }}
+                  component={Link}
+                  to={`/offer/${order.id}`}
+                  state={{ name: order.name }}
+                >
+                  <Typography>Offer</Typography>
+                </Button>
+              )}
             </div>
           </Box>
         )}

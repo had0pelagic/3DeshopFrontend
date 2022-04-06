@@ -17,7 +17,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
 import "filepond/dist/filepond.min.css";
@@ -28,6 +28,7 @@ import moment from "moment";
 export default function UserOffers() {
   const { id } = useParams();
   const { getToken } = useAuth();
+  const navigate = useNavigate();
   const [offers, setOffers] = useState([]);
   const [isLoadingOffers, setLoadingOffers] = useState(true);
   const [isLoadingOffer, setLoadingOffer] = useState(true);
@@ -74,6 +75,7 @@ export default function UserOffers() {
 
     if (response.status === 200) {
       console.log("Offer has been approved!");
+      navigate(`/user-orders/${jwtUserId}`);
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -86,6 +88,7 @@ export default function UserOffers() {
 
     if (response.status === 200) {
       console.log("Offer has been declined!");
+      navigate(`/user-orders/${jwtUserId}`); //go back to user orders
     } else {
       console.log("error at products, didn't return 200");
     }
