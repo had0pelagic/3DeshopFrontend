@@ -4,6 +4,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useAuth } from "../../hooks/useAuth";
 import api from "../../api";
+import { Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const { onLogin } = useAuth();
@@ -55,6 +57,11 @@ export default function Login() {
         value={state.password}
         onChange={handleChange}
       />
+      <div style={{ marginTop: 10 }}>
+        <Typography component={Link} to={"/register"}>
+          No account? Join today!
+        </Typography>
+      </div>
       <div className="mt40">
         <Button variant="contained" onClick={handleSubmitClick}>
           Login

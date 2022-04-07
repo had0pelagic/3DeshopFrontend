@@ -13,6 +13,7 @@ import api from "../../api";
 import DownloadHelper from "../../utils/download.helper";
 import JwtHelper from "../../utils/jwt.helper";
 import { useAuth } from "../../hooks/useAuth";
+import moment from "moment";
 import Loader from "../../components/Loader";
 
 export default function OrderDownload() {
@@ -33,6 +34,7 @@ export default function OrderDownload() {
       const files = response.data.map((file) => {
         return DownloadHelper.getFileData(file);
       });
+      console.log(response.data);
       setFiles(files);
     } else {
       console.log("error at products, didn't return 200");
@@ -51,6 +53,7 @@ export default function OrderDownload() {
               <TableHead>
                 <TableRow>
                   <TableCell>Name</TableCell>
+                  <TableCell>Date</TableCell>
                   <TableCell align="left"></TableCell>
                 </TableRow>
               </TableHead>
@@ -65,6 +68,9 @@ export default function OrderDownload() {
                   >
                     <TableCell component="th" scope="row">
                       {file.filename + " "}
+                    </TableCell>
+                    <TableCell align="left">
+                      {moment(file.date).format("YYYY-MM-DD h:mm:ss a")}
                     </TableCell>
                     <TableCell align="left">
                       <a

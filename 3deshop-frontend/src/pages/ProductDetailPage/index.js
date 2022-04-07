@@ -80,6 +80,7 @@ export default function ProductDetails() {
     if (response.status === 200) {
       console.log("payment sent!");
       handleClose();
+      window.location.reload();
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -90,6 +91,7 @@ export default function ProductDetails() {
 
     if (response.status === 200) {
       console.log("Comment added");
+      window.location.reload();
     } else {
       console.log("error at products, didn't return 200");
     }

@@ -255,6 +255,7 @@ export default function UserJobs() {
                   <TableCell align="left">Creation date</TableCell>
                   <TableCell align="left">Status</TableCell>
                   <TableCell align="left">Completed</TableCell>
+                  <TableCell align="left">Request for changes</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -279,6 +280,9 @@ export default function UserJobs() {
                     </TableCell>
                     <TableCell align="left">
                       {job.progress === 100 ? "Yes" : "No"}
+                    </TableCell>
+                    <TableCell align="left">
+                      {job.needChanges ? "Yes" : "No"}
                     </TableCell>
                   </TableRow>
                 ))}

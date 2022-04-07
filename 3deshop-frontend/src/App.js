@@ -136,14 +136,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/products"
-            element={
-              <ProtectedRoute>
-                <Layout page={<Products />} />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/products" element={<Layout page={<Products />} />} />
         </Routes>
       </AuthProvider>
     </Router>

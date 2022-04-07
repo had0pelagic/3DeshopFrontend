@@ -246,27 +246,23 @@ export default function Orders() {
                   Completion till: {order.completeTill}
                 </Typography>
               </div>
-              {isOrderOwner ? (
-                <div></div>
-              ) : (
-                <Button
-                  sx={{
-                    color: "#fff",
-                    "&:hover": {
-                      backgroundColor: "#30475E",
-                      color: "#F05454",
-                    },
+              {isOrderOwner?(<div></div>):(<Button
+                sx={{
+                  color: "#fff",
+                  "&:hover": {
                     backgroundColor: "#30475E",
-                    marginTop: 5,
-                    width: 400,
-                  }}
-                  component={Link}
-                  to={`/offer/${order.id}`}
-                  state={{ name: order.name }}
-                >
-                  <Typography>Offer</Typography>
-                </Button>
-              )}
+                    color: "#F05454",
+                  },
+                  backgroundColor: "#30475E",
+                  marginTop: 5,
+                  width: 400,
+                }}
+                component={Link}
+                to={`/offer/${order.id}`}
+                state={{ name: order.name }}
+              >
+                <Typography>Offer</Typography>
+              </Button>)}
             </div>
           </Box>
         )}

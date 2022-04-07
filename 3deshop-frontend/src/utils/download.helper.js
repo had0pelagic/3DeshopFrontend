@@ -11,11 +11,13 @@ const DownloadHelper = {
     // };
 
     const name = response.fileDownloadName;
+    const date = response.lastModified;
     const blob = new Blob([response.fileContents]);
     const url = URL.createObjectURL(blob);
     return {
       url: url,
       filename: name,
+      date: date,
     };
   },
 };

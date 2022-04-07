@@ -73,6 +73,18 @@ export default function JobProgress() {
     setLoading(false);
   };
 
+  const requestJobChanges = async () => {
+    const response = await api.orders.requestJobChanges(id);
+
+    if (response.status === 200) {
+      console.log("Request for changes has been sent!");
+      window.location.reload();
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+    setLoading(false);
+  };
+
   const approveOrder = async () => {
     const token = getToken().data;
     const jwtUserId = JwtHelper.getUser(token).userId;
@@ -143,7 +155,9 @@ export default function JobProgress() {
                         </TableCell>
                         <TableCell align="left">{progress.progress}%</TableCell>
                         <TableCell align="left">
-                          {moment(progress.created).format("YYYY-MM-DD")}
+                          {moment(progress.created).format(
+                            "YYYY-MM-DD h:mm:ss a"
+                          )}
                         </TableCell>
                         <TableCell align="left">{progress.userId}</TableCell>
                       </TableRow>
@@ -250,6 +264,7 @@ export default function JobProgress() {
                     marginTop: 5,
                     width: 400,
                   }}
+                  onClick={() => requestJobChanges()}
                 >
                   <Typography style={{ fontSize: 30 }}>
                     Ask for changes
