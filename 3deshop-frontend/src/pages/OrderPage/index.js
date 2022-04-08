@@ -30,6 +30,7 @@ import JwtHelper from "../../utils/jwt.helper";
 export default function Orders() {
   const { getToken } = useAuth();
   const [orders, setOrders] = useState([]);
+  const [userId, setUserId] = useState();
   const [isLoadingOrders, setLoadingOrders] = useState(true);
   const [isLoadingOrder, setLoadingOrder] = useState(true);
   const [order, setOrder] = useState();
@@ -65,11 +66,19 @@ export default function Orders() {
 
     if (response.status === 200) {
       setOrders(response.data);
+      getUserId();
+      console.log(response.data);
       console.log("Orders returned!");
     } else {
       console.log("error at products, didn't return 200");
     }
     setLoadingOrders(false);
+  };
+
+  const getUserId = () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    setUserId(jwtUserId);
   };
 
   const getDisplayOrder = async (id) => {
@@ -151,6 +160,7 @@ export default function Orders() {
                       <TableCell>Name</TableCell>
                       <TableCell align="left">Description</TableCell>
                       <TableCell align="left">Creation date</TableCell>
+                      <TableCell align="left">Created by</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -171,6 +181,25 @@ export default function Orders() {
                         <TableCell align="left">
                           {moment(order.created).format("YYYY-MM-DD")}
                         </TableCell>
+                        {order.user.id === userId ? (
+                          <TableCell align="left">
+                            <Typography
+                              component={Link}
+                              to={`/user-orders/${order.user.id}`}
+                            >
+                              My order
+                            </Typography>
+                          </TableCell>
+                        ) : (
+                          <TableCell align="left">
+                            <Typography
+                              component={Link}
+                              to={`/user-profile/${order.user.id}`}
+                            >
+                              {order.user.username}
+                            </Typography>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                   </TableBody>
@@ -246,23 +275,27 @@ export default function Orders() {
                   Completion till: {order.completeTill}
                 </Typography>
               </div>
-              {isOrderOwner?(<div></div>):(<Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
+              {isOrderOwner ? (
+                <div></div>
+              ) : (
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
                     backgroundColor: "#30475E",
-                    color: "#F05454",
-                  },
-                  backgroundColor: "#30475E",
-                  marginTop: 5,
-                  width: 400,
-                }}
-                component={Link}
-                to={`/offer/${order.id}`}
-                state={{ name: order.name }}
-              >
-                <Typography>Offer</Typography>
-              </Button>)}
+                    marginTop: 5,
+                    width: 400,
+                  }}
+                  component={Link}
+                  to={`/offer/${order.id}`}
+                  state={{ name: order.name }}
+                >
+                  <Typography>Offer</Typography>
+                </Button>
+              )}
             </div>
           </Box>
         )}

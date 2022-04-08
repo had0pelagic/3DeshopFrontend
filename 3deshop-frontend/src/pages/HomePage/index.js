@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import React from "react";
 import "./styles.css";
 
 export default function Home() {
