@@ -19,6 +19,7 @@ export default function Login() {
     if (response.status === 200) {
       await onLogin(response.data);
     } else {
+      alert(response.errorMessage);
       console.log("error at products, didn't return 200");
     }
   };

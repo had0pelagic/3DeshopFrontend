@@ -10,11 +10,13 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
+import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import api from "../../api";
 
 const menuItems = [
   {
@@ -27,10 +29,11 @@ const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [username, setUsername] = useState("");
+  const [userBalance, setUserBalance] = useState();
   const [id, setId] = useState("");
   const { onLogout, getToken } = useAuth();
 
-  useEffect(() => {
+  useEffect(async () => {
     if (getToken().data !== null) {
       const token = getToken().data;
       const jwt = JwtHelper.getUser(token);
@@ -38,6 +41,22 @@ const ResponsiveAppBar = () => {
       setId(jwt.userId);
     }
   }, [getToken]);
+
+  const getUserBalance = async (id) => {
+    const response = await api.balance.getUserBalance(id);
+
+    if (response.status === 200) {
+      setUserBalance(response.data.balance);
+    } else {
+      console.log("error at getting user balance, didn't return 200");
+    }
+  };
+
+  useEffect(async () => {
+    const token = getToken().data;
+    const jwt = JwtHelper.getUser(token);
+    await getUserBalance(jwt.userId);
+  }, [getUserBalance]);
 
   const handleLogout = () => {
     onLogout();
@@ -168,8 +187,19 @@ const ResponsiveAppBar = () => {
           <NavItems />
           {username ? (
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="User">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  flex: 1,
+                }}
+              >
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ p: 0, marginLeft: 5 }}
+                >
                   <Avatar
                     alt="Avatar"
                     src="https://w7.pngwing.com/pngs/605/198/png-transparent-computer-icons-avatar-avatar-web-design-heroes-development.png"
@@ -178,7 +208,18 @@ const ResponsiveAppBar = () => {
                     {username}
                   </Typography>
                 </IconButton>
-              </Tooltip>
+
+                <IconButton
+                  component={Link}
+                  to={`/user-balance-top-up/${id}`}
+                  sx={{ p: 0, marginLeft: 5 }}
+                >
+                  <Typography style={{ color: "white" }}>
+                    {userBalance} coins
+                  </Typography>
+                  <AddIcon sx={{ color: "white" }}></AddIcon>
+                </IconButton>
+              </div>
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"

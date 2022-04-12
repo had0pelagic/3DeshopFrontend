@@ -71,14 +71,11 @@ export default function ProductDetails() {
     const request = {
       userId: jwtUserId,
       productId: id,
-      sender: state.cardNumber,
-      amount: productDetails.about.price,
-      currencyCode: "EUR",
     };
-    const response = await api.payments.postPayment(request);
+    const response = await api.balance.payForProduct(request);
 
     if (response.status === 200) {
-      console.log("payment sent!");
+      console.log("product bought!");
       handleClose();
       window.location.reload();
     } else {

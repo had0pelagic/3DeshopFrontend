@@ -1,8 +1,4 @@
-import { useAuth } from "../../hooks/useAuth";
-
 const ErrorHandling = async (apiError, path = "Not given") => {
-  const { onLogout } = useAuth();
-
   let error = {
     errorMessage: getErrorMessage(apiError),
     status: getStatus(apiError),
@@ -10,14 +6,12 @@ const ErrorHandling = async (apiError, path = "Not given") => {
     error: apiError,
   };
 
-  if (error.status === 401) {
-    // localStorage.removeItem("userToken");
-    onLogout();
-    // return signOut();
+  if (error.status === 400) {
+    error.errorMessage = apiError.response.data.Message;
   }
 
   console.log("Error", error);
-
+  
   return error;
 };
 

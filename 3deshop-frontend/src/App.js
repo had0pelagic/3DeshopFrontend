@@ -23,6 +23,7 @@ import UserJobs from "./pages/UserJobPage";
 import JobProgress from "./pages/JobProgressPage";
 import OrderDownload from "./pages/OrderDownloadPage";
 import ErrorProvider from "./components/ErrorProvider";
+import UserBalanceTopUp from "./pages/UserBalanceTopUpPage";
 
 export default function App() {
   return (
@@ -36,6 +37,14 @@ export default function App() {
             <Route
               path="/account/:id"
               element={<Layout page={<Account />} />}
+            />
+            <Route
+              path="/user-balance-top-up/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout page={<UserBalanceTopUp />} />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/order-download/:id"

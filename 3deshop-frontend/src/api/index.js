@@ -10,6 +10,7 @@ import errorHandling from "./utils/errorHandling";
 import responseHandling from "./utils/responseHandling";
 import fileRepository from "./repositories/fileRepository";
 import orderRepository from "./repositories/orderRepository";
+import balanceRepository from "./repositories/balanceRepository";
 
 const axiosInstance = axios.create({
   baseURL: config.baseUrl,
@@ -148,6 +149,7 @@ const repositories = {
   products: productRepository(axiosMiddleware),
   comments: commentRepository(axiosMiddleware),
   productDetails: productDetailRepository(axiosMiddleware),
+  balance: balanceRepository(axiosMiddleware),
   payments: paymentRepository(axiosPaymentMiddleware),
   files: fileRepository(axiosMiddleware),
   orders: orderRepository(axiosMiddleware),

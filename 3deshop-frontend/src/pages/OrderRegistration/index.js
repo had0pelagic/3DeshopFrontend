@@ -56,7 +56,7 @@ export default function OrderRegistration() {
     const response = await api.orders.postOrder(order);
 
     if (response.status === 200) {
-      await postPayment(response.data.orderId);
+      // await postPayment(response.data.orderId);
       console.log("Order uploaded!");
       navigate("/orders");
     } else {
