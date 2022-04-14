@@ -92,6 +92,7 @@ export default function JobProgress() {
 
     if (response.status === 200) {
       console.log("Order has been approved!");
+      window.location.reload();
     } else {
       console.log("error at products, didn't return 200");
     }

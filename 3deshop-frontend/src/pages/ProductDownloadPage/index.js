@@ -8,6 +8,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Box,
 } from "@mui/material";
 import api from "../../api";
 import DownloadHelper from "../../utils/download.helper";
@@ -29,10 +30,13 @@ export default function ProductDownload() {
     const token = getToken().data;
     const jwtUserId = JwtHelper.getUser(token).userId;
     const response = await api.files.getFiles(id, jwtUserId);
+
     if (response.status === 200) {
+      // console.log(response.data);
       const files = response.data.map((file) => {
         return DownloadHelper.getFileData(file);
       });
+      // console.log(files);
       setFiles(files);
     } else {
       console.log("error at products, didn't return 200");

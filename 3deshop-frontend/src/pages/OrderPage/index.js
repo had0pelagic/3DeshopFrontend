@@ -272,7 +272,8 @@ export default function Orders() {
                   {order.price}$
                 </Typography>
                 <Typography sx={{ fontSize: 20 }} variant="h5">
-                  Completion till: {order.completeTill}
+                  Completion till:{" "}
+                  {moment(order.completeTill).format("YYYY-MM-DD")}
                 </Typography>
               </div>
               {isOrderOwner ? (

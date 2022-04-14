@@ -20,7 +20,6 @@ export default function OrderRegistration() {
     price: "",
     description: "",
     completeTill: new Date(),
-    cardNumber: "",
   });
   const [images, setImages] = useState([]);
 
@@ -56,7 +55,6 @@ export default function OrderRegistration() {
     const response = await api.orders.postOrder(order);
 
     if (response.status === 200) {
-      // await postPayment(response.data.orderId);
       console.log("Order uploaded!");
       navigate("/orders");
     } else {
@@ -142,18 +140,6 @@ export default function OrderRegistration() {
             )}
           />
         </LocalizationProvider>
-      </div>
-      <div className="flexContainer">
-        <TextField
-          required
-          id="cardNumber"
-          label="Card number"
-          variant="standard"
-          margin="normal"
-          defaultValue={orderForm.cardNumber}
-          onChange={handleChange}
-          sx={{ width: 300 }}
-        />
       </div>
       <div style={{ marginTop: 60 }}>
         <TextField
