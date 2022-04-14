@@ -120,7 +120,7 @@ export default function UserOrders() {
 
     if (response.status === 200) {
       console.log("Order removed!");
-      window.location.reload()
+      window.location.reload();
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -187,7 +187,7 @@ export default function UserOrders() {
                         <TableCell align="left">
                           {moment(order.created).format("YYYY-MM-DD")}
                         </TableCell>
-                        <TableCell align="left">{order.price}$</TableCell>
+                        <TableCell align="left">{order.price} C</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -257,7 +257,7 @@ export default function UserOrders() {
               />
               <div className="priceDateContainer">
                 <Typography sx={{ fontSize: 20 }} variant="h5" gutterBottom>
-                  {order.price}$
+                  {order.price} C
                 </Typography>
                 <Typography sx={{ fontSize: 20 }} variant="h5">
                   Completion till:{" "}

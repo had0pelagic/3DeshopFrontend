@@ -160,7 +160,14 @@ export default function JobProgress() {
                             "YYYY-MM-DD h:mm:ss a"
                           )}
                         </TableCell>
-                        <TableCell align="left">{progress.userId}</TableCell>
+                        <TableCell align="left">
+                          <Typography
+                            component={Link}
+                            to={`/user-profile/${progress.user.id}`}
+                          >
+                            {progress.user.username}
+                          </Typography>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

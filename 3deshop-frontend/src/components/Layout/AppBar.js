@@ -215,7 +215,7 @@ const ResponsiveAppBar = () => {
                   sx={{ p: 0, marginLeft: 5 }}
                 >
                   <Typography style={{ color: "white" }}>
-                    {userBalance} coins
+                    {userBalance} C
                   </Typography>
                   <AddIcon sx={{ color: "white" }}></AddIcon>
                 </IconButton>

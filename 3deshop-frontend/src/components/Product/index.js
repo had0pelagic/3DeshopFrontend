@@ -78,7 +78,7 @@ export default function Product({
         {price === 0 ? (
           <Typography style={{ fontSize: 20 }}>Free</Typography>
         ) : (
-          <Typography style={{ fontSize: 20 }}>{price}$</Typography>
+          <Typography style={{ fontSize: 20 }}>{price} C</Typography>
         )}
       </CardActions>
     </Card>

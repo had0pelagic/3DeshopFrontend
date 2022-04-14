@@ -194,7 +194,7 @@ export default function ProductDetails() {
                   }}
                 >
                   <Typography style={{ fontSize: 20 }}>
-                    {productDetails.about.price}$
+                    {productDetails.about.price} C
                   </Typography>
                 </div>
               </div>
