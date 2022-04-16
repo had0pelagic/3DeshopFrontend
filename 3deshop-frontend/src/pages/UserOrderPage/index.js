@@ -100,7 +100,6 @@ export default function UserOrders() {
                     height="300"
                     image={`${image.format},${image.data}`}
                     key={index}
-                    style={{ backgroundColor: "Red" }}
                   />
                 ))}
               </Carousel>

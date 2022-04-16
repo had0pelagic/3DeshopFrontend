@@ -24,6 +24,7 @@ import JobProgress from "./pages/JobProgressPage";
 import OrderDownload from "./pages/OrderDownloadPage";
 import ErrorProvider from "./components/ErrorProvider";
 import UserBalanceTopUp from "./pages/UserBalanceTopUpPage";
+import UserProfile from "./pages/UserProfile";
 
 export default function App() {
   return (
@@ -37,6 +38,14 @@ export default function App() {
             <Route
               path="/account/:id"
               element={<Layout page={<Account />} />}
+            />
+            <Route
+              path="/user-profile/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout page={<UserProfile />} />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/user-balance-top-up/:id"

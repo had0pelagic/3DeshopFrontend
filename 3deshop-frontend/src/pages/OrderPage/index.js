@@ -106,7 +106,6 @@ export default function Orders() {
                     height="300"
                     image={`${image.format},${image.data}`}
                     key={index}
-                    style={{ backgroundColor: "Red" }}
                   />
                 ))}
               </Carousel>
@@ -269,7 +268,7 @@ export default function Orders() {
               />
               <div className="priceDateContainer">
                 <Typography sx={{ fontSize: 20 }} variant="h5" gutterBottom>
-                  {order.price}$
+                  {order.price} C
                 </Typography>
                 <Typography sx={{ fontSize: 20 }} variant="h5">
                   Completion till:{" "}

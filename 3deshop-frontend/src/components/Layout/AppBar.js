@@ -29,6 +29,7 @@ const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [username, setUsername] = useState("");
+  const [user, setUser] = useState();
   const [userBalance, setUserBalance] = useState();
   const [id, setId] = useState("");
   const { onLogout, getToken } = useAuth();
@@ -39,8 +40,19 @@ const ResponsiveAppBar = () => {
       const jwt = JwtHelper.getUser(token);
       setUsername(jwt.username);
       setId(jwt.userId);
+      await getUser(jwt.userId);
     }
   }, [getToken]);
+
+  const getUser = async (id) => {
+    const response = await api.users.getUser(id);
+
+    if (response.status === 200) {
+      setUser(response.data);
+    } else {
+      console.log("error at account page, didn't return 200");
+    }
+  };
 
   const getUserBalance = async (id) => {
     const response = await api.balance.getUserBalance(id);
@@ -185,7 +197,7 @@ const ResponsiveAppBar = () => {
             <ViewInArIcon sx={{ fontSize: 50, color: "white" }} />
           </Typography>
           <NavItems />
-          {username ? (
+          {user ? (
             <Box sx={{ flexGrow: 0 }}>
               <div
                 style={{
@@ -202,7 +214,8 @@ const ResponsiveAppBar = () => {
                 >
                   <Avatar
                     alt="Avatar"
-                    src="https://w7.pngwing.com/pngs/605/198/png-transparent-computer-icons-avatar-avatar-web-design-heroes-development.png"
+                    src={`${user.image.format},${user.image.data}`}
+                    // src="https://w7.pngwing.com/pngs/605/198/png-transparent-computer-icons-avatar-avatar-web-design-heroes-development.png"
                   />
                   <Typography style={{ marginLeft: 20, color: "white" }}>
                     {username}

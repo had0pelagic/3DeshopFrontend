@@ -75,7 +75,6 @@ export default function ProductDetails() {
     const response = await api.balance.payForProduct(request);
 
     if (response.status === 200) {
-      console.log("product bought!");
       handleClose();
       window.location.reload();
     } else {
@@ -87,7 +86,6 @@ export default function ProductDetails() {
     const response = await api.comments.postComment(productId, userId, comment);
 
     if (response.status === 200) {
-      console.log("Comment added");
       window.location.reload();
     } else {
       console.log("error at products, didn't return 200");
@@ -101,7 +99,6 @@ export default function ProductDetails() {
       ...prevState,
       [id]: value,
     }));
-    console.log(value);
   };
 
   const handleSubmitClick = async (e) => {
@@ -123,7 +120,6 @@ export default function ProductDetails() {
       ...prevState,
       [id]: value,
     }));
-    console.log(value);
   };
 
   function ProductImages() {
@@ -183,19 +179,10 @@ export default function ProductDetails() {
                     onClick={handleOpen}
                   >
                     <ShoppingCartIcon sx={{ fontSize: 50 }} />
+                    <Typography style={{ fontSize: 20, marginLeft: 10 }}>
+                      {productDetails.about.price} C
+                    </Typography>
                   </Button>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    flex: 1,
-                  }}
-                >
-                  <Typography style={{ fontSize: 20 }}>
-                    {productDetails.about.price} C
-                  </Typography>
                 </div>
               </div>
             )}
@@ -253,17 +240,31 @@ export default function ProductDetails() {
             <Typography sx={{ fontSize: 30 }} color="text.primary" gutterBottom>
               {productDetails.about.name}
             </Typography>
-            {productDetails.categories.map((category, index) => (
-              <Typography
-                variant="h7"
-                sx={{ mb: 1.5 }}
-                color="text.secondary"
-                key={index}
-              >
-                {category.name + " "}
-              </Typography>
-            ))}
-            <Typography variant="h6" component="div" sx={{ inlineSize: 800 }}>
+            <Typography
+              variant="h6"
+              component={Link}
+              style={{ textDecoration: "none", color: "black" }}
+              to={`/user-profile/${productDetails.user.id}`}
+            >
+              by: {productDetails.user.username}
+            </Typography>
+            <div style={{ paddingTop: 10 }}>
+              {productDetails.categories.map((category, index) => (
+                <Typography
+                  variant="h7"
+                  sx={{ mb: 1.5 }}
+                  color="text.secondary"
+                  key={index}
+                >
+                  {category.name + " "}
+                </Typography>
+              ))}
+            </div>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ inlineSize: 800, paddingTop: 2 }}
+            >
               {productDetails.about.description}
             </Typography>
           </CardContent>
@@ -299,13 +300,19 @@ export default function ProductDetails() {
               >
                 <Grid item sx={{ marginTop: "8px", marginBottom: "10px" }}>
                   <Avatar
-                    src={comment.user.imageURL}
                     alt="User avatar"
+                    src={`${comment.user.image.format},${comment.user.image.data}`}
                     sx={{ width: 60, height: 60 }}
                   />
                 </Grid>
                 <Grid item xs={8}>
-                  <Typography>{comment.user.username}</Typography>
+                  <Typography
+                    component={Link}
+                    style={{ textDecoration: "none", color: "black" }}
+                    to={`/user-profile/${comment.user.id}`}
+                  >
+                    {comment.user.username}
+                  </Typography>
                   <Typography
                     style={{ wordWrap: "break-word", paddingTop: 15 }}
                   >

@@ -4,7 +4,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import "./style.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DefaultImage from "../../images/defaultProductImage.png";
 
 export default function Product({
@@ -65,9 +65,7 @@ export default function Product({
           </Typography>
         ))}
 
-        <Typography sx={{ color: "black" }} component="div">
-          by {creator}
-        </Typography>
+        <Typography sx={{ color: "black" }}>by {creator.username}</Typography>
       </CardContent>
       <CardActions
         sx={{

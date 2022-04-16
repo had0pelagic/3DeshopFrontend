@@ -192,7 +192,6 @@ export default function UserJobs() {
                     height="300"
                     image={`${image.format},${image.data}`}
                     key={index}
-                    style={{ backgroundColor: "Red" }}
                   />
                 ))}
               </Carousel>

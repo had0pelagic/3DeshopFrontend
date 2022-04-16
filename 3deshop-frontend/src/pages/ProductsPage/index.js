@@ -16,6 +16,7 @@ export default function Products() {
   const getProducts = async () => {
     const products = await api.products.getProducts();
     if (products.status === 200) {
+      console.log(products.data)
       setProducts(products.data);
     } else {
       console.log("error at products, didn't return 200");
@@ -50,7 +51,7 @@ export default function Products() {
             id={product.id}
             name={product.name}
             categories={product.categories}
-            creator={product.username}
+            creator={product.user}
             price={product.price}
             image={product.image}
           />
