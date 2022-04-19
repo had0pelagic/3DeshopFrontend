@@ -255,6 +255,7 @@ export default function UserJobs() {
                   <TableCell align="left">Status</TableCell>
                   <TableCell align="left">Completed</TableCell>
                   <TableCell align="left">Request for changes</TableCell>
+                  <TableCell align="left">Owner</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -282,6 +283,14 @@ export default function UserJobs() {
                     </TableCell>
                     <TableCell align="left">
                       {job.needChanges ? "Yes" : "No"}
+                    </TableCell>
+                    <TableCell align="left">
+                      <Typography
+                        component={Link}
+                        to={`/user-profile/${job.order.user.id}`}
+                      >
+                        {job.order.user.username}
+                      </Typography>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -340,7 +349,6 @@ export default function UserJobs() {
                   Offer completion date: {offerFormattedDate}
                 </Typography>
               </div>
-              {console.log(job)}
               {job.progress === 100 ? (
                 <div></div>
               ) : (
@@ -382,6 +390,22 @@ export default function UserJobs() {
                   </Button>
                 </div>
               )}
+              <Button
+                sx={{
+                  color: "#fff",
+                  "&:hover": {
+                    backgroundColor: "#30475E",
+                    color: "#F05454",
+                  },
+                  backgroundColor: "#30475E",
+                  marginTop: 5,
+                  width: 400,
+                }}
+                component={Link}
+                to={`/job-progress/${job.order.id}`}
+              >
+                <Typography>Progress</Typography>
+              </Button>
             </div>
           </Box>
         )}

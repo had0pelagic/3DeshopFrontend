@@ -12,6 +12,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TextField,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
@@ -26,14 +27,25 @@ export default function JobProgress() {
   const { id } = useParams();
   const { getToken } = useAuth();
   const [isLoading, setLoading] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
   const [progresses, setProgresses] = useState([]);
   const [order, setOrder] = useState();
   const [lastProgressValue, setLastProgressValue] = useState(0);
+  const [requestForm, setRequestForm] = useState({
+    orderId: "",
+    description: "",
+  });
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = async () => {
     setOpen(true);
+  };
+
+  const [openRequestModal, setRequestModal] = useState(false);
+  const handleRequestModalClose = () => setOpen(false);
+  const handleRequestModalOpen = async () => {
+    setRequestModal(true);
   };
 
   useEffect(async () => {
@@ -62,10 +74,15 @@ export default function JobProgress() {
   };
 
   const getOrder = async () => {
-    const response = await api.orders.getOrder(id);
+    const response = await api.orders.getDisplayOrder(id);
 
     if (response.status === 200) {
       setOrder(response.data);
+      const token = getToken().data;
+      const jwtUserId = JwtHelper.getUser(token).userId;
+      if (jwtUserId === response.data.user.id) {
+        setIsOwner(true);
+      }
       console.log("Progress returned!");
     } else {
       console.log("error at products, didn't return 200");
@@ -74,7 +91,9 @@ export default function JobProgress() {
   };
 
   const requestJobChanges = async () => {
-    const response = await api.orders.requestJobChanges(id);
+    const request = requestForm;
+    request.orderId = id;
+    const response = await api.orders.requestJobChanges(request);
 
     if (response.status === 200) {
       console.log("Request for changes has been sent!");
@@ -113,6 +132,15 @@ export default function JobProgress() {
       </Box>
     );
   }
+
+  const handleChange = async (e) => {
+    const { id, value } = e.target;
+
+    setRequestForm((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+  };
 
   return (
     <div className="flexContainer">
@@ -174,7 +202,7 @@ export default function JobProgress() {
                 </Table>
               </TableContainer>
               <div>
-                {lastProgressValue === 100 ? (
+                {isOwner && lastProgressValue === 100 ? (
                   <div>
                     <Button
                       sx={{
@@ -272,7 +300,7 @@ export default function JobProgress() {
                     marginTop: 5,
                     width: 400,
                   }}
-                  onClick={() => requestJobChanges()}
+                  onClick={() => handleRequestModalOpen()}
                 >
                   <Typography style={{ fontSize: 30 }}>
                     Ask for changes
@@ -280,6 +308,61 @@ export default function JobProgress() {
                 </Button>
               </div>
             )}
+          </div>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openRequestModal}
+        onClose={handleRequestModalClose}
+        BackdropProps={{
+          timeout: 600,
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            backgroundColor: "#DDDDDD",
+            border: "1px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <div className="flexContainer">
+            <Typography variant="h4">Change request</Typography>
+            <div style={{ marginTop: 60 }}>
+              <TextField
+                id="description"
+                label="description"
+                variant="outlined"
+                multiline
+                rows={4}
+                sx={{
+                  width: 300,
+                }}
+                value={requestForm.description}
+                onChange={handleChange}
+              />
+            </div>
+            <Button
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+                marginTop: 5,
+                width: 300,
+              }}
+              onClick={() => requestJobChanges()}
+            >
+              <Typography style={{ fontSize: 20 }}>Send request</Typography>
+            </Button>
           </div>
         </Box>
       </Modal>

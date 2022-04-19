@@ -53,8 +53,8 @@ export default (axios) => ({
   async isOrderJobActive(orderId) {
     return axios.get(`/order/is-order-job-active/${orderId}`);
   },
-  async requestJobChanges(orderId) {
-    return axios.get(`/order/request-job-changes/${orderId}`);
+  async requestJobChanges(data) {
+    return axios.post(`/order/request-job-changes`, data);
   },
   async removeOrder(userId, orderId) {
     return axios.get(`/order/remove-order/${userId}/${orderId}`);
