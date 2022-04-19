@@ -88,7 +88,7 @@ export default function UserOffers() {
 
     if (response.status === 200) {
       console.log("Offer has been declined!");
-      navigate(`/user-orders/${jwtUserId}`); //go back to user orders
+      navigate(`/user-orders/${jwtUserId}`);
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -135,7 +135,14 @@ export default function UserOffers() {
                     <TableCell align="left">
                       {moment(offer.completeTill).format("YYYY-MM-DD")}
                     </TableCell>
-                    <TableCell align="left">{offer.userId}</TableCell>
+                    <TableCell align="left">
+                      <Typography
+                        component={Link}
+                        to={`/user-profile/${offer.user.id}`}
+                      >
+                        {offer.user.username}
+                      </Typography>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
