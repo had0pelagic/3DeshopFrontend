@@ -66,8 +66,10 @@ const ResponsiveAppBar = () => {
 
   useEffect(async () => {
     const token = getToken().data;
-    const jwt = JwtHelper.getUser(token);
-    await getUserBalance(jwt.userId);
+    if (token !== null) {
+      const jwt = JwtHelper.getUser(token);
+      await getUserBalance(jwt.userId);
+    }
   }, [getUserBalance]);
 
   const handleLogout = () => {
@@ -215,7 +217,6 @@ const ResponsiveAppBar = () => {
                   <Avatar
                     alt="Avatar"
                     src={`${user.image.format},${user.image.data}`}
-                    // src="https://w7.pngwing.com/pngs/605/198/png-transparent-computer-icons-avatar-avatar-web-design-heroes-development.png"
                   />
                   <Typography style={{ marginLeft: 20, color: "white" }}>
                     {username}

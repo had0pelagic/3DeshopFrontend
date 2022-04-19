@@ -4,6 +4,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import api from "../../api";
 import { useAuth } from "../../hooks/useAuth";
+import { Avatar, Container, Typography } from "@mui/material";
+import { ImportContactsOutlined } from "@material-ui/icons";
 
 export default function Register() {
   const user = {
@@ -124,74 +126,181 @@ export default function Register() {
 
   return (
     <div className="flexContainer">
-      <TextField
-        required
-        id="username"
-        label="Username"
-        variant="standard"
-        margin="normal"
-        value={state.username}
-        onChange={handleChange}
-        error={!error.username ? false : true}
-        helperText={error.username}
-      />
-      <TextField
-        required
-        id="firstName"
-        label="First name"
-        variant="standard"
-        margin="normal"
-        value={state.firstName}
-        onChange={handleChange}
-      />
-      <TextField
-        required
-        id="lastName"
-        label="Last name"
-        variant="standard"
-        margin="normal"
-        value={state.lastName}
-        onChange={handleChange}
-      />
-      <TextField
-        required
-        id="email"
-        label="Email"
-        variant="standard"
-        margin="normal"
-        type="email"
-        value={state.email}
-        onChange={handleChange}
-      />
-      <TextField
-        required
-        id="password"
-        label="Password"
-        variant="standard"
-        margin="normal"
-        type="password"
-        value={state.password}
-        onChange={handleChange}
-        error={!error.password ? false : true}
-        helperText={error.password}
-      />
-      <TextField
-        required
-        id="confirmPassword"
-        label="Confirm password"
-        variant="standard"
-        margin="normal"
-        type="password"
-        value={state.confirmPassword}
-        onChange={handleChange}
-        error={!error.confirmPassword ? false : true}
-        helperText={error.confirmPassword}
-      />
-      <div className="mt40">
-        <Button variant="contained" onClick={handleSubmitClick}>
-          Register
-        </Button>
-      </div>
+      <Container component="main" maxWidth="xs">
+        <div
+          style={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar style={{ marginTop: 10 }}>
+            <ImportContactsOutlined />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign Up
+          </Typography>
+          <form
+            style={{
+              width: "100%",
+              marginTop: 10,
+            }}
+            noValidate
+          >
+            <TextField
+              required
+              id="username"
+              label="Username"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              value={state.username}
+              onChange={handleChange}
+              error={!error.username ? false : true}
+              helperText={error.username}
+            />
+            <TextField
+              required
+              id="firstName"
+              label="First name"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              value={state.firstName}
+              onChange={handleChange}
+            />
+            <TextField
+              required
+              id="lastName"
+              label="Last name"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              value={state.lastName}
+              onChange={handleChange}
+            />
+            <TextField
+              required
+              id="email"
+              label="Email"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              type="email"
+              value={state.email}
+              onChange={handleChange}
+            />
+            <TextField
+              required
+              id="password"
+              label="Password"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              type="password"
+              value={state.password}
+              onChange={handleChange}
+              error={!error.password ? false : true}
+              helperText={error.password}
+            />
+            <TextField
+              required
+              id="confirmPassword"
+              label="Confirm password"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              type="password"
+              value={state.confirmPassword}
+              onChange={handleChange}
+              error={!error.confirmPassword ? false : true}
+              helperText={error.confirmPassword}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 5 }}
+              onClick={handleSubmitClick}
+            >
+              Sign Up
+            </Button>
+          </form>
+        </div>
+      </Container>
     </div>
+
+    // <div className="flexContainer">
+    //   <TextField
+    //     required
+    //     id="username"
+    //     label="Username"
+    //     variant="standard"
+    //     margin="normal"
+    //     value={state.username}
+    //     onChange={handleChange}
+    //     error={!error.username ? false : true}
+    //     helperText={error.username}
+    //   />
+    //   <TextField
+    //     required
+    //     id="firstName"
+    //     label="First name"
+    //     variant="standard"
+    //     margin="normal"
+    //     value={state.firstName}
+    //     onChange={handleChange}
+    //   />
+    //   <TextField
+    //     required
+    //     id="lastName"
+    //     label="Last name"
+    //     variant="standard"
+    //     margin="normal"
+    //     value={state.lastName}
+    //     onChange={handleChange}
+    //   />
+    //   <TextField
+    //     required
+    //     id="email"
+    //     label="Email"
+    //     variant="standard"
+    //     margin="normal"
+    //     type="email"
+    //     value={state.email}
+    //     onChange={handleChange}
+    //   />
+    //   <TextField
+    //     required
+    //     id="password"
+    //     label="Password"
+    //     variant="standard"
+    //     margin="normal"
+    //     type="password"
+    //     value={state.password}
+    //     onChange={handleChange}
+    //     error={!error.password ? false : true}
+    //     helperText={error.password}
+    //   />
+    //   <TextField
+    //     required
+    //     id="confirmPassword"
+    //     label="Confirm password"
+    //     variant="standard"
+    //     margin="normal"
+    //     type="password"
+    //     value={state.confirmPassword}
+    //     onChange={handleChange}
+    //     error={!error.confirmPassword ? false : true}
+    //     helperText={error.confirmPassword}
+    //   />
+    //   <div className="mt40">
+    //     <Button variant="contained" onClick={handleSubmitClick}>
+    //       Register
+    //     </Button>
+    //   </div>
+    // </div>
   );
 }

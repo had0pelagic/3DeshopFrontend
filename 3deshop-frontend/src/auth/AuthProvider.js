@@ -46,6 +46,7 @@ const AuthProvider = ({ children }) => {
     const origin = location.state?.from?.pathname || "/";
     removeTokenFromStorage();
     setToken(null);
+    window.location.reload();
     navigate(origin);
   };
 
