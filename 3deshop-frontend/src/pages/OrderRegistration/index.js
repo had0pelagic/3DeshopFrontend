@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import api from "../../api";
 import JwtHelper from "../../utils/jwt.helper";
 import FormatHelper from "../../utils/format.helper";
 import "./styles.css";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { Card, TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import {
+  Card,
+  TextField,
+  Button,
+  Container,
+  Avatar,
+  Typography,
+} from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -96,87 +104,112 @@ export default function OrderRegistration() {
   };
 
   return (
-    <div className="flexContainer p50">
-      <h1>Order registration</h1>
-      <div style={{ marginTop: 20 }}>
-        <TextField
-          required
-          id="name"
-          label="Name"
-          variant="standard"
-          margin="normal"
-          value={orderForm.name}
-          onChange={handleChange}
-          sx={{ width: 300 }}
-        />
-      </div>
-      <div style={{ marginTop: 20 }}>
-        <TextField
-          required
-          id="price"
-          label="Price"
-          variant="standard"
-          margin="normal"
-          value={orderForm.price}
-          onChange={handleChange}
-          sx={{ width: 300 }}
-        />
-      </div>
-      <div style={{ marginTop: 60 }}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DesktopDatePicker
-            required
-            id="completeTill"
-            label="completeTill"
-            value={orderForm.completeTill}
-            minDate={new Date("2021-01-01")}
-            onChange={(orderForm) =>
-              handleChange({
-                target: { value: orderForm, id: "completeTill" },
-              })
-            }
-            renderInput={(params) => (
-              <TextField {...params} sx={{ width: 300 }} />
-            )}
-          />
-        </LocalizationProvider>
-      </div>
-      <div style={{ marginTop: 60 }}>
-        <TextField
-          id="description"
-          label="description"
-          variant="outlined"
-          multiline
-          rows={4}
-          sx={{
-            width: 300,
+    <div className="flexContainer">
+      <Container component="main" maxWidth="xs">
+        <div
+          style={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
-          value={orderForm.description}
-          onChange={handleChange}
-        />
-      </div>
-      <Card
-        sx={{
-          backgroundColor: "white",
-          border: 2,
-          width: 500,
-          height: 200,
-          mt: 5,
-        }}
-      >
-        <FilePond
-          stylePanelLayout="compact"
-          files={images}
-          allowMultiple={true}
-          onupdatefiles={setImages}
-          labelIdle='Drag & Drop your images or <span class="filepond--label-action">Browse</span>'
-        />
-      </Card>
-      <div style={{ marginTop: 40 }}>
-        <Button variant="contained" onClick={handleSubmitClick}>
-          Register
-        </Button>
-      </div>
+        >
+          <Avatar style={{ marginTop: 10 }}>
+            <FileUploadIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Order upload
+          </Typography>
+          <form
+            style={{
+              width: "100%",
+              marginTop: 10,
+            }}
+            noValidate
+          >
+            <TextField
+              required
+              id="name"
+              label="Order name"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              value={orderForm.name}
+              onChange={handleChange}
+              sx={{ width: 396, mt: 3 }}
+            />
+            <TextField
+              required
+              id="price"
+              label="Price"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              value={orderForm.price}
+              onChange={handleChange}
+              sx={{ width: 396, mt: 3 }}
+            />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DesktopDatePicker
+                required
+                id="completeTill"
+                label="Completion till"
+                value={orderForm.completeTill}
+                minDate={new Date("2021-01-01")}
+                onChange={(orderForm) =>
+                  handleChange({
+                    target: { value: orderForm, id: "completeTill" },
+                  })
+                }
+                renderInput={(params) => (
+                  <TextField {...params} sx={{ width: 396, mt: 3 }} />
+                )}
+              />
+            </LocalizationProvider>
+            <TextField
+              id="description"
+              label="description"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={4}
+              value={orderForm.description}
+              onChange={handleChange}
+              sx={{ width: 396, mt: 3 }}
+            />
+            <Card
+              sx={{
+                backgroundColor: "white",
+                border: 0,
+                width: 396,
+                height: "100%",
+                mt: 3,
+              }}
+            >
+              <FilePond
+                stylePanelLayout="compact"
+                files={images}
+                allowMultiple={true}
+                onupdatefiles={setImages}
+                credits
+                labelIdle='Drag & Drop your images or <span class="filepond--label-action">Browse</span>'
+              />
+            </Card>
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 30 }}
+              onClick={handleSubmitClick}
+            >
+              Upload order
+            </Button>
+          </form>
+        </div>
+      </Container>
     </div>
   );
 }

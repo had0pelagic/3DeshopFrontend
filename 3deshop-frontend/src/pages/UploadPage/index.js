@@ -3,6 +3,7 @@ import "./styles.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import api from "../../api";
 import {
   Checkbox,
@@ -12,7 +13,10 @@ import {
   FormLabel,
   Card,
   Typography,
+  Avatar,
+  Container,
 } from "@mui/material";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import JwtHelper from "../../utils/jwt.helper";
 import FormatHelper from "../../utils/format.helper";
 import { FilePond } from "react-filepond";
@@ -20,6 +24,7 @@ import "filepond/dist/filepond.min.css";
 
 export default function Upload() {
   const { getToken } = useAuth();
+  const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [images, setImages] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -98,6 +103,7 @@ export default function Upload() {
     const response = await api.products.uploadProduct(product);
 
     if (response.status === 200) {
+      navigate("/products");
       console.log("Product uploaded!");
     } else {
       console.log("error at products, didn't return 200");
@@ -146,91 +152,141 @@ export default function Upload() {
 
   return (
     <div className="flexContainer">
-      <TextField
-        required
-        id="name"
-        label="Name"
-        variant="standard"
-        margin="normal"
-        value={productAbout.name}
-        onChange={handleAboutChange}
-      />
+      <Container component="main" maxWidth="xs">
+        <div
+          style={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar style={{ marginTop: 10 }}>
+            <FileUploadIcon />
+          </Avatar>
 
-      <TextField
-        type="text"
-        required
-        id="price"
-        label="Price"
-        variant="standard"
-        margin="normal"
-        value={productAbout.price}
-        onChange={handleAboutChange}
-      />
+          <Typography component="h1" variant="h5">
+            Product upload
+          </Typography>
 
-      <TextField
-        required
-        id="description"
-        label="Description"
-        variant="standard"
-        margin="normal"
-        multiline
-        rows={8}
-        value={productAbout.description}
-        onChange={handleAboutChange}
-      />
+          <form
+            style={{
+              width: "100%",
+              marginTop: 10,
+            }}
+            noValidate
+          >
+            <TextField
+              required
+              id="name"
+              label="Name"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              value={productAbout.name}
+              onChange={handleAboutChange}
+              sx={{ width: 400 }}
+            />
 
-      <SpecificationCheckBoxes
-        handleSpecificationChange={handleSpecificationChange}
-        specificationState={productSpecification}
-      />
+            <TextField
+              type="text"
+              required
+              id="price"
+              label="Price"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              value={productAbout.price}
+              onChange={handleAboutChange}
+              sx={{ width: 400 }}
+            />
 
-      <Card
-        sx={{ bgcolor: "white", border: 2, width: 800, height: 400, mt: 5 }}
-      >
-        <Typography>Upload file...</Typography>
-        <FilePond
-          stylePanelLayout="compact"
-          files={files}
-          allowMultiple={true}
-          onupdatefiles={setFiles}
-          labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
-        />
-      </Card>
+            <TextField
+              required
+              id="description"
+              label="Description"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={8}
+              value={productAbout.description}
+              onChange={handleAboutChange}
+              sx={{ width: 400 }}
+            />
 
-      <Card
-        sx={{ bgcolor: "white", border: 2, width: 800, height: 400, mt: 5 }}
-      >
-        <Typography>Upload images...</Typography>
-        <FilePond
-          stylePanelLayout="compact"
-          files={images}
-          allowMultiple={true}
-          onupdatefiles={setImages}
-          labelIdle='Drag & Drop your images or <span class="filepond--label-action">Browse</span>'
-        />
-      </Card>
+            <SpecificationCheckBoxes
+              handleSpecificationChange={handleSpecificationChange}
+              specificationState={productSpecification}
+            />
 
-      <ProductCheckBoxes
-        items={categories}
-        handleChange={handleCheckboxes}
-        idName="categories"
-        label="Categories:"
-        state={setSelectedCategories}
-      />
+            <Card
+              sx={{
+                bgcolor: "white",
+                border: 0,
+                width: 400,
+                height: "100%",
+                mt: 5,
+              }}
+            >
+              <FilePond
+                stylePanelLayout="compact"
+                files={files}
+                allowMultiple={true}
+                onupdatefiles={setFiles}
+                credits
+                labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+              />
+            </Card>
 
-      <ProductCheckBoxes
-        items={formats}
-        handleChange={handleCheckboxes}
-        idName="formats"
-        label="Formats:"
-        state={setSelectedFormats}
-      />
+            <Card
+              sx={{
+                bgcolor: "white",
+                border: 0,
+                width: 400,
+                height: "100%",
+                mt: 5,
+              }}
+            >
+              <FilePond
+                stylePanelLayout="compact"
+                files={images}
+                allowMultiple={true}
+                onupdatefiles={setImages}
+                credits
+                labelIdle='Drag & Drop your images or <span class="filepond--label-action">Browse</span>'
+              />
+            </Card>
 
-      <div className="mt40">
-        <Button variant="contained" onClick={handleSubmitClick}>
-          Upload
-        </Button>
-      </div>
+            <ProductCheckBoxes
+              items={categories}
+              handleChange={handleCheckboxes}
+              idName="categories"
+              label="Categories:"
+              state={setSelectedCategories}
+            />
+
+            <ProductCheckBoxes
+              items={formats}
+              handleChange={handleCheckboxes}
+              idName="formats"
+              label="Formats:"
+              state={setSelectedFormats}
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 30 }}
+              onClick={handleSubmitClick}
+            >
+              Upload product
+            </Button>
+          </form>
+        </div>
+      </Container>
     </div>
   );
 }
@@ -240,9 +296,28 @@ function SpecificationCheckBoxes({
   specificationState,
 }) {
   return (
-    <Card sx={{ mt: 5 }}>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Specifications:</FormLabel>
+    <Card sx={{ mt: 5, width: 400 }}>
+      <FormControl
+        component="fieldset"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        <FormLabel
+          component="legend"
+          sx={{
+            color: "black",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          <Typography sx={{ mt: 2, mb: 2 }}>Specifications:</Typography>
+        </FormLabel>
         <FormGroup aria-label="position" row>
           <FormControlLabel
             value="textures"
@@ -304,9 +379,28 @@ function SpecificationCheckBoxes({
 
 function ProductCheckBoxes({ items, handleChange, idName, label, state }) {
   return (
-    <Card sx={{ mt: 5 }}>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">{label}</FormLabel>
+    <Card sx={{ mt: 5, width: 400 }}>
+      <FormControl
+        component="fieldset"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        <FormLabel
+          component="legend"
+          sx={{
+            color: "black",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          <Typography sx={{ mt: 2, mb: 2 }}>{label}</Typography>
+        </FormLabel>
         <FormGroup aria-label="position" row>
           {items.map((item, index) => (
             <FormControlLabel

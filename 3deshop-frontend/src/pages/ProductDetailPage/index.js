@@ -19,11 +19,20 @@ import Box from "@mui/material/Box";
 import { useAuth } from "../../hooks/useAuth";
 import DefaultImage from "../../images/defaultProductImage.png";
 import Divider from "@mui/material/Divider";
-import { Avatar, Grid } from "@mui/material";
+import {
+  Avatar,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+} from "@mui/material";
 
 export default function ProductDetails() {
   let { id } = useParams();
   const { getToken } = useAuth();
+  const [isOwner, setIsOwner] = useState(false);
   const [productDetails, setDetails] = useState();
   const [comments, setComments] = useState();
   const [comment, setComment] = useState({
@@ -31,12 +40,12 @@ export default function ProductDetails() {
   });
   const [isLoadingDetails, setLoadingDetails] = useState(true);
   const [isLoadingComments, setLoadingComments] = useState(true);
+
   const [open, setOpen] = useState(false);
-  const [state, setState] = useState({
-    cardNumber: "",
-  });
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(async () => {
     await getProductDetails();
@@ -48,6 +57,12 @@ export default function ProductDetails() {
 
     if (response.status === 200) {
       setDetails(response.data);
+
+      const token = getToken().data;
+      const jwtUserId = JwtHelper.getUser(token).userId;
+      if (jwtUserId === response.data.user.id) {
+        setIsOwner(true);
+      }
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -90,15 +105,6 @@ export default function ProductDetails() {
     } else {
       console.log("error at products, didn't return 200");
     }
-  };
-
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-
-    setState((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
   };
 
   const handleSubmitClick = async (e) => {
@@ -186,46 +192,30 @@ export default function ProductDetails() {
                 </div>
               </div>
             )}
-            <Modal
+
+            <Dialog
               open={open}
               onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-              BackdropProps={{
-                timeout: 600,
-              }}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
             >
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  width: 400,
-                  backgroundColor: "background.paper",
-                  border: "2px solid #000",
-                  boxShadow: 24,
-                  p: 4,
-                }}
-              >
-                <div className="flexContainer">
-                  <TextField
-                    required
-                    id="cardNumber"
-                    label="Card number"
-                    variant="standard"
-                    margin="normal"
-                    defaultValue={state.cardNumber}
-                    onChange={handleChange}
-                  />
-                  <div className="mt40">
-                    <Button variant="contained" onClick={handleSubmitClick}>
-                      Purchase
-                    </Button>
-                  </div>
-                </div>
-              </Box>
-            </Modal>
+              <DialogTitle id="alert-dialog-title">
+                {"Product purchase"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {"Are you sure you want to purchase this product?"}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleSubmitClick} color="primary" autoFocus>
+                  {"Purchase"}
+                </Button>
+                <Button onClick={handleClose} color="primary">
+                  {"Decline"}
+                </Button>
+              </DialogActions>
+            </Dialog>
           </CardActions>
         </Card>
       </div>
@@ -390,7 +380,7 @@ export default function ProductDetails() {
         <Loader />
       ) : (
         <div>
-          {ProductActions()}
+          {!isOwner ? ProductActions() : <div></div>}
           {ProductComments()}
         </div>
       )}

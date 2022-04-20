@@ -93,7 +93,7 @@ export default function Account() {
               backgroundColor: "white",
               border: 2,
               width: 350,
-              height: 150,
+              height: "100%",
               marginTop: 5,
             }}
           >

@@ -462,7 +462,7 @@ export default function UserJobs() {
             </div>
             {form.progress === 100 ? (
               <div>
-                <div style={{ marginTop: 20 }}>
+                <div style={{ marginTop: 20, height: "100%" }}>
                   <FilePond
                     stylePanelLayout="compact"
                     files={files}
