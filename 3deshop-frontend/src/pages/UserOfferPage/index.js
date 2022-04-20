@@ -112,7 +112,7 @@ export default function UserOffers() {
                   <TableCell>Description</TableCell>
                   <TableCell align="left">Creation date</TableCell>
                   <TableCell align="left">Complete till</TableCell>
-                  <TableCell align="left">User id</TableCell>
+                  <TableCell align="left">User</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

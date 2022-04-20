@@ -367,7 +367,7 @@ export default function UserJobs() {
                       }}
                       onClick={abandonJob}
                     >
-                      <Typography>Abandon the job</Typography>
+                      <Typography>Abandon job</Typography>
                     </Button>
                   ) : (
                     <div></div>
