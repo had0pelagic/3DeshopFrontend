@@ -13,6 +13,11 @@ import {
   TableRow,
   Paper,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
@@ -46,6 +51,14 @@ export default function JobProgress() {
   const handleRequestModalClose = () => setOpen(false);
   const handleRequestModalOpen = async () => {
     setRequestModal(true);
+  };
+
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+  const handleConfirmationDialogOpen = () => {
+    setOpenConfirmationDialog(true);
+  };
+  const handleConfirmationDialogClose = () => {
+    setOpenConfirmationDialog(false);
   };
 
   useEffect(async () => {
@@ -285,7 +298,7 @@ export default function JobProgress() {
                     marginTop: 5,
                     width: 400,
                   }}
-                  onClick={() => approveOrder()}
+                  onClick={handleConfirmationDialogOpen}
                 >
                   <Typography style={{ fontSize: 30 }}>Approve</Typography>
                 </Button>
@@ -366,6 +379,28 @@ export default function JobProgress() {
           </div>
         </Box>
       </Modal>
+
+      <Dialog
+        open={openConfirmationDialog}
+        onClose={handleConfirmationDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Order completion"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {"Are you sure you want to approve this order and complete it?"}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => approveOrder()} color="primary" autoFocus>
+            {"Yes"}
+          </Button>
+          <Button onClick={handleConfirmationDialogClose} color="primary">
+            {"No"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

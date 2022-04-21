@@ -4,10 +4,22 @@ import api from "../../api";
 import JwtHelper from "../../utils/jwt.helper";
 import "./styles.css";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { TextField, Button } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Avatar,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import CreateIcon from "@mui/icons-material/Create";
 
 export default function Offer() {
   let { id } = useParams();
@@ -18,6 +30,15 @@ export default function Offer() {
     description: "",
     completeTill: new Date(),
   });
+
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const handleSuccessDialogOpen = () => {
+    setOpenSuccess(true);
+  };
+  const handleSuccessDialogClose = () => {
+    setOpenSuccess(false);
+    navigate("/orders");
+  };
 
   const uploadOffer = async () => {
     const token = getToken().data;
@@ -32,7 +53,7 @@ export default function Offer() {
 
     if (response.status === 200) {
       console.log("Offer sent!");
-      navigate("/orders");
+      handleSuccessDialogOpen();
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -53,47 +74,87 @@ export default function Offer() {
   };
 
   return (
-    <div
-      className="flexContainer p50"
-      style={{ marginLeft: 30, marginRight: 30 }}
-    >
-      <h1>Offer for: {state.name}</h1>
-      <div style={{ marginTop: 60 }}>
-        <TextField
-          id="description"
-          label="Note"
-          variant="outlined"
-          multiline
-          rows={4}
-          sx={{
-            width: 260,
+    <div className="flexContainer">
+      <Container component="main" maxWidth="xs">
+        <div
+          style={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
-          value={offerForm.description}
-          onChange={handleChange}
-        />
-      </div>
-      <div style={{ marginTop: 60 }}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DesktopDatePicker
-            required
-            id="completeTill"
-            label="completeTill"
-            value={offerForm.completeTill}
-            minDate={new Date("2021-01-01")}
-            onChange={(offerForm) =>
-              handleChange({
-                target: { value: offerForm, id: "completeTill" },
-              })
-            }
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </LocalizationProvider>
-      </div>
-      <div style={{ marginTop: 40 }}>
-        <Button variant="contained" onClick={handleSubmitClick}>
-          Make an offer
-        </Button>
-      </div>
+        >
+          <Avatar style={{ marginTop: 10 }}>
+            <CreateIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5" style={{ mt: 3 }}>
+            Create offer for: {state.name}
+          </Typography>
+          <form
+            style={{
+              width: "100%",
+              marginTop: 10,
+            }}
+            noValidate
+          >
+            <TextField
+              id="description"
+              label="Note"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={4}
+              sx={{
+                width: "100%",
+              }}
+              value={offerForm.description}
+              onChange={handleChange}
+            />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DesktopDatePicker
+                required
+                id="completeTill"
+                label="completeTill"
+                value={offerForm.completeTill}
+                minDate={new Date("2021-01-01")}
+                onChange={(offerForm) =>
+                  handleChange({
+                    target: { value: offerForm, id: "completeTill" },
+                  })
+                }
+                renderInput={(params) => (
+                  <TextField {...params} sx={{ width: "100%", mt: 3 }} />
+                )}
+              />
+            </LocalizationProvider>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 20 }}
+              onClick={handleSubmitClick}
+            >
+              Make an offer
+            </Button>
+          </form>
+        </div>
+      </Container>
+
+      <Dialog
+        open={openSuccess}
+        onClose={handleSuccessDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Offer has been sent!"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleSuccessDialogClose}>Ok</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

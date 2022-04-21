@@ -16,6 +16,9 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Dialog,
+  DialogTitle,
+  DialogActions,
 } from "@mui/material";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
@@ -33,11 +36,24 @@ export default function UserOffers() {
   const [isLoadingOffers, setLoadingOffers] = useState(true);
   const [isLoadingOffer, setLoadingOffer] = useState(true);
   const [offer, setOffer] = useState();
+  const [statusMessage, setStatusMessage] = useState();
+
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = async (id) => {
     await getOffer(id);
     setOpen(true);
+  };
+
+  const [openStatusDialog, setOpenStatusDialog] = useState(false);
+  const handleStatusDialogOpen = () => {
+    setOpenStatusDialog(true);
+  };
+  const handleStatusDialogClose = () => {
+    setOpenStatusDialog(false);
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    navigate(`/user-orders/${jwtUserId}`);
   };
 
   useEffect(async () => {
@@ -75,7 +91,8 @@ export default function UserOffers() {
 
     if (response.status === 200) {
       console.log("Offer has been approved!");
-      navigate(`/user-orders/${jwtUserId}`);
+      setStatusMessage("Offer has been approved!");
+      handleStatusDialogOpen();
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -88,7 +105,8 @@ export default function UserOffers() {
 
     if (response.status === 200) {
       console.log("Offer has been declined!");
-      navigate(`/user-orders/${jwtUserId}`);
+      setStatusMessage("Offer has been declined!");
+      handleStatusDialogOpen();
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -225,6 +243,18 @@ export default function UserOffers() {
           </Box>
         )}
       </Modal>
+
+      <Dialog
+        open={openStatusDialog}
+        onClose={handleStatusDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{statusMessage}</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleStatusDialogClose}>Ok</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
