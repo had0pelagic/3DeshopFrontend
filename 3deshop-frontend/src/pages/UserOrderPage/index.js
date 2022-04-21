@@ -27,6 +27,7 @@ import JwtHelper from "../../utils/jwt.helper";
 import moment from "moment";
 import DefaultImage from "../../images/defaultProductImage.png";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
+import ReactPaginate from "react-paginate";
 
 export default function UserOrders() {
   const { getToken } = useAuth();
@@ -87,6 +88,20 @@ export default function UserOrders() {
     setLoadingOrder(false);
   };
 
+  const removeOrder = async () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    const response = await api.orders.removeOrder(jwtUserId, order.id);
+
+    if (response.status === 200) {
+      console.log("Order removed!");
+      window.location.reload();
+    } else {
+      console.log("error at orders, didn't return 200");
+    }
+    setLoadingOrders(false);
+  };
+
   function OrderImages() {
     return (
       <div style={{ minWidth: 400, marginTop: 20 }}>
@@ -112,19 +127,82 @@ export default function UserOrders() {
     );
   }
 
-  const removeOrder = async () => {
-    const token = getToken().data;
-    const jwtUserId = JwtHelper.getUser(token).userId;
-    const response = await api.orders.removeOrder(jwtUserId, order.id);
+  function Items({ currentItems }) {
+    return (
+      <>
+        {currentItems && (
+          <TableContainer component={Paper} sx={{ width: "100%" }}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell align="left">Description</TableCell>
+                  <TableCell align="left">Creation date</TableCell>
+                  <TableCell align="left">Price</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {currentItems.map((order, index) => (
+                  <TableRow
+                    hover
+                    key={index}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleOpen(order.id)}
+                  >
+                    <TableCell component="th" scope="row">
+                      {order.name}
+                    </TableCell>
+                    <TableCell align="left">{order.description}</TableCell>
+                    <TableCell align="left">
+                      {moment(order.created).format("YYYY-MM-DD")}
+                    </TableCell>
+                    <TableCell align="left">{order.price} C</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </>
+    );
+  }
 
-    if (response.status === 200) {
-      console.log("Order removed!");
-      window.location.reload();
-    } else {
-      console.log("error at products, didn't return 200");
-    }
-    setLoadingOrders(false);
-  };
+  function PaginatedTable({ itemsPerPage }) {
+    const [currentItems, setCurrentItems] = useState(null);
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+
+    useEffect(() => {
+      const endOffset = itemOffset + itemsPerPage;
+      setCurrentItems(orders.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(orders.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage]);
+
+    const handlePageClick = (event) => {
+      const newOffset = (event.selected * itemsPerPage) % orders.length;
+      setItemOffset(newOffset);
+    };
+
+    return (
+      <>
+        <Items currentItems={currentItems} />
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel=" >"
+          previousLabel="< "
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          renderOnZeroPageCount={null}
+          containerClassName="pagination"
+          activeClassName="active"
+        />
+      </>
+    );
+  }
 
   return (
     <div className="flexContainer">
@@ -158,40 +236,8 @@ export default function UserOrders() {
               >
                 Add new order
               </Button>
-              <TableContainer component={Paper} sx={{ width: "100%" }}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell align="left">Description</TableCell>
-                      <TableCell align="left">Creation date</TableCell>
-                      <TableCell align="left">Price</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {orders.map((order, index) => (
-                      <TableRow
-                        hover
-                        key={index}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                          cursor: "pointer",
-                        }}
-                        onClick={() => handleOpen(order.id)}
-                      >
-                        <TableCell component="th" scope="row">
-                          {order.name}
-                        </TableCell>
-                        <TableCell align="left">{order.description}</TableCell>
-                        <TableCell align="left">
-                          {moment(order.created).format("YYYY-MM-DD")}
-                        </TableCell>
-                        <TableCell align="left">{order.price} C</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+
+              <PaginatedTable itemsPerPage={6} />
             </div>
           ) : (
             <div className="flexContainer">

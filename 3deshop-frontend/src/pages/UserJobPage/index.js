@@ -30,6 +30,7 @@ import DefaultImage from "../../images/defaultProductImage.png";
 import moment from "moment";
 import Slider from "@mui/material/Slider";
 import LinearProgress from "@mui/material/LinearProgress";
+import ReactPaginate from "react-paginate";
 
 export default function UserJobs() {
   const { getToken } = useAuth();
@@ -179,6 +180,22 @@ export default function UserJobs() {
     }
   };
 
+  const handleProgressChange = (e) => {
+    setForm((prevState) => ({
+      ...prevState,
+      ["progress"]: e.target.value,
+    }));
+  };
+
+  const handleNoteChange = (e) => {
+    const { id, value } = e.target;
+
+    setForm((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+  };
+
   function OrderImages() {
     return (
       <div style={{ minWidth: 400, marginTop: 20 }}>
@@ -219,33 +236,10 @@ export default function UserJobs() {
     );
   }
 
-  const handleProgressChange = (e) => {
-    setForm((prevState) => ({
-      ...prevState,
-      ["progress"]: e.target.value,
-    }));
-  };
-
-  const handleNoteChange = (e) => {
-    const { id, value } = e.target;
-
-    setForm((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
-  };
-
-  return (
-    <div className="flexContainer">
-      {isLoadingJobs ? (
-        <Loader />
-      ) : (
-        <div
-          className="flexContainer"
-          style={{ marginLeft: 30, marginRight: 30 }}
-        >
-          <h1>Active jobs</h1>
-
+  function Items({ currentItems }) {
+    return (
+      <>
+        {currentItems && (
           <TableContainer component={Paper} sx={{ width: "100%" }}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -259,7 +253,7 @@ export default function UserJobs() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {jobs.map((job, index) => (
+                {currentItems.map((job, index) => (
                   <TableRow
                     hover
                     key={index}
@@ -297,6 +291,56 @@ export default function UserJobs() {
               </TableBody>
             </Table>
           </TableContainer>
+        )}
+      </>
+    );
+  }
+
+  function PaginatedTable({ itemsPerPage }) {
+    const [currentItems, setCurrentItems] = useState(null);
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+
+    useEffect(() => {
+      const endOffset = itemOffset + itemsPerPage;
+      setCurrentItems(jobs.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(jobs.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage]);
+
+    const handlePageClick = (event) => {
+      const newOffset = (event.selected * itemsPerPage) % jobs.length;
+      setItemOffset(newOffset);
+    };
+
+    return (
+      <>
+        <Items currentItems={currentItems} />
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel=" >"
+          previousLabel="< "
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          renderOnZeroPageCount={null}
+          containerClassName="pagination"
+          activeClassName="active"
+        />
+      </>
+    );
+  }
+
+  return (
+    <div className="flexContainer">
+      {isLoadingJobs ? (
+        <Loader />
+      ) : (
+        <div
+          className="flexContainer"
+          style={{ marginLeft: 30, marginRight: 30 }}
+        >
+          <h1>Active jobs</h1>
+          <PaginatedTable itemsPerPage={2} />
         </div>
       )}
 
