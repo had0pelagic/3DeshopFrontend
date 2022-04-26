@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../api";
+import { Avatar, Container, Typography } from "@mui/material";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 export default function UserBalanceTopUp() {
   const { getToken } = useAuth();
@@ -24,6 +26,7 @@ export default function UserBalanceTopUp() {
 
     if (response.status === 200) {
       console.log("balance update!");
+      alert("Credits were added to user account")
       const origin = location.state?.from?.pathname || "/";
       navigate(origin);
     } else {
@@ -47,20 +50,51 @@ export default function UserBalanceTopUp() {
 
   return (
     <div className="flexContainer">
-      <TextField
-        required
-        id="amount"
-        label="Amount"
-        variant="standard"
-        margin="normal"
-        value={form.amount}
-        onChange={handleChange}
-      />
-      <div className="mt40">
-        <Button variant="contained" onClick={handleSubmitClick}>
-          Add to balance
-        </Button>
-      </div>
+      <Container component="main" maxWidth="xs">
+        <div
+          style={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar style={{ marginTop: 10 }}>
+            <AttachMoneyIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Add credits to balance
+          </Typography>
+          <form
+            style={{
+              width: "100%",
+              marginTop: 10,
+            }}
+            noValidate
+          >
+            <TextField
+              required
+              id="amount"
+              label="Amount"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              value={form.amount}
+              onChange={handleChange}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 15 }}
+              onClick={handleSubmitClick}
+            >
+              Add to balance
+            </Button>
+          </form>
+        </div>
+      </Container>
     </div>
   );
 }

@@ -94,6 +94,7 @@ export default function UserOrders() {
     const response = await api.orders.removeOrder(jwtUserId, order.id);
 
     if (response.status === 200) {
+      alert("Order has been removed")
       console.log("Order removed!");
       window.location.reload();
     } else {

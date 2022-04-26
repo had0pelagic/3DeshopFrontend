@@ -25,6 +25,7 @@ import OrderDownload from "./pages/OrderDownloadPage";
 import ErrorProvider from "./components/ErrorProvider";
 import UserBalanceTopUp from "./pages/UserBalanceTopUpPage";
 import UserProfile from "./pages/UserProfile";
+import UserProducts from "./pages/UserProductPage";
 
 export default function App() {
   return (
@@ -92,6 +93,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <Layout page={<UserOffers />} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user-products/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout page={<UserProducts />} />
                 </ProtectedRoute>
               }
             />

@@ -89,6 +89,7 @@ export default function UserJobs() {
 
     if (response.status === 200) {
       console.log("Job has been updated!");
+      alert("Progress has been set");
       handleProgressClose();
       window.location.reload();
     } else {
@@ -129,7 +130,7 @@ export default function UserJobs() {
     const response = await api.orders.setJobCompletion(request);
 
     if (response.status === 200) {
-      console.log("Job has been completed!");
+      alert("Job has been completed");
       handleProgressClose();
       window.location.reload();
     } else {
@@ -340,7 +341,7 @@ export default function UserJobs() {
           style={{ marginLeft: 30, marginRight: 30 }}
         >
           <h1>Active jobs</h1>
-          <PaginatedTable itemsPerPage={2} />
+          <PaginatedTable itemsPerPage={6} />
         </div>
       )}
 

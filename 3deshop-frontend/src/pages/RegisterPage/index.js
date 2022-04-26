@@ -40,6 +40,7 @@ export default function Register() {
         password: state.password,
       });
       if (loginResponse.status === 200) {
+        alert("User has been registered")
         await onLogin(loginResponse.data);
       } else {
         console.log("Error, while trying to login after registration");

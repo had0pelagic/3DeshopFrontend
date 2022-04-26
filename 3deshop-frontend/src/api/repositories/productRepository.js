@@ -2,6 +2,9 @@ export default (axios) => ({
   async getProducts() {
     return axios.get("/product");
   },
+  async getUserProducts(id) {
+    return axios.get(`/product/user-products/${id}`);
+  },
   async getProduct(id) {
     return axios.get(`/product/${id}`);
   },

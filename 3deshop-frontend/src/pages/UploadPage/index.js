@@ -103,6 +103,7 @@ export default function Upload() {
     const response = await api.products.uploadProduct(product);
 
     if (response.status === 200) {
+      alert("Product has been uploaded");
       navigate("/products");
       console.log("Product uploaded!");
     } else {
