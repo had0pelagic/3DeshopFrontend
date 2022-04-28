@@ -43,7 +43,7 @@ export default function UserProfile() {
             <CardContent>
               <CardMedia
                 component="img"
-                sx={{ height: 200, width: 200, border: 1 }}
+                sx={{ height: 200, width: 200, border: 0 }}
                 image={`${user.image.format},${user.image.data}`}
               />
               <Typography variant="h3" sx={{ mt: 1 }}>
@@ -52,7 +52,7 @@ export default function UserProfile() {
               <Typography variant="h4" sx={{ mt: 1 }}>
                 {user.firstName} {user.lastName}
               </Typography>
-              <Typography variant="h5" sx={{ mt: 1 }}>
+              {/* <Typography variant="h5" sx={{ mt: 1 }}>
                 0 reputation
               </Typography>
               <Typography variant="h5" sx={{ mt: 1 }}>
@@ -60,7 +60,7 @@ export default function UserProfile() {
               </Typography>
               <Typography variant="h5" sx={{ mt: 1 }}>
                 completed job count
-              </Typography>
+              </Typography> */}
             </CardContent>
           </Card>
         </div>

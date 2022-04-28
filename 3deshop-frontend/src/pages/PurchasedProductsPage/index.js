@@ -97,19 +97,27 @@ export default function PurchasedProducts() {
       </ListItem>
     );
   }
+
   return (
     <div className="flexContainer mt40">
+      {console.log(products)}
       {isLoading ? (
         <Loader />
       ) : (
         <div>
-          <List
-            sx={{ width: "150%", maxWidth: 800, bgcolor: "background.paper" }}
-          >
-            {products.map((product, index) => (
-              <PurchasedProduct product={product} key={index} />
-            ))}
-          </List>
+          {products && products.length > 0 ? (
+            <List
+              sx={{ width: "150%", maxWidth: 800, bgcolor: "background.paper" }}
+            >
+              {products.map((product, index) => (
+                <PurchasedProduct product={product} key={index} />
+              ))}
+            </List>
+          ) : (
+            <div className="flexContainer">
+              <h2>No bought products</h2>
+            </div>
+          )}
         </div>
       )}
     </div>

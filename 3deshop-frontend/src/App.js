@@ -38,7 +38,11 @@ export default function App() {
             <Route path="/login" element={<Layout page={<Login />} />} />
             <Route
               path="/account/:id"
-              element={<Layout page={<Account />} />}
+              element={
+                <ProtectedRoute>
+                  <Layout page={<Account />} />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/user-profile/:id"

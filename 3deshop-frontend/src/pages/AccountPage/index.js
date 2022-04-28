@@ -17,21 +17,14 @@ export default function Account() {
     await getUser();
   }, []);
 
-  function encodeData(array) {
-    return Promise.all(
-      array.map(async (item) => {
-        try {
-          const base64 = await FormatHelper.encodeBase64(item.file);
-          return {
-            name: item.filename,
-            data: base64.bytes,
-            format: base64.type,
-          };
-        } catch (error) {
-          throw error;
-        }
-      })
-    );
+  async function encodeData(item) {
+    const imageFile = item[0];
+    const base64 = await FormatHelper.encodeBase64(imageFile.file);
+    return {
+      name: imageFile.filename,
+      data: base64.bytes,
+      format: base64.type,
+    };
   }
 
   const getUser = async () => {
@@ -46,12 +39,13 @@ export default function Account() {
   };
 
   const updateUser = async () => {
-    const imageData = await encodeData(image);
+    console.log(image)
+    const imageData = image == null ? null : await encodeData(image);
     const request = {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
-      image: imageData[0],
+      image: imageData,
       email: user.email,
     };
     const response = await api.users.userUpdate(id, request);

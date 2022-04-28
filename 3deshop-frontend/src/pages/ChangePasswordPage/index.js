@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
 import api from "../../api";
 
@@ -10,13 +10,18 @@ export default function ChangePassword() {
   };
   let { id } = useParams();
   const [state, setState] = useState(passwordObj);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const updatePassword = async () => {
     const response = await api.users.userChangePassword(id, state);
+
     if (response.status === 200) {
-      console.log("Password has been changed");
+      alert("Password has been changed");
+      const origin = location.state?.from?.pathname || "/";
+      navigate(origin);
     } else {
-      console.log("error at account page, didn't return 200");
+      console.log("error at password change page, didn't return 200");
     }
   };
 
@@ -26,7 +31,7 @@ export default function ChangePassword() {
   };
 
   const handleChange = (e) => {
-    console.log(e.target)
+    console.log(e.target);
     const { id, value } = e.target;
     setState((prevState) => ({
       ...prevState,
