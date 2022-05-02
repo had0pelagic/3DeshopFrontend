@@ -146,8 +146,6 @@ export default function Upload() {
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    console.log(files);
-    console.log(images);
     await uploadProduct();
   };
 

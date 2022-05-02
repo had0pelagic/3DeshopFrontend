@@ -26,6 +26,7 @@ import ErrorProvider from "./components/ErrorProvider";
 import UserBalanceTopUp from "./pages/UserBalanceTopUpPage";
 import UserProfile from "./pages/UserProfile";
 import UserProducts from "./pages/UserProductPage";
+import ProductsSearch from "./pages/ProductsSearchPage";
 
 export default function App() {
   return (
@@ -36,6 +37,10 @@ export default function App() {
             <Route path="/" element={<Layout page={<Home />} />} />
             <Route path="/register" element={<Layout page={<Register />} />} />
             <Route path="/login" element={<Layout page={<Login />} />} />
+            <Route
+              path="/products/:name"
+              element={<Layout page={<ProductsSearch />} />}
+            />
             <Route
               path="/account/:id"
               element={
