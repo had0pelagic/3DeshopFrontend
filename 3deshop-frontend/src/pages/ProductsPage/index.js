@@ -5,7 +5,7 @@ import api from "../../api";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Tiles } from "@rebass/layout";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
   Checkbox,
@@ -19,17 +19,53 @@ import {
 
 export default function Products() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [productSearchName, setProductSearchName] = useState("");
-
-  const specifications = ["Textures", "Rig", "Animation", "Materials"];
-  const [selectedSpecificationValues, setSelectedSpecificationValues] =
-    useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [productSpecification, setProductSpecification] = useState({
+    Textures: false,
+    Animation: false,
+    Rig: false,
+    Materials: false,
+  });
+  const navigate = useNavigate();
 
   useEffect(async () => {
     await getProducts();
+    await getCategories();
   }, []);
 
+  const toggleProductCheckBoxValue = (index) => {
+    setProductSpecification((prevState) => ({
+      ...prevState,
+      [Object.keys(productSpecification)[index]]:
+        !Object.values(productSpecification)[index],
+    }));
+  };
+
+  const getCategories = async () => {
+    const response = await api.productDetails.getCategories();
+
+    console.log(response);
+
+    if (response.status === 200) {
+      setCategories(response.data);
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+  };
+
   const getProducts = async () => {
+    const products = await api.products.getProducts();
+
+    if (products.status === 200) {
+      setProducts(products.data);
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+  };
+
+  const getProductsBySpecification = async () => {
     const products = await api.products.getProducts();
 
     if (products.status === 200) {
@@ -100,17 +136,24 @@ export default function Products() {
       ...prevState,
       [id]: value,
     }));
-    console.log(value);
   };
 
-  const handleSpecificationChange = (e) => {
-    const {
-      target: { value },
-    } = e;
-    setSelectedSpecificationValues(
-      typeof value === "string" ? value.split(",") : value
+  const handleCheckboxes = (id) => {
+    setSelectedCategories((prevState) =>
+      prevState.includes(id)
+        ? prevState.filter((x) => x !== id)
+        : [...prevState, id]
     );
-    console.log(value);
+  };
+
+  const advancedSearch = () => {
+    const search = {
+      productName: productSearchName.name,
+      productCategories: selectedCategories,
+      productSpecifications: productSpecification,
+    };
+    console.log(search);
+    navigate("/advanced-product-search", { state: search });
   };
 
   return (
@@ -158,27 +201,71 @@ export default function Products() {
         <div style={{ backgroundColor: "orange", display: "flex" }}>
           <FormControl sx={{ m: 1, width: 300 }}>
             <InputLabel id="demo-multiple-checkbox-label">
-              Specification
+              Specifications
             </InputLabel>
             <Select
               labelId="demo-multiple-checkbox-label"
               id="demo-multiple-checkbox"
               multiple
-              value={selectedSpecificationValues}
-              onChange={handleSpecificationChange}
+              value={[]}
               input={<OutlinedInput label="Tag" />}
-              renderValue={(selected) => selected.join(", ")}
             >
-              {specifications.map((value) => (
-                <MenuItem key={value} value={value}>
+              {Object.keys(productSpecification).map((item, index) => (
+                <MenuItem key={index} value={item} selected={item}>
                   <Checkbox
-                    checked={selectedSpecificationValues.indexOf(value) > -1}
+                    key={index}
+                    checked={Object.values(productSpecification)[index]}
+                    onClick={() => toggleProductCheckBoxValue(index)}
                   />
-                  <ListItemText primary={value} />
+                  <ListItemText primary={item} />
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
+        </div>
+
+        <div style={{ backgroundColor: "red", display: "flex" }}>
+          <FormControl sx={{ m: 1, width: 300 }}>
+            <InputLabel id="demo-multiple-checkbox-label">
+              Categories
+            </InputLabel>
+            <Select
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
+              multiple
+              value={[]}
+              input={<OutlinedInput label="Tag" />}
+            >
+              {categories.map((item, index) => (
+                <MenuItem key={index} value={item.name}>
+                  <Checkbox
+                    key={index}
+                    checked={selectedCategories.includes(item.id)}
+                    onChange={() => handleCheckboxes(item.id)}
+                  />
+                  <ListItemText primary={item.name} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button
+            sx={{
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#30475E",
+                color: "#F05454",
+              },
+              marginTop: 15,
+              marginLeft: 3,
+              marginBottom: 45,
+              backgroundColor: "#30475E",
+              width: 200,
+            }}
+            onClick={advancedSearch}
+          >
+            Advanced search
+          </Button>
         </div>
 
         <div style={{ backgroundColor: "pink" }}>

@@ -38,7 +38,7 @@ export default function App() {
             <Route path="/register" element={<Layout page={<Register />} />} />
             <Route path="/login" element={<Layout page={<Login />} />} />
             <Route
-              path="/products/:name"
+              path="/advanced-product-search"
               element={<Layout page={<ProductsSearch />} />}
             />
             <Route

@@ -8,6 +8,9 @@ export default (axios) => ({
   async getProductByName(name) {
     return axios.get(`/product/get-products-by-name/${name}`);
   },
+  async getProductsByGivenCriteria(data) {
+    return axios.post("/product/get-products-by-criteria", data);
+  },
   async getProduct(id) {
     return axios.get(`/product/${id}`);
   },

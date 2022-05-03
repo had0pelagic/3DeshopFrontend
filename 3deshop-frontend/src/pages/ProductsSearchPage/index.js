@@ -3,19 +3,24 @@ import Product from "../../components/Product";
 import "./styles.css";
 import api from "../../api";
 import { Tiles } from "@rebass/layout";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 export default function ProductsSearch() {
-  const { name } = useParams();
   const [products, setProducts] = useState([]);
+  let { state } = useLocation();
 
   useEffect(async () => {
-    await searchForProduct(name);
+    await searchForProducts();
   }, []);
 
-  const searchForProduct = async (name) => {
-    const products = await api.products.getProductByName(name);
+  const searchForProducts = async () => {
+    const request = {
+      name: state.productName,
+      categories: state.productCategories,
+      specifications: state.productSpecifications,
+    };
+    const products = await api.products.getProductsByGivenCriteria(request);
 
     if (products.status === 200) {
       setProducts(products.data);
