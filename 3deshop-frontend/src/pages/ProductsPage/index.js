@@ -8,31 +8,42 @@ import { Tiles } from "@rebass/layout";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
+  Box,
   Checkbox,
   FormControl,
   InputLabel,
   ListItemText,
   MenuItem,
+  Modal,
   OutlinedInput,
   Select,
+  Typography,
 } from "@mui/material";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
+  const [formats, setFormats] = useState([]);
+  const [selectedFormats, setSelectedFormats] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [productSearchName, setProductSearchName] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [productSearchName, setProductSearchName] = useState("");
   const [productSpecification, setProductSpecification] = useState({
     Textures: false,
     Animation: false,
     Rig: false,
     Materials: false,
   });
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
   const navigate = useNavigate();
 
   useEffect(async () => {
     await getProducts();
     await getCategories();
+    await getFormats();
   }, []);
 
   const toggleProductCheckBoxValue = (index) => {
@@ -46,8 +57,6 @@ export default function Products() {
   const getCategories = async () => {
     const response = await api.productDetails.getCategories();
 
-    console.log(response);
-
     if (response.status === 200) {
       setCategories(response.data);
     } else {
@@ -55,17 +64,17 @@ export default function Products() {
     }
   };
 
-  const getProducts = async () => {
-    const products = await api.products.getProducts();
+  const getFormats = async () => {
+    const response = await api.productDetails.getFormats();
 
-    if (products.status === 200) {
-      setProducts(products.data);
+    if (response.status === 200) {
+      setFormats(response.data);
     } else {
       console.log("error at products, didn't return 200");
     }
   };
 
-  const getProductsBySpecification = async () => {
+  const getProducts = async () => {
     const products = await api.products.getProducts();
 
     if (products.status === 200) {
@@ -138,8 +147,16 @@ export default function Products() {
     }));
   };
 
-  const handleCheckboxes = (id) => {
+  const handleCategoryCheckboxes = (id) => {
     setSelectedCategories((prevState) =>
+      prevState.includes(id)
+        ? prevState.filter((x) => x !== id)
+        : [...prevState, id]
+    );
+  };
+
+  const handleFormatCheckboxes = (id) => {
+    setSelectedFormats((prevState) =>
       prevState.includes(id)
         ? prevState.filter((x) => x !== id)
         : [...prevState, id]
@@ -149,10 +166,10 @@ export default function Products() {
   const advancedSearch = () => {
     const search = {
       productName: productSearchName.name,
+      productFormats: selectedFormats,
       productCategories: selectedCategories,
       productSpecifications: productSpecification,
     };
-    console.log(search);
     navigate("/advanced-product-search", { state: search });
   };
 
@@ -160,139 +177,207 @@ export default function Products() {
     <div className="flexContainer p50">
       <div
         style={{
-          backgroundColor: "blue",
           display: "flex",
           flexDirection: "initial",
-          justifyContent: "space-between",
+          justifyContent: "center",
+          minHeight: 10,
           width: "100%",
         }}
       >
-        <div style={{ backgroundColor: "cyan", display: "flex" }}>
-          <TextField
-            required
-            id="name"
-            margin="normal"
-            variant="outlined"
-            fullWidth
-            onChange={handleChange}
-            style={{ width: 200 }}
-          />
-          <Button
-            sx={{
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "#30475E",
-                color: "#F05454",
-              },
-              marginTop: 15,
-              marginLeft: 3,
-              marginBottom: 45,
+        <Button
+          sx={{
+            color: "#fff",
+            "&:hover": {
               backgroundColor: "#30475E",
-              width: 200,
-            }}
-            component={Link}
-            to={`/products/${productSearchName.name}`}
-          >
-            {console.log(productSearchName)}
-            Search
-          </Button>
-        </div>
-
-        <div style={{ backgroundColor: "orange", display: "flex" }}>
-          <FormControl sx={{ m: 1, width: 300 }}>
-            <InputLabel id="demo-multiple-checkbox-label">
-              Specifications
-            </InputLabel>
-            <Select
-              labelId="demo-multiple-checkbox-label"
-              id="demo-multiple-checkbox"
-              multiple
-              value={[]}
-              input={<OutlinedInput label="Tag" />}
-            >
-              {Object.keys(productSpecification).map((item, index) => (
-                <MenuItem key={index} value={item} selected={item}>
-                  <Checkbox
-                    key={index}
-                    checked={Object.values(productSpecification)[index]}
-                    onClick={() => toggleProductCheckBoxValue(index)}
-                  />
-                  <ListItemText primary={item} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-
-        <div style={{ backgroundColor: "red", display: "flex" }}>
-          <FormControl sx={{ m: 1, width: 300 }}>
-            <InputLabel id="demo-multiple-checkbox-label">
-              Categories
-            </InputLabel>
-            <Select
-              labelId="demo-multiple-checkbox-label"
-              id="demo-multiple-checkbox"
-              multiple
-              value={[]}
-              input={<OutlinedInput label="Tag" />}
-            >
-              {categories.map((item, index) => (
-                <MenuItem key={index} value={item.name}>
-                  <Checkbox
-                    key={index}
-                    checked={selectedCategories.includes(item.id)}
-                    onChange={() => handleCheckboxes(item.id)}
-                  />
-                  <ListItemText primary={item.name} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <Button
-            sx={{
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "#30475E",
-                color: "#F05454",
-              },
-              marginTop: 15,
-              marginLeft: 3,
-              marginBottom: 45,
+              color: "#F05454",
+            },
+            backgroundColor: "#30475E",
+            marginTop: 5,
+            marginRight: 5,
+            marginBottom: 5,
+            alignItems: "right",
+            width: 200,
+          }}
+          component={Link}
+          to={`/upload-product`}
+        >
+          Upload product
+        </Button>
+        <Button
+          sx={{
+            color: "#fff",
+            "&:hover": {
               backgroundColor: "#30475E",
-              width: 200,
-            }}
-            onClick={advancedSearch}
-          >
-            Advanced search
-          </Button>
-        </div>
-
-        <div style={{ backgroundColor: "pink" }}>
-          <Button
-            sx={{
-              color: "#fff",
-              "&:hover": {
-                backgroundColor: "#30475E",
-                color: "#F05454",
-              },
-              backgroundColor: "#30475E",
-              marginTop: 5,
-              marginLeft: "auto",
-              marginRight: 15,
-              marginBottom: 5,
-              alignItems: "right",
-              width: 200,
-            }}
-            component={Link}
-            to={`/upload-product`}
-          >
-            Upload product
-          </Button>
-        </div>
+              color: "#F05454",
+            },
+            backgroundColor: "#30475E",
+            marginTop: 5,
+            marginLeft: 5,
+            marginBottom: 5,
+            alignItems: "right",
+            width: 200,
+          }}
+          onClick={handleOpen}
+        >
+          Advanced search
+        </Button>
       </div>
 
       <PaginatedItems itemsPerPage={9} />
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        BackdropProps={{
+          timeout: 600,
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            backgroundColor: "#DDDDDD",
+            border: "1px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <div className="flexContainer">
+            <Typography style={{ fontSize: 30 }}>Advanced search</Typography>
+
+            <div
+              style={{
+                display: "flex",
+                marginTop: 5,
+                width: 200,
+              }}
+            >
+              <TextField
+                id="name"
+                margin="normal"
+                variant="outlined"
+                onChange={handleChange}
+                label="Product name or fragment"
+              />
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                marginTop: 5,
+                width: 200,
+              }}
+            >
+              <FormControl style={{ width: "100%" }}>
+                <InputLabel id="demo-multiple-checkbox-label">
+                  Specifications
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  multiple
+                  value={[]}
+                  input={<OutlinedInput label="Tag" />}
+                >
+                  {Object.keys(productSpecification).map((item, index) => (
+                    <MenuItem key={index} value={item} selected={item}>
+                      <Checkbox
+                        key={index}
+                        checked={Object.values(productSpecification)[index]}
+                        onClick={() => toggleProductCheckBoxValue(index)}
+                      />
+                      <ListItemText primary={item} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                marginTop: 15,
+                width: 200,
+              }}
+            >
+              <FormControl style={{ width: "100%" }}>
+                <InputLabel id="demo-multiple-checkbox-label">
+                  Formats
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  multiple
+                  value={[]}
+                  input={<OutlinedInput label="Tag" />}
+                >
+                  {formats.map((item, index) => (
+                    <MenuItem key={index} value={item.name}>
+                      <Checkbox
+                        key={index}
+                        checked={selectedFormats.includes(item.id)}
+                        onChange={() => handleFormatCheckboxes(item.id)}
+                      />
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                marginTop: 15,
+                width: 200,
+              }}
+            >
+              <FormControl style={{ width: "100%" }}>
+                <InputLabel id="demo-multiple-checkbox-label">
+                  Categories
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  multiple
+                  value={[]}
+                  input={<OutlinedInput label="Tag" />}
+                >
+                  {categories.map((item, index) => (
+                    <MenuItem key={index} value={item.name}>
+                      <Checkbox
+                        key={index}
+                        checked={selectedCategories.includes(item.id)}
+                        onChange={() => handleCategoryCheckboxes(item.id)}
+                      />
+                      <ListItemText primary={item.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            <Button
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                marginTop: 2,
+                backgroundColor: "#30475E",
+                width: 200,
+              }}
+              onClick={advancedSearch}
+            >
+              Advanced search
+            </Button>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 }

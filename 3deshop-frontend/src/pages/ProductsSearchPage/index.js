@@ -17,13 +17,14 @@ export default function ProductsSearch() {
   const searchForProducts = async () => {
     const request = {
       name: state.productName,
+      formats: state.productFormats,
       categories: state.productCategories,
       specifications: state.productSpecifications,
     };
-    const products = await api.products.getProductsByGivenCriteria(request);
+    const response = await api.products.getProductsByGivenCriteria(request);
 
-    if (products.status === 200) {
-      setProducts(products.data);
+    if (response.status === 200) {
+      setProducts(response.data);
     } else {
       console.log("error at products, didn't return 200");
     }
