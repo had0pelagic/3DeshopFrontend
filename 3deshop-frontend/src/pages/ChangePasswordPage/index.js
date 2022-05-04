@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import { Button, TextField } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Container,
+  TextField,
+  Typography,
+} from "@mui/material";
+import PasswordIcon from "@mui/icons-material/Password";
 import api from "../../api";
 
 export default function ChangePassword() {
@@ -41,31 +48,64 @@ export default function ChangePassword() {
 
   return (
     <div className="flexContainer">
-      <TextField
-        required
-        id="password"
-        label="Password"
-        variant="standard"
-        margin="normal"
-        type="password"
-        value={state.password}
-        onChange={handleChange}
-      />
-      <TextField
-        required
-        id="confirmPassword"
-        label="Confirm password"
-        variant="standard"
-        margin="normal"
-        type="password"
-        value={state.confirmPassword}
-        onChange={handleChange}
-      />
-      <div className="mt40">
-        <Button variant="contained" onClick={handleSubmitClick}>
-          Change
-        </Button>
-      </div>
+      <Container component="main" maxWidth="xs">
+        <div
+          style={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar style={{ marginTop: 10 }}>
+            <PasswordIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Change password
+          </Typography>
+          <form
+            style={{
+              width: "100%",
+              marginTop: 10,
+            }}
+            noValidate
+          >
+            <TextField
+              required
+              id="password"
+              label="Password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              type="password"
+              value={state.password}
+              onChange={handleChange}
+            />
+            <TextField
+              required
+              id="confirmPassword"
+              label="Confirm password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              type="password"
+              value={state.confirmPassword}
+              onChange={handleChange}
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 5 }}
+              onClick={handleSubmitClick}
+            >
+              Change password
+            </Button>
+          </form>
+        </div>
+      </Container>
     </div>
   );
 }
