@@ -180,7 +180,6 @@ export default function Products() {
           display: "flex",
           flexDirection: "initial",
           justifyContent: "center",
-          minHeight: 10,
           width: "100%",
         }}
       >

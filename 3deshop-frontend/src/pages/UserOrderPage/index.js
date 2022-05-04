@@ -94,7 +94,7 @@ export default function UserOrders() {
     const response = await api.orders.removeOrder(jwtUserId, order.id);
 
     if (response.status === 200) {
-      alert("Order has been removed")
+      alert("Order has been removed");
       console.log("Order removed!");
       window.location.reload();
     } else {
@@ -128,6 +128,10 @@ export default function UserOrders() {
     );
   }
 
+  function TruncateString(value) {
+    return value.length > 20 ? value.substring(0, 20) + "..." : value;
+  }
+
   function Items({ currentItems }) {
     return (
       <>
@@ -156,7 +160,9 @@ export default function UserOrders() {
                     <TableCell component="th" scope="row">
                       {order.name}
                     </TableCell>
-                    <TableCell align="left">{order.description}</TableCell>
+                    <TableCell align="left">
+                      {TruncateString(order.description)}
+                    </TableCell>
                     <TableCell align="left">
                       {moment(order.created).format("YYYY-MM-DD")}
                     </TableCell>
@@ -217,27 +223,35 @@ export default function UserOrders() {
               className="flexContainer"
               style={{ marginLeft: 30, marginRight: 30 }}
             >
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#30475E",
-                    color: "#F05454",
-                  },
-                  backgroundColor: "#30475E",
-                  marginTop: 5,
-                  marginLeft: "auto",
-                  marginRight: 15,
-                  marginBottom: 5,
-                  alignItems: "right",
-                  width: 200,
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "initial",
+                  justifyContent: "center",
+                  width: "100%",
                 }}
-                component={Link}
-                to={`/order-registration`}
               >
-                Add new order
-              </Button>
-
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
+                    backgroundColor: "#30475E",
+                    marginTop: 5,
+                    marginLeft: "auto",
+                    marginRight: 0,
+                    marginBottom: 5,
+                    alignItems: "right",
+                    width: 200,
+                  }}
+                  component={Link}
+                  to={`/order-registration`}
+                >
+                  Add new order
+                </Button>
+              </div>
               <PaginatedTable itemsPerPage={6} />
             </div>
           ) : (

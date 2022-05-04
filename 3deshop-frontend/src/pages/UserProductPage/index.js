@@ -118,27 +118,35 @@ export default function UserProducts() {
               className="flexContainer"
               style={{ marginLeft: 30, marginRight: 30 }}
             >
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#30475E",
-                    color: "#F05454",
-                  },
-                  backgroundColor: "#30475E",
-                  marginTop: 5,
-                  marginLeft: "auto",
-                  marginRight: 15,
-                  marginBottom: 5,
-                  alignItems: "right",
-                  width: 200,
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "initial",
+                  justifyContent: "center",
+                  width: "100%",
                 }}
-                component={Link}
-                to={`/upload-product`}
               >
-                Add new product
-              </Button>
-
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
+                    backgroundColor: "#30475E",
+                    marginTop: 5,
+                    marginLeft: "auto",
+                    marginRight: 0,
+                    marginBottom: 5,
+                    alignItems: "right",
+                    width: 200,
+                  }}
+                  component={Link}
+                  to={`/upload-product`}
+                >
+                  Add new product
+                </Button>
+              </div>
               <PaginatedTable itemsPerPage={6} />
             </div>
           ) : (

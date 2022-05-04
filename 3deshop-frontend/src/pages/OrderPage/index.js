@@ -68,8 +68,6 @@ export default function Orders() {
     if (response.status === 200) {
       setOrders(response.data);
       getUserId();
-      console.log(response.data);
-      console.log("Orders returned!");
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -93,6 +91,10 @@ export default function Orders() {
     }
     setLoadingOrder(false);
   };
+
+  function TruncateString(value) {
+    return value.length > 20 ? value.substring(0, 20) + "..." : value;
+  }
 
   function OrderImages() {
     return (
@@ -147,7 +149,9 @@ export default function Orders() {
                     <TableCell component="th" scope="row">
                       {order.name}
                     </TableCell>
-                    <TableCell align="left">{order.description}</TableCell>
+                    <TableCell align="left">
+                      {TruncateString(order.description)}
+                    </TableCell>
                     <TableCell align="left">
                       {moment(order.created).format("YYYY-MM-DD")}
                     </TableCell>
@@ -225,29 +229,39 @@ export default function Orders() {
           {orders && orders.length > 0 ? (
             <div
               className="flexContainer"
-              style={{ marginLeft: 30, marginRight: 30 }}
+              style={{
+                marginLeft: 30,
+                marginRight: 30,
+              }}
             >
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#30475E",
-                    color: "#F05454",
-                  },
-                  backgroundColor: "#30475E",
-                  marginTop: 5,
-                  marginLeft: "auto",
-                  marginRight: 15,
-                  marginBottom: 5,
-                  alignItems: "right",
-                  width: 200,
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "initial",
+                  justifyContent: "center",
+                  width: "100%",
                 }}
-                component={Link}
-                to={`/order-registration`}
               >
-                Add new order
-              </Button>
-
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
+                    backgroundColor: "#30475E",
+                    marginTop: 5,
+                    marginLeft: "auto",
+                    marginRight: 0,
+                    marginBottom: 5,
+                    alignItems: "right",
+                  }}
+                  component={Link}
+                  to={`/order-registration`}
+                >
+                  Add new order
+                </Button>
+              </div>
               <PaginatedTable itemsPerPage={6} />
             </div>
           ) : (
