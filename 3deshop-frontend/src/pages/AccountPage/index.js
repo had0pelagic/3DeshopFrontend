@@ -1,21 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button, CardMedia, TextField, Typography, Card } from "@mui/material";
 import api from "../../api";
 import Loader from "../../components/Loader";
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FormatHelper from "../../utils/format.helper";
+import JwtHelper from "../../utils/jwt.helper";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Account() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [user, setUser] = useState();
   const [image, setImage] = useState();
   const [isLoading, setLoading] = useState(true);
+  const { getToken } = useAuth();
 
   useEffect(async () => {
+    checkIfUsersPage();
     await getUser();
   }, []);
+
+  const checkIfUsersPage = () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    
+    if (id !== jwtUserId) {
+      navigate("/");
+    }
+  };
 
   async function encodeData(item) {
     const imageFile = item[0];
@@ -39,7 +53,7 @@ export default function Account() {
   };
 
   const updateUser = async () => {
-    console.log(image)
+    console.log(image);
     const imageData = image == null ? null : await encodeData(image);
     const request = {
       username: user.username,

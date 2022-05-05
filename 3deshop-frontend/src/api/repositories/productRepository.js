@@ -9,10 +9,10 @@ export default (axios) => ({
     return axios.get(`/product/get-products-by-name/${name}`);
   },
   async getProductsByGivenIdsAndOrderByPrice(data) {
-    return axios.post(`/product/get-products-by-ids-order-by-price`,data);
+    return axios.post(`/product/get-products-by-ids-order-by-price`, data);
   },
   async getProductsByGivenIdsAndOrderByDate(data) {
-    return axios.post(`/product/get-products-by-ids-order-by-date`,data);
+    return axios.post(`/product/get-products-by-ids-order-by-date`, data);
   },
   async getProductsOrderByPrice(ascending) {
     return axios.get(`/product/get-products-order-by-price/${ascending}`);

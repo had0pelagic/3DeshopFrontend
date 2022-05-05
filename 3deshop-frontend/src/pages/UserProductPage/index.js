@@ -11,20 +11,34 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
 import "filepond/dist/filepond.min.css";
 import ReactPaginate from "react-paginate";
+import JwtHelper from "../../utils/jwt.helper";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function UserProducts() {
   const { id } = useParams();
   const [products, setProducts] = useState([]);
   const [IsLoadingProducts, setLoadingProducts] = useState(true);
+  const { getToken } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(async () => {
+    checkIfUsersPage();
     await getUserProducts();
   }, []);
+
+  const checkIfUsersPage = () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    
+    if (id !== jwtUserId) {
+      navigate("/");
+    }
+  };
 
   const getUserProducts = async () => {
     const response = await api.products.getUserProducts(id);

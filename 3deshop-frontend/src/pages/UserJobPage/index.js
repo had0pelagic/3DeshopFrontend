@@ -17,7 +17,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
 import { FilePond } from "react-filepond";
@@ -33,6 +33,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 import ReactPaginate from "react-paginate";
 
 export default function UserJobs() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const { getToken } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [files, setFiles] = useState();
@@ -58,8 +60,18 @@ export default function UserJobs() {
   };
 
   useEffect(async () => {
+    checkIfUsersPage();
     await getJobs();
   }, []);
+
+  const checkIfUsersPage = () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+
+    if (id !== jwtUserId) {
+      navigate("/");
+    }
+  };
 
   const getJobs = async () => {
     const token = getToken().data;
@@ -68,9 +80,8 @@ export default function UserJobs() {
 
     if (response.status === 200) {
       setJobs(response.data);
-      console.log("Offers returned!");
     } else {
-      console.log("error at products, didn't return 200");
+      console.log("error at user jobs, didn't return 200");
     }
     setLoadingJobs(false);
   };
@@ -183,7 +194,7 @@ export default function UserJobs() {
 
   const handleProgressChange = (e) => {
     e.preventDefault();
-    
+
     setForm((prevState) => ({
       ...prevState,
       ["progress"]: e.target.value,

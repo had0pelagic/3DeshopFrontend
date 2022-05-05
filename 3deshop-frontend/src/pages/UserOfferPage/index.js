@@ -67,6 +67,7 @@ export default function UserOffers() {
       setOffers(response.data);
       console.log("Offers returned!");
     } else {
+      alert(response.errorMessage);
       console.log("error at products, didn't return 200");
     }
     setLoadingOffers(false);

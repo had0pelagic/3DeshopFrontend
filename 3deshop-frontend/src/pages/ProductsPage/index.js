@@ -5,7 +5,7 @@ import api from "../../api";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Tiles } from "@rebass/layout";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import {
   Box,

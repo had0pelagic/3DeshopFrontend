@@ -81,7 +81,8 @@ export default function JobProgress() {
       }
       console.log("Progress returned!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
+      console.log("error at progress, didn't return 200");
     }
     setLoading(false);
   };

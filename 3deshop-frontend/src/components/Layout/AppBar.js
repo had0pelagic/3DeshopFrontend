@@ -282,7 +282,7 @@ const ResponsiveAppBar = () => {
                   <Typography>My products</Typography>
                 </MenuItem>
 
-                <MenuItem key={"User jobs"} component={Link} to={`/user-jobs`}>
+                <MenuItem key={"User jobs"} component={Link} to={`/user-jobs/${id}`}>
                   <Typography>My jobs</Typography>
                 </MenuItem>
 

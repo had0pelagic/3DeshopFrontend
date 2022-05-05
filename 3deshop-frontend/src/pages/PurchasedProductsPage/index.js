@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Avatar,
   List,
@@ -12,15 +12,29 @@ import {
 import api from "../../api";
 import Loader from "../../components/Loader";
 import { Link } from "react-router-dom";
+import JwtHelper from "../../utils/jwt.helper";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function PurchasedProducts() {
   let { id } = useParams();
+  const navigate = useNavigate();
   const [products, setProducts] = useState("");
   const [isLoading, setLoading] = useState(true);
+  const { getToken } = useAuth();
 
   useEffect(async () => {
+    checkIfUsersPage();
     await getPurchasedProducts();
   }, []);
+
+  const checkIfUsersPage = () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+
+    if (id !== jwtUserId) {
+      navigate("/");
+    }
+  };
 
   const getPurchasedProducts = async () => {
     const response = await api.products.getPurchasedProducts(id);

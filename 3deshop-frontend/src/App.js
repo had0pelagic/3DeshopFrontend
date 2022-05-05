@@ -90,7 +90,7 @@ export default function App() {
               }
             />
             <Route
-              path="/user-jobs"
+              path="/user-jobs/:id"
               element={
                 <ProtectedRoute>
                   <Layout page={<UserJobs />} />

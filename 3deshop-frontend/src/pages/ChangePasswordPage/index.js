@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import {
   Avatar,
@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import PasswordIcon from "@mui/icons-material/Password";
 import api from "../../api";
+import JwtHelper from "../../utils/jwt.helper";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function ChangePassword() {
   const passwordObj = {
@@ -19,6 +21,20 @@ export default function ChangePassword() {
   const [state, setState] = useState(passwordObj);
   const location = useLocation();
   const navigate = useNavigate();
+  const { getToken } = useAuth();
+
+  useEffect(() => {
+    checkIfUsersPage();
+  }, []);
+
+  const checkIfUsersPage = () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+
+    if (id !== jwtUserId) {
+      navigate("/");
+    }
+  };
 
   const updatePassword = async () => {
     const response = await api.users.userChangePassword(id, state);

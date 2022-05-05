@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "./styles.css";
 import { useAuth } from "../../hooks/useAuth";
 import {
@@ -30,6 +31,8 @@ import ConfirmationDialog from "../../components/ConfirmationDialog";
 import ReactPaginate from "react-paginate";
 
 export default function UserOrders() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const { getToken } = useAuth();
   const [orders, setOrders] = useState([]);
   const [isLoadingOrders, setLoadingOrders] = useState(true);
@@ -46,8 +49,18 @@ export default function UserOrders() {
   };
 
   useEffect(async () => {
+    checkIfUsersPage();
     await getUserOrders();
   }, []);
+
+  const checkIfUsersPage = () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    
+    if (id !== jwtUserId) {
+      navigate("/");
+    }
+  };
 
   const getUserOrders = async () => {
     const token = getToken().data;
