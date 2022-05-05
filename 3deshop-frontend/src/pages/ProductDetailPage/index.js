@@ -13,9 +13,7 @@ import Loader from "../../components/Loader/index.js";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import Carousel from "react-material-ui-carousel";
-import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
 import { useAuth } from "../../hooks/useAuth";
 import DefaultImage from "../../images/defaultProductImage.png";
 import Divider from "@mui/material/Divider";
@@ -28,6 +26,7 @@ import {
   DialogTitle,
   Grid,
 } from "@mui/material";
+import ReactPaginate from "react-paginate";
 
 export default function ProductDetails() {
   let { id } = useParams();
@@ -121,7 +120,7 @@ export default function ProductDetails() {
 
   const handleCommentChange = (e) => {
     const { id, value } = e.target;
-
+    e.preventDefault();
     setComment((prevState) => ({
       ...prevState,
       [id]: value,
@@ -263,6 +262,50 @@ export default function ProductDetails() {
     );
   }
 
+  function ProductCommentInput() {
+    return (
+      <div>
+        <div>
+          <TextField
+            id="description"
+            variant="outlined"
+            multiline
+            rows={4}
+            sx={{
+              width: "100%",
+            }}
+            value={comment.description}
+            onChange={handleCommentChange}
+            autoFocus
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: 10,
+          }}
+        >
+          <Button
+            variant="outlined"
+            sx={{
+              background: "#222831",
+              color: "white",
+              borderStyle: "none",
+              "&:hover": {
+                background: "#30475E",
+                borderStyle: "none",
+              },
+            }}
+            onClick={handleCommentSubmit}
+          >
+            Post comment
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   function ProductComments() {
     return (
       <div style={{ paddingTop: "60px" }}>
@@ -366,6 +409,103 @@ export default function ProductDetails() {
     );
   }
 
+  function Items({ currentItems }) {
+    return (
+      <>
+        {currentItems && (
+          <div style={{ paddingTop: "60px" }}>
+            <Card
+              sx={{
+                minWidth: 800,
+                maxWidth: 800,
+                backgroundColor: "transparent",
+              }}
+            >
+              <CardContent>
+                <Typography
+                  sx={{ fontSize: 25 }}
+                  color="text.primary"
+                  gutterBottom
+                >
+                  Comments
+                </Typography>
+                {currentItems.map((comment, index) => (
+                  <Grid
+                    container
+                    spacing={1}
+                    key={index}
+                    sx={{
+                      marginTop: 2,
+                      display: "flex",
+                      justifyContent: "left",
+                    }}
+                  >
+                    <Grid item sx={{ marginTop: "8px", marginBottom: "10px" }}>
+                      <Avatar
+                        alt="User avatar"
+                        src={`${comment.user.image.format},${comment.user.image.data}`}
+                        sx={{ width: 60, height: 60 }}
+                      />
+                    </Grid>
+                    <Grid item xs={8}>
+                      <Typography
+                        component={Link}
+                        style={{ textDecoration: "none", color: "black" }}
+                        to={`/user-profile/${comment.user.id}`}
+                      >
+                        {comment.user.username}
+                      </Typography>
+                      <Typography
+                        style={{ wordWrap: "break-word", paddingTop: 15 }}
+                      >
+                        {comment.description}
+                      </Typography>
+                      <Divider />
+                    </Grid>
+                  </Grid>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  function PaginatedComments({ itemsPerPage }) {
+    const [currentItems, setCurrentItems] = useState(null);
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+
+    useEffect(() => {
+      const endOffset = itemOffset + itemsPerPage;
+      setCurrentItems(comments.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(comments.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage]);
+
+    const handlePageClick = (event) => {
+      const newOffset = (event.selected * itemsPerPage) % comments.length;
+      setItemOffset(newOffset);
+    };
+
+    return (
+      <>
+        <Items currentItems={currentItems} />
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel=" >"
+          previousLabel="< "
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          renderOnZeroPageCount={null}
+          containerClassName="pagination"
+          activeClassName="active"
+        />
+      </>
+    );
+  }
+
   return (
     <div className="flexContainer p50">
       {isLoadingDetails ? (
@@ -373,7 +513,7 @@ export default function ProductDetails() {
       ) : (
         <div>
           {ProductImages()}
-          <ProductAbout />
+          {ProductAbout()}
         </div>
       )}
       {isLoadingComments ? (
@@ -381,7 +521,8 @@ export default function ProductDetails() {
       ) : (
         <div>
           {!isOwner ? ProductActions() : <div></div>}
-          {ProductComments()}
+          <PaginatedComments itemsPerPage={6} />
+          {ProductCommentInput()}
         </div>
       )}
     </div>

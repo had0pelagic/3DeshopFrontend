@@ -33,6 +33,7 @@ export default function Products() {
     Rig: false,
     Materials: false,
   });
+  const [orderText, setOrderText] = useState("");
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -59,6 +60,26 @@ export default function Products() {
 
     if (response.status === 200) {
       setCategories(response.data);
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+  };
+
+  const getProductsOrderByPrice = async (ascending) => {
+    const products = await api.products.getProductsOrderByPrice(ascending);
+
+    if (products.status === 200) {
+      setProducts(products.data);
+    } else {
+      console.log("error at products, didn't return 200");
+    }
+  };
+
+  const getProductsOrderByUploadDate = async (ascending) => {
+    const products = await api.products.getProductsOrderByUploadDate(ascending);
+
+    if (products.status === 200) {
+      setProducts(products.data);
     } else {
       console.log("error at products, didn't return 200");
     }
@@ -173,6 +194,10 @@ export default function Products() {
     navigate("/advanced-product-search", { state: search });
   };
 
+  const handleOrderChange = (e) => {
+    setOrderText(e.target.value);
+  };
+
   return (
     <div className="flexContainer p50">
       <div
@@ -196,12 +221,14 @@ export default function Products() {
             marginBottom: 5,
             alignItems: "right",
             width: 200,
+            minWidth: 100,
           }}
           component={Link}
           to={`/upload-product`}
         >
           Upload product
         </Button>
+
         <Button
           sx={{
             color: "#fff",
@@ -215,11 +242,65 @@ export default function Products() {
             marginBottom: 5,
             alignItems: "right",
             width: 200,
+            minWidth: 100,
           }}
           onClick={handleOpen}
         >
           Advanced search
         </Button>
+
+        <FormControl
+          fullWidth
+          style={{
+            position: "relative",
+            marginLeft: 80,
+            marginTop: 30,
+            minWidth: 100,
+            width: 200,
+          }}
+        >
+          <InputLabel id="demo-simple-select-label">Sort by</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={orderText}
+            label="Sort by"
+            onChange={handleOrderChange}
+          >
+            <MenuItem
+              value={"Lowest price"}
+              onClick={async () => {
+                await getProductsOrderByPrice(true);
+              }}
+            >
+              Lowest price
+            </MenuItem>
+            <MenuItem
+              value={"Higher price"}
+              onClick={async () => {
+                await getProductsOrderByPrice(false);
+              }}
+            >
+              Higher price
+            </MenuItem>
+            <MenuItem
+              value={"Newest"}
+              onClick={async () => {
+                await getProductsOrderByUploadDate(true);
+              }}
+            >
+              Newest
+            </MenuItem>
+            <MenuItem
+              value={"Oldest"}
+              onClick={async () => {
+                await getProductsOrderByUploadDate(false);
+              }}
+            >
+              Oldest
+            </MenuItem>
+          </Select>
+        </FormControl>
       </div>
 
       <PaginatedItems itemsPerPage={9} />

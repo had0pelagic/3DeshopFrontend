@@ -182,6 +182,8 @@ export default function UserJobs() {
   };
 
   const handleProgressChange = (e) => {
+    e.preventDefault();
+    
     setForm((prevState) => ({
       ...prevState,
       ["progress"]: e.target.value,
