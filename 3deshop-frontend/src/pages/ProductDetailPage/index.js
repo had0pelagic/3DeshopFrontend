@@ -173,7 +173,21 @@ export default function ProductDetails() {
                 <DownloadingIcon sx={{ fontSize: 50 }} />
               </Button>
             ) : productDetails.about.price === 0 ? (
-              <Typography style={{ fontSize: 20 }}>Free</Typography>
+              <div style={{ display: "flex", flexWrap: "wrap" }}>
+                <div style={{ flex: 2 }}>
+                  <Button
+                    sx={{
+                      color: "black",
+                    }}
+                    onClick={handleOpen}
+                  >
+                    <ShoppingCartIcon sx={{ fontSize: 50 }} />
+                    <Typography style={{ fontSize: 20, marginLeft: 10 }}>
+                      {productDetails.about.price} C
+                    </Typography>
+                  </Button>
+                </div>
+              </div>
             ) : (
               <div style={{ display: "flex", flexWrap: "wrap" }}>
                 <div style={{ flex: 2 }}>
@@ -264,144 +278,51 @@ export default function ProductDetails() {
 
   function ProductCommentInput() {
     return (
-      <div>
-        <div>
-          <TextField
-            id="description"
-            variant="outlined"
-            multiline
-            rows={4}
-            sx={{
-              width: "100%",
-            }}
-            value={comment.description}
-            onChange={handleCommentChange}
-            autoFocus
-          />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            paddingTop: 10,
-          }}
-        >
-          <Button
-            variant="outlined"
-            sx={{
-              background: "#222831",
-              color: "white",
-              borderStyle: "none",
-              "&:hover": {
-                background: "#30475E",
-                borderStyle: "none",
-              },
-            }}
-            onClick={handleCommentSubmit}
-          >
-            Post comment
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  function ProductComments() {
-    return (
-      <div style={{ paddingTop: "60px" }}>
+      <div style={{ backgroundColor: "white", width: "100%" }}>
         <Card
           sx={{
-            minWidth: 800,
-            maxWidth: 800,
-            backgroundColor: "transparent",
+            minWidth: 830,
+            maxWidth: 830,
+            backgroundColor: "white",
           }}
         >
           <CardContent>
-            <Typography sx={{ fontSize: 25 }} color="text.primary" gutterBottom>
-              Comments
-            </Typography>
-            {comments.map((comment, index) => (
-              <Grid
-                container
-                spacing={1}
-                key={index}
+            <div>
+              <TextField
+                id="description"
+                variant="outlined"
+                multiline
+                rows={4}
                 sx={{
-                  marginTop: 2,
-                  display: "flex",
-                  justifyContent: "left",
+                  width: "100%",
                 }}
-              >
-                <Grid item sx={{ marginTop: "8px", marginBottom: "10px" }}>
-                  <Avatar
-                    alt="User avatar"
-                    src={`${comment.user.image.format},${comment.user.image.data}`}
-                    sx={{ width: 60, height: 60 }}
-                  />
-                </Grid>
-                <Grid item xs={8}>
-                  <Typography
-                    component={Link}
-                    style={{ textDecoration: "none", color: "black" }}
-                    to={`/user-profile/${comment.user.id}`}
-                  >
-                    {comment.user.username}
-                  </Typography>
-                  <Typography
-                    style={{ wordWrap: "break-word", paddingTop: 15 }}
-                  >
-                    {comment.description}
-                  </Typography>
-                  <Divider />
-                </Grid>
-              </Grid>
-            ))}
+                value={comment.description}
+                onChange={handleCommentChange}
+                autoFocus
+              />
+            </div>
             <div
-              style={
-                comments.length > 0
-                  ? {
-                      paddingTop: 10,
-                    }
-                  : {
-                      paddingTop: 30,
-                    }
-              }
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                paddingTop: 10,
+              }}
             >
-              <div>
-                <TextField
-                  id="description"
-                  variant="outlined"
-                  multiline
-                  rows={4}
-                  sx={{
-                    width: "100%",
-                  }}
-                  value={comment.description}
-                  onChange={handleCommentChange}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  paddingTop: 10,
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  sx={{
-                    background: "#222831",
-                    color: "white",
+              <Button
+                variant="outlined"
+                sx={{
+                  background: "#222831",
+                  color: "white",
+                  borderStyle: "none",
+                  "&:hover": {
+                    background: "#30475E",
                     borderStyle: "none",
-                    "&:hover": {
-                      background: "#30475E",
-                      borderStyle: "none",
-                    },
-                  }}
-                  onClick={handleCommentSubmit}
-                >
-                  Post comment
-                </Button>
-              </div>
+                  },
+                }}
+                onClick={handleCommentSubmit}
+              >
+                Post comment
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -416,9 +337,9 @@ export default function ProductDetails() {
           <div style={{ paddingTop: "60px" }}>
             <Card
               sx={{
-                minWidth: 800,
-                maxWidth: 800,
-                backgroundColor: "transparent",
+                minWidth: 830,
+                maxWidth: 830,
+                backgroundColor: "white",
               }}
             >
               <CardContent>

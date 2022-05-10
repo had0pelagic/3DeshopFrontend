@@ -3,14 +3,14 @@ import "./styles.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { useAuth } from "../../hooks/useAuth";
-import api from "../../api";
 import {
   Avatar,
   Container,
   Grid,
   Typography,
 } from "@mui/material";
+import { useAuth } from "../../hooks/useAuth";
+import api from "../../api";
 import { Link } from "react-router-dom";
 
 export default function Login() {
@@ -22,11 +22,11 @@ export default function Login() {
 
   const userLogin = async () => {
     const response = await api.users.userLogin(state);
+    
     if (response.status === 200) {
       await onLogin(response.data);
     } else {
       alert(response.errorMessage);
-      console.log("error at products, didn't return 200");
     }
   };
 
@@ -38,9 +38,9 @@ export default function Login() {
     }));
   };
 
-  const handleSubmitClick = (e) => {
+  const handleSubmitClick = async (e) => {
     e.preventDefault();
-    userLogin();
+    await userLogin();
   };
 
   return (

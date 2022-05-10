@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./styles.css";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import api from "../../api";
 import { useAuth } from "../../hooks/useAuth";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import { Avatar, Container, Typography } from "@mui/material";
 import { ImportContactsOutlined } from "@material-ui/icons";
 
@@ -20,10 +20,6 @@ export default function Register() {
   const [error, setError] = useState(user);
   const { onLogin } = useAuth();
 
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     setState((prevState) => ({
@@ -34,28 +30,32 @@ export default function Register() {
 
   const userRegistration = async () => {
     const registerResponse = await api.users.userRegister(state);
+
     if (registerResponse.status === 200) {
       const loginResponse = await api.users.userLogin({
         username: state.username,
         password: state.password,
       });
+
       if (loginResponse.status === 200) {
-        alert("User has been registered")
+        alert("User has been registered");
         await onLogin(loginResponse.data);
       } else {
-        console.log("Error, while trying to login after registration");
+        alert(loginResponse.errorMessage);
       }
     } else {
-      console.log("Error at registration, didn't return 200");
+      alert(registerResponse.errorMessage);
     }
   };
 
   const tryRegister = async () => {
-    if (!state.username) {
-      console.log("Error: Username is empty");
+    let errorExists = false;
+
+    if (state.username.length < 6 || state.username.length > 14) {
+      errorExists = true;
       setError((prev) => ({
         ...prev,
-        username: "Error: Username is empty",
+        username: "Username must be between 6 and 14 symbols",
       }));
     } else {
       setError((prev) => ({
@@ -64,37 +64,11 @@ export default function Register() {
       }));
     }
 
-    if (state.password !== state.confirmPassword) {
-      console.log("Error: Passwords are not matching");
+    if (state.password.length < 6) {
+      errorExists = true;
       setError((prev) => ({
         ...prev,
-        password: "Error: Passwords are not matching",
-      }));
-    } else {
-      setError((prev) => ({
-        ...prev,
-        password: "",
-      }));
-    }
-
-    if (state.username.length < 4 || state.username.length > 14) {
-      console.log("Error: Username must be between 4 and 14 symbols");
-      setError((prev) => ({
-        ...prev,
-        username: "Error: Username must be between 4 and 14 symbols",
-      }));
-    } else {
-      setError((prev) => ({
-        ...prev,
-        username: "",
-      }));
-    }
-
-    if (state.password.length < 4 || state.password.length > 14) {
-      console.log("Error: Password must be between 4 and 14 symbols");
-      setError((prev) => ({
-        ...prev,
-        password: "Error: Password must be between 4 and 14 symbols",
+        password: "Password must have atleast 6 symbols",
       }));
     } else {
       setError((prev) => ({
@@ -104,25 +78,80 @@ export default function Register() {
     }
 
     if (state.password !== state.confirmPassword) {
-      console.log("Error: Passwords must match");
+      errorExists = true;
       setError((prev) => ({
         ...prev,
-        confirmPassword: "Error: Passwords must match",
+        password: "Passwords must match",
       }));
     } else {
       setError((prev) => ({
         ...prev,
-        confirmPassword: "",
+        password: "",
       }));
+    }
+
+    if (state.firstName.length === 0) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        firstName: "First name can't be empty",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        firstName: "",
+      }));
+    }
+
+    if (state.lastName.length === 0) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        lastName: "Last name can't be empty",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        lastName: "",
+      }));
+    }
+
+    if (state.email.length < 6) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        email: "Invalid email",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        email: "",
+      }));
+    }
+
+    if (!state.email.includes("@")) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        email: "Invalid email",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        email: "",
+      }));
+    }
+
+    if (!errorExists) {
+      await userRegistration();
     }
 
     return;
   };
 
-  const handleSubmitClick = (e) => {
+  const handleSubmitClick = async (e) => {
     e.preventDefault();
-    tryRegister();
-    userRegistration();
+    await tryRegister();
   };
 
   return (
@@ -169,6 +198,8 @@ export default function Register() {
               variant="outlined"
               fullWidth
               value={state.firstName}
+              error={!error.firstName ? false : true}
+              helperText={error.firstName}
               onChange={handleChange}
             />
             <TextField
@@ -179,6 +210,8 @@ export default function Register() {
               variant="outlined"
               fullWidth
               value={state.lastName}
+              error={!error.lastName ? false : true}
+              helperText={error.lastName}
               onChange={handleChange}
             />
             <TextField
@@ -190,6 +223,8 @@ export default function Register() {
               fullWidth
               type="email"
               value={state.email}
+              error={!error.email ? false : true}
+              helperText={error.email}
               onChange={handleChange}
             />
             <TextField
@@ -201,9 +236,9 @@ export default function Register() {
               fullWidth
               type="password"
               value={state.password}
-              onChange={handleChange}
               error={!error.password ? false : true}
               helperText={error.password}
+              onChange={handleChange}
             />
             <TextField
               required
@@ -214,9 +249,9 @@ export default function Register() {
               fullWidth
               type="password"
               value={state.confirmPassword}
-              onChange={handleChange}
               error={!error.confirmPassword ? false : true}
               helperText={error.confirmPassword}
+              onChange={handleChange}
             />
             <Button
               type="submit"

@@ -109,8 +109,9 @@ export default function Products() {
     return (
       <>
         {currentItems &&
-          currentItems.map((product) => (
+          currentItems.map((product, index) => (
             <Product
+              key={index}
               id={product.id}
               name={product.name}
               categories={product.categories}
@@ -363,7 +364,7 @@ export default function Products() {
                   input={<OutlinedInput label="Tag" />}
                 >
                   {Object.keys(productSpecification).map((item, index) => (
-                    <MenuItem key={index} value={item} selected={item}>
+                    <MenuItem key={index} value={item}>
                       <Checkbox
                         key={index}
                         checked={Object.values(productSpecification)[index]}

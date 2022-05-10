@@ -26,6 +26,9 @@ export default function ProductsSearch() {
     const response = await api.products.getProductsByGivenCriteria(request);
 
     if (response.status === 200) {
+      if (response.data.length === 0) {
+        alert("No products were found by given criteria");
+      }
       setProducts(response.data);
     } else {
       console.log("error at products, didn't return 200");
@@ -36,8 +39,9 @@ export default function ProductsSearch() {
     return (
       <>
         {currentItems &&
-          currentItems.map((product) => (
+          currentItems.map((product, index) => (
             <Product
+              key={index}
               id={product.id}
               name={product.name}
               categories={product.categories}

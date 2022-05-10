@@ -4,7 +4,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import "./style.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DefaultImage from "../../images/defaultProductImage.png";
 
 export default function Product({
@@ -32,25 +32,23 @@ export default function Product({
       }}
     >
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <img
-              style={{ objectFit: "contain" }}
-              src={
-                image !== null ? `${image.format},${image.data}` : DefaultImage
-              }
-              height="200"
-              width="300"
-              alt="none"
-            />
-          </div>
-        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img
+            style={{ objectFit: "contain" }}
+            src={
+              image !== null ? `${image.format},${image.data}` : DefaultImage
+            }
+            height="200"
+            width="300"
+            alt="none"
+          />
+        </div>
         <Typography variant="h5" component="div">
           {name}
         </Typography>
@@ -64,9 +62,9 @@ export default function Product({
             {category.name + " "}
           </Typography>
         ))}
-
         <Typography sx={{ color: "black" }}>by {creator.username}</Typography>
       </CardContent>
+
       <CardActions
         sx={{
           color: "black",
