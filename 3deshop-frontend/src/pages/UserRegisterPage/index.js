@@ -31,6 +31,7 @@ export default function Register() {
   const userRegistration = async () => {
     const registerResponse = await api.users.userRegister(state);
 
+    console.log("a");
     if (registerResponse.status === 200) {
       const loginResponse = await api.users.userLogin({
         username: state.username,
@@ -81,12 +82,12 @@ export default function Register() {
       errorExists = true;
       setError((prev) => ({
         ...prev,
-        password: "Passwords must match",
+        confirmPassword: "Passwords must match",
       }));
     } else {
       setError((prev) => ({
         ...prev,
-        password: "",
+        confirmPassword: "",
       }));
     }
 
@@ -116,19 +117,6 @@ export default function Register() {
       }));
     }
 
-    if (state.email.length < 6) {
-      errorExists = true;
-      setError((prev) => ({
-        ...prev,
-        email: "Invalid email",
-      }));
-    } else {
-      setError((prev) => ({
-        ...prev,
-        email: "",
-      }));
-    }
-
     if (!state.email.includes("@")) {
       errorExists = true;
       setError((prev) => ({
@@ -136,14 +124,32 @@ export default function Register() {
         email: "Invalid email",
       }));
     } else {
-      setError((prev) => ({
-        ...prev,
-        email: "",
-      }));
+      if (state.email.length < 6) {
+        errorExists = true;
+        setError((prev) => ({
+          ...prev,
+          email: "Invalid email",
+        }));
+      } else {
+        setError((prev) => ({
+          ...prev,
+          email: "",
+        }));
+      }
     }
 
     if (!errorExists) {
       await userRegistration();
+    } else {
+      var allErrors = Object.keys(error)
+        .map((item) => {
+          return error[item].length > 0 ? error[item] : null;
+        })
+        .map((i) => {
+          if (i) return `*${i} \n`;
+        })
+        .join("");
+      alert(allErrors);
     }
 
     return;

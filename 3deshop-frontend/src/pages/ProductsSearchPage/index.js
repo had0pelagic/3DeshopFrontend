@@ -110,7 +110,7 @@ export default function ProductsSearch() {
   };
 
   const getProductsOrderByUploadDate = async (ascending) => {
-    const ids = [];
+    const ids = getProductIds();
     const request = { productIds: ids, ascending: ascending };
     const products = await api.products.getProductsByGivenIdsAndOrderByDate(
       request

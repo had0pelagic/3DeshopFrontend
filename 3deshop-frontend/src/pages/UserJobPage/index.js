@@ -16,6 +16,11 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
@@ -31,6 +36,7 @@ import moment from "moment";
 import Slider from "@mui/material/Slider";
 import LinearProgress from "@mui/material/LinearProgress";
 import ReactPaginate from "react-paginate";
+import FileFormatValidation from "../../utils/fileFormatValidation.helper";
 
 export default function UserJobs() {
   const { id } = useParams();
@@ -59,10 +65,83 @@ export default function UserJobs() {
     setProgressOpen(true);
   };
 
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+  const handleConfirmationDialogOpen = () => {
+    setOpenConfirmationDialog(true);
+  };
+  const handleConfirmationDialogClose = () => {
+    setOpenConfirmationDialog(false);
+  };
+
+  const [error, setError] = useState({
+    comment: "",
+    file: "",
+  });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
   useEffect(async () => {
     checkIfUsersPage();
     await getJobs();
   }, []);
+
+  const trySetJobCompletion = async () => {
+    let errorExists = false;
+
+    if (form.comment.length === 0 || form.comment.length > 200) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        comment: "Comment must have between 0 and 200 symbols",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        comment: "",
+      }));
+    }
+
+    if (!FileFormatValidation.isModelFormatsValid(files)) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        file: "Accepted file formats: gltf, obj, blend, fbx, png, jpg",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        file: "",
+      }));
+    }
+
+    if (!errorExists) {
+      await setJobCompletion();
+    }
+
+    return;
+  };
+
+  const trySetJobProgress = async () => {
+    let errorExists = false;
+
+    if (form.comment.length === 0 || form.comment.length > 200) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        comment: "Comment must have between 0 and 200 symbols",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        comment: "",
+      }));
+    }
+
+    if (!errorExists) {
+      await setJobProgress();
+    }
+
+    return;
+  };
 
   const checkIfUsersPage = () => {
     const token = getToken().data;
@@ -104,7 +183,7 @@ export default function UserJobs() {
       handleProgressClose();
       window.location.reload();
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -145,18 +224,22 @@ export default function UserJobs() {
       handleProgressClose();
       window.location.reload();
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    await setJobProgress();
+    setButtonDisabled(true);
+    await trySetJobProgress();
+    setButtonDisabled(false);
   };
 
   const handleJobCompletion = async (e) => {
     e.preventDefault();
-    await setJobCompletion();
+    setButtonDisabled(true);
+    await trySetJobCompletion();
+    setButtonDisabled(false);
   };
 
   const getDisplayOrder = async (job) => {
@@ -188,7 +271,7 @@ export default function UserJobs() {
       console.log("Job has been abandoned!");
       window.location.reload();
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -390,12 +473,12 @@ export default function UserJobs() {
                 multiline
                 maxRows={4}
                 value={order.description}
-                InputProps={{ readOnly: true, disableUnderline: true }}
+                InputProps={{ readOnly: true }}
                 sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
               />
               <div className="priceDateContainer">
                 <Typography sx={{ fontSize: 20 }} variant="h5" gutterBottom>
-                  {order.price}$
+                  {order.price}C
                 </Typography>
                 <Box sx={{ width: "100%" }}>
                   <LinearProgressWithLabel value={job.progress} />
@@ -423,14 +506,14 @@ export default function UserJobs() {
                         marginTop: 5,
                         width: 400,
                       }}
-                      onClick={abandonJob}
+                      disabled={buttonDisabled}
+                      onClick={handleConfirmationDialogOpen}
                     >
                       <Typography>Abandon job</Typography>
                     </Button>
                   ) : (
                     <div></div>
                   )}
-
                   <Button
                     sx={{
                       color: "#fff",
@@ -442,6 +525,7 @@ export default function UserJobs() {
                       marginTop: 5,
                       width: 400,
                     }}
+                    disabled={buttonDisabled}
                     onClick={() => handleProgressOpen()}
                   >
                     <Typography>Set progress</Typography>
@@ -459,6 +543,7 @@ export default function UserJobs() {
                   marginTop: 5,
                   width: 400,
                 }}
+                disabled={buttonDisabled}
                 component={Link}
                 to={`/job-progress/${job.order.id}`}
               >
@@ -516,6 +601,8 @@ export default function UserJobs() {
                 }}
                 value={form.comment}
                 onChange={handleNoteChange}
+                error={!error.comment ? false : true}
+                helperText={error.comment}
               />
             </div>
             {form.progress === 100 ? (
@@ -524,10 +611,26 @@ export default function UserJobs() {
                   <FilePond
                     stylePanelLayout="compact"
                     files={files}
+                    credits
                     allowMultiple={true}
                     onupdatefiles={setFiles}
                     labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
                   />
+                  {error.file ? (
+                    <Typography
+                      sx={{
+                        color: "red",
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: 2,
+                        marginBottom: 2,
+                      }}
+                    >
+                      {error.file}
+                    </Typography>
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
                 <Button
                   sx={{
@@ -540,6 +643,7 @@ export default function UserJobs() {
                     marginTop: 5,
                     width: 400,
                   }}
+                  disabled={buttonDisabled}
                   onClick={handleJobCompletion}
                 >
                   <Typography>Set progress & upload files</Typography>
@@ -557,6 +661,7 @@ export default function UserJobs() {
                   marginTop: 5,
                   width: 400,
                 }}
+                disabled={buttonDisabled}
                 onClick={handleSubmitClick}
               >
                 <Typography>Set progress</Typography>
@@ -565,6 +670,37 @@ export default function UserJobs() {
           </div>
         </Box>
       </Modal>
+
+      <Dialog
+        open={openConfirmationDialog}
+        onClose={handleConfirmationDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Job abandon"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {"Are you sure you want to abandon this job?"}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={buttonDisabled}
+            onClick={() => abandonJob()}
+            color="primary"
+            autoFocus
+          >
+            {"Yes"}
+          </Button>
+          <Button
+            disabled={buttonDisabled}
+            onClick={handleConfirmationDialogClose}
+            color="primary"
+          >
+            {"No"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

@@ -45,11 +45,38 @@ export default function ProductDetails() {
   const handleClose = () => {
     setOpen(false);
   };
+  const [error, setError] = useState({
+    comment: "",
+  });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   useEffect(async () => {
     await getProductDetails();
     await getProductComments();
   }, []);
+
+  const tryPostComment = async (productId, userId, comment) => {
+    let errorExists = false;
+
+    if (comment.description.length === 0) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        comment: "Comment cannot be empty",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        comment: "",
+      }));
+    }
+
+    if (!errorExists) {
+      await postComment(productId, userId, comment);
+    }
+
+    return;
+  };
 
   const getProductDetails = async () => {
     const response = await api.products.getProduct(id);
@@ -115,7 +142,8 @@ export default function ProductDetails() {
     e.preventDefault();
     const token = getToken().data;
     const jwtUserId = JwtHelper.getUser(token).userId;
-    await postComment(id, jwtUserId, comment);
+    await tryPostComment(id, jwtUserId, comment);
+    setButtonDisabled(false);
   };
 
   const handleCommentChange = (e) => {
@@ -299,6 +327,8 @@ export default function ProductDetails() {
                 value={comment.description}
                 onChange={handleCommentChange}
                 autoFocus
+                error={!error.comment ? false : true}
+                helperText={error.comment}
               />
             </div>
             <div
@@ -319,7 +349,11 @@ export default function ProductDetails() {
                     borderStyle: "none",
                   },
                 }}
-                onClick={handleCommentSubmit}
+                disabled={buttonDisabled}
+                onClick={(e) => {
+                  handleCommentSubmit(e);
+                  setButtonDisabled(true);
+                }}
               >
                 Post comment
               </Button>

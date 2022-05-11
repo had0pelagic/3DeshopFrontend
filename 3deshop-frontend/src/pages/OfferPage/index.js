@@ -10,11 +10,6 @@ import {
   Container,
   Avatar,
   Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
 } from "@mui/material";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -22,22 +17,41 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import CreateIcon from "@mui/icons-material/Create";
 
 export default function Offer() {
-  let { id } = useParams();
   const navigate = useNavigate();
+  let { id } = useParams();
   let { state } = useLocation();
   const { getToken } = useAuth();
   const [offerForm, setOfferForm] = useState({
     description: "",
     completeTill: new Date(),
   });
+  const [error, setError] = useState({ description: "" });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const handleSuccessDialogOpen = () => {
-    setOpenSuccess(true);
-  };
-  const handleSuccessDialogClose = () => {
-    setOpenSuccess(false);
-    navigate("/orders");
+  const tryUploadOffer = async () => {
+    let errorExists = false;
+
+    if (
+      offerForm.description.length < 10 ||
+      offerForm.description.length > 200
+    ) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        description: "Description must be between 10 and 200 symbols",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        description: "",
+      }));
+    }
+
+    if (!errorExists) {
+      await uploadOffer();
+    }
+
+    return;
   };
 
   const uploadOffer = async () => {
@@ -52,10 +66,10 @@ export default function Offer() {
     const response = await api.orders.postOffer(offer);
 
     if (response.status === 200) {
-      console.log("Offer sent!");
-      handleSuccessDialogOpen();
+      alert("Offer sent!");
+      navigate("/orders");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -70,7 +84,7 @@ export default function Offer() {
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    await uploadOffer();
+    await tryUploadOffer();
   };
 
   return (
@@ -110,14 +124,17 @@ export default function Offer() {
               }}
               value={offerForm.description}
               onChange={handleChange}
+              error={!error.description ? false : true}
+              helperText={error.description}
             />
+
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DesktopDatePicker
                 required
                 id="completeTill"
                 label="completeTill"
                 value={offerForm.completeTill}
-                minDate={new Date("2021-01-01")}
+                minDate={new Date(new Date())}
                 onChange={(offerForm) =>
                   handleChange({
                     target: { value: offerForm, id: "completeTill" },
@@ -128,33 +145,21 @@ export default function Offer() {
                 )}
               />
             </LocalizationProvider>
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               style={{ marginTop: 20 }}
-              onClick={handleSubmitClick}
+              disabled={buttonDisabled}
+              onClick={(e)=>{handleSubmitClick(e);setButtonDisabled(true)}}
             >
               Make an offer
             </Button>
           </form>
         </div>
       </Container>
-
-      <Dialog
-        open={openSuccess}
-        onClose={handleSuccessDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Offer has been sent!"}
-        </DialogTitle>
-        <DialogActions>
-          <Button onClick={handleSuccessDialogClose}>Ok</Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 }

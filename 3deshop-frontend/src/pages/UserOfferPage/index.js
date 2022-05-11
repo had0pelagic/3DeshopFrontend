@@ -36,24 +36,12 @@ export default function UserOffers() {
   const [isLoadingOffers, setLoadingOffers] = useState(true);
   const [isLoadingOffer, setLoadingOffer] = useState(true);
   const [offer, setOffer] = useState();
-  const [statusMessage, setStatusMessage] = useState();
 
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = async (id) => {
     await getOffer(id);
     setOpen(true);
-  };
-
-  const [openStatusDialog, setOpenStatusDialog] = useState(false);
-  const handleStatusDialogOpen = () => {
-    setOpenStatusDialog(true);
-  };
-  const handleStatusDialogClose = () => {
-    setOpenStatusDialog(false);
-    const token = getToken().data;
-    const jwtUserId = JwtHelper.getUser(token).userId;
-    navigate(`/user-orders/${jwtUserId}`);
   };
 
   useEffect(async () => {
@@ -65,10 +53,8 @@ export default function UserOffers() {
 
     if (response.status === 200) {
       setOffers(response.data);
-      console.log("Offers returned!");
     } else {
       alert(response.errorMessage);
-      console.log("error at products, didn't return 200");
     }
     setLoadingOffers(false);
   };
@@ -78,9 +64,8 @@ export default function UserOffers() {
 
     if (response.status === 200) {
       setOffer(response.data);
-      console.log("Offer returned!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingOffer(false);
   };
@@ -91,11 +76,12 @@ export default function UserOffers() {
     const response = await api.orders.acceptOffer(jwtUserId, offerId, id);
 
     if (response.status === 200) {
-      console.log("Offer has been approved!");
-      setStatusMessage("Offer has been approved!");
-      handleStatusDialogOpen();
+      alert("Offer has been approved!");
+      const token = getToken().data;
+      const jwtUserId = JwtHelper.getUser(token).userId;
+      navigate(`/user-orders/${jwtUserId}`);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -105,11 +91,12 @@ export default function UserOffers() {
     const response = await api.orders.declineOffer(jwtUserId, offerId);
 
     if (response.status === 200) {
-      console.log("Offer has been declined!");
-      setStatusMessage("Offer has been declined!");
-      handleStatusDialogOpen();
+      alert("Offer has been declined!");
+      const token = getToken().data;
+      const jwtUserId = JwtHelper.getUser(token).userId;
+      navigate(`/user-orders/${jwtUserId}`);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -201,7 +188,7 @@ export default function UserOffers() {
                 multiline
                 maxRows={4}
                 value={offer.description}
-                InputProps={{ readOnly: true, disableUnderline: true }}
+                InputProps={{ readOnly: true }}
                 sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
               />
               <div className="priceDateContainer">
@@ -244,18 +231,6 @@ export default function UserOffers() {
           </Box>
         )}
       </Modal>
-
-      <Dialog
-        open={openStatusDialog}
-        onClose={handleStatusDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{statusMessage}</DialogTitle>
-        <DialogActions>
-          <Button onClick={handleStatusDialogClose}>Ok</Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 }

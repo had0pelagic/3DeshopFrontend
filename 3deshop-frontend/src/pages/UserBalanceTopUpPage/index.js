@@ -15,8 +15,35 @@ export default function UserBalanceTopUp() {
   const location = useLocation();
   const [form, setForm] = useState({
     userId: null,
-    amount: null,
+    amount: "",
   });
+  const [error, setError] = useState({
+    amount: "",
+  });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  const tryUserTopUpBalance = async () => {
+    let errorExists = false;
+
+    if (!/[0-9]/.test(form.amount)) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        amount: "Amount must be a number",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        amount: "",
+      }));
+    }
+
+    if (!errorExists) {
+      await userTopUpBalance();
+    }
+
+    return;
+  };
 
   const userTopUpBalance = async () => {
     const token = getToken().data;
@@ -25,13 +52,11 @@ export default function UserBalanceTopUp() {
     const response = await api.balance.balanceTopUp(form);
 
     if (response.status === 200) {
-      console.log("balance update!");
-      alert("Credits were added to user account")
+      alert("Credits were added to user account");
       const origin = location.state?.from?.pathname || "/";
       navigate(origin);
     } else {
       alert(response.errorMessage);
-      console.log("error at balance top up, didn't return 200");
     }
   };
 
@@ -45,7 +70,8 @@ export default function UserBalanceTopUp() {
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    await userTopUpBalance();
+    await tryUserTopUpBalance();
+    setButtonDisabled(false);
   };
 
   return (
@@ -74,6 +100,7 @@ export default function UserBalanceTopUp() {
           >
             <TextField
               required
+              type="text"
               id="amount"
               label="Amount"
               margin="normal"
@@ -81,6 +108,8 @@ export default function UserBalanceTopUp() {
               fullWidth
               value={form.amount}
               onChange={handleChange}
+              error={!error.amount ? false : true}
+              helperText={error.amount}
             />
             <Button
               type="submit"
@@ -88,9 +117,13 @@ export default function UserBalanceTopUp() {
               variant="contained"
               color="primary"
               style={{ marginTop: 15 }}
-              onClick={handleSubmitClick}
+              disabled={buttonDisabled}
+              onClick={(e) => {
+                setButtonDisabled(true);
+                handleSubmitClick(e);
+              }}
             >
-              Add to balance
+              Add credits
             </Button>
           </form>
         </div>

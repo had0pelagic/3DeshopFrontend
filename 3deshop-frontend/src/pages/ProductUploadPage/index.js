@@ -21,6 +21,7 @@ import JwtHelper from "../../utils/jwt.helper";
 import FormatHelper from "../../utils/format.helper";
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
+import FileFormatValidation from "../../utils/fileFormatValidation.helper";
 
 export default function Upload() {
   const { getToken } = useAuth();
@@ -33,7 +34,7 @@ export default function Upload() {
   const [selectedFormats, setSelectedFormats] = useState([]);
   const [productAbout, setProductAboutState] = useState({
     name: "",
-    price: "",
+    price: 0,
     description: "",
   });
   const [productSpecification, setProductSpecificationState] = useState({
@@ -43,11 +44,122 @@ export default function Upload() {
     rig: false,
     materials: false,
   });
+  const [error, setError] = useState({
+    name: "",
+    price: "",
+    description: "",
+    fileFormats: "",
+    imageFormats: "",
+    categories: "",
+    formats: "",
+  });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   useEffect(async () => {
     await getCategories();
     await getFormats();
   }, []);
+
+  const tryUpload = async () => {
+    let errorExists = false;
+
+    if (productAbout.name.length < 6 || productAbout.name.length > 60) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        name: "Name must have atleast 6 symbols",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        name: "",
+      }));
+    }
+
+    if (!/[0-9]/.test(productAbout.price)) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        price: "Price must be a number",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        price: "",
+      }));
+    }
+
+    if (productAbout.description.length === 0) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        description: "Description cannot be empty",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        description: "",
+      }));
+    }
+
+    if (selectedCategories.length === 0) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        categories: "Atleast one category needs to be chosen",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        categories: "",
+      }));
+    }
+
+    if (selectedFormats.length === 0) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        formats: "Atleast one format needs to be chosen",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        formats: "",
+      }));
+    }
+
+    if (!FileFormatValidation.isModelFormatsValid(files)) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        fileFormats: "Accepted file formats: gltf, obj, blend, fbx, png, jpg",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        fileFormats: "",
+      }));
+    }
+
+    if (!FileFormatValidation.isImageFormatsValid(images)) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        imageFormats: "Accepted image formats: png, jpg",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        imageFormats: "",
+      }));
+    }
+
+    if (!errorExists) {
+      await uploadProduct();
+    }
+
+    return;
+  };
 
   const getCategories = async () => {
     const response = await api.productDetails.getCategories();
@@ -105,9 +217,8 @@ export default function Upload() {
     if (response.status === 200) {
       alert("Product has been uploaded");
       navigate("/products");
-      console.log("Product uploaded!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -146,7 +257,8 @@ export default function Upload() {
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    await uploadProduct();
+    await tryUpload();
+    setButtonDisabled(false);
   };
 
   return (
@@ -185,6 +297,8 @@ export default function Upload() {
               value={productAbout.name}
               onChange={handleAboutChange}
               sx={{ width: 400 }}
+              error={!error.name ? false : true}
+              helperText={error.name}
             />
 
             <TextField
@@ -198,6 +312,8 @@ export default function Upload() {
               value={productAbout.price}
               onChange={handleAboutChange}
               sx={{ width: 400 }}
+              error={!error.price ? false : true}
+              helperText={error.price}
             />
 
             <TextField
@@ -212,6 +328,8 @@ export default function Upload() {
               value={productAbout.description}
               onChange={handleAboutChange}
               sx={{ width: 400 }}
+              error={!error.description ? false : true}
+              helperText={error.description}
             />
 
             <SpecificationCheckBoxes
@@ -236,6 +354,21 @@ export default function Upload() {
                 credits
                 labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
               />
+              {error.fileFormats ? (
+                <Typography
+                  sx={{
+                    color: "red",
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: 2,
+                    marginBottom: 2,
+                  }}
+                >
+                  {error.fileFormats}
+                </Typography>
+              ) : (
+                <div></div>
+              )}
             </Card>
 
             <Card
@@ -255,6 +388,21 @@ export default function Upload() {
                 credits
                 labelIdle='Drag & Drop your images or <span class="filepond--label-action">Browse</span>'
               />
+              {error.imageFormats ? (
+                <Typography
+                  sx={{
+                    color: "red",
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: 2,
+                    marginBottom: 2,
+                  }}
+                >
+                  {error.imageFormats}
+                </Typography>
+              ) : (
+                <div></div>
+              )}
             </Card>
 
             <ProductCheckBoxes
@@ -263,14 +411,16 @@ export default function Upload() {
               idName="categories"
               label="Categories:"
               state={setSelectedCategories}
+              error={error.categories}
             />
 
             <ProductCheckBoxes
               items={formats}
               handleChange={handleCheckboxes}
               idName="formats"
-              label="Formats:"
+              label="File formats:"
               state={setSelectedFormats}
+              error={error.formats}
             />
 
             <Button
@@ -279,7 +429,11 @@ export default function Upload() {
               variant="contained"
               color="primary"
               style={{ marginTop: 30 }}
-              onClick={handleSubmitClick}
+              disabled={buttonDisabled}
+              onClick={(e) => {
+                setButtonDisabled(true);
+                handleSubmitClick(e);
+              }}
             >
               Upload product
             </Button>
@@ -376,7 +530,14 @@ function SpecificationCheckBoxes({
   );
 }
 
-function ProductCheckBoxes({ items, handleChange, idName, label, state }) {
+function ProductCheckBoxes({
+  items,
+  handleChange,
+  idName,
+  label,
+  state,
+  error,
+}) {
   return (
     <Card sx={{ mt: 5, width: 400 }}>
       <FormControl
@@ -418,6 +579,21 @@ function ProductCheckBoxes({ items, handleChange, idName, label, state }) {
           ))}
         </FormGroup>
       </FormControl>
+      {error ? (
+        <Typography
+          sx={{
+            color: "red",
+            display: "flex",
+            justifyContent: "center",
+            marginTop: 2,
+            marginBottom: 2,
+          }}
+        >
+          {error}
+        </Typography>
+      ) : (
+        <div></div>
+      )}
     </Card>
   );
 }

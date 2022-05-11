@@ -27,6 +27,7 @@ import { useAuth } from "../../hooks/useAuth";
 import JwtHelper from "../../utils/jwt.helper";
 import moment from "moment";
 import LinearProgress from "@mui/material/LinearProgress";
+import { AlignVerticalCenterTwoTone } from "@mui/icons-material";
 
 export default function JobProgress() {
   const { id } = useParams();
@@ -61,10 +62,37 @@ export default function JobProgress() {
     setOpenConfirmationDialog(false);
   };
 
+  const [error, setError] = useState({ description: "" });
+
   useEffect(async () => {
     await getProgress();
     await getOrder();
   }, []);
+
+  const tryRequestJobChanges = async () => {
+    let errorExists = false;
+
+    if (
+      requestForm.description.length === 0 ||
+      requestForm.description.length > 200
+    ) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        description: "Note must have between 0 and 200 symbols",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        description: "",
+      }));
+    }
+
+    if (!errorExists) {
+      await requestJobChanges();
+    }
+    return;
+  };
 
   const getProgress = async () => {
     const token = getToken().data;
@@ -79,10 +107,8 @@ export default function JobProgress() {
         setLastProgressValue(response.data[response.data.length - 1].progress);
         setProgresses(response.data);
       }
-      console.log("Progress returned!");
     } else {
       alert(response.errorMessage);
-      console.log("error at progress, didn't return 200");
     }
     setLoading(false);
   };
@@ -97,9 +123,8 @@ export default function JobProgress() {
       if (jwtUserId === response.data.user.id) {
         setIsOwner(true);
       }
-      console.log("Progress returned!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoading(false);
   };
@@ -110,10 +135,10 @@ export default function JobProgress() {
     const response = await api.orders.requestJobChanges(request);
 
     if (response.status === 200) {
-      console.log("Request for changes has been sent!");
+      alert("Request sent!");
       window.location.reload();
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoading(false);
   };
@@ -124,10 +149,10 @@ export default function JobProgress() {
     const response = await api.orders.approveOrder(id, jwtUserId);
 
     if (response.status === 200) {
-      console.log("Order has been approved!");
+      alert("Order has been approved");
       window.location.reload();
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoading(false);
   };
@@ -154,6 +179,11 @@ export default function JobProgress() {
       ...prevState,
       [id]: value,
     }));
+  };
+
+  const handleSubmitClick = async (e) => {
+    e.preventDefault();
+    await tryRequestJobChanges();
   };
 
   return (
@@ -348,10 +378,10 @@ export default function JobProgress() {
         >
           <div className="flexContainer">
             <Typography variant="h4">Change request</Typography>
-            <div style={{ marginTop: 60 }}>
+            <div style={{ marginTop: 40 }}>
               <TextField
                 id="description"
-                label="description"
+                label="Note"
                 variant="outlined"
                 multiline
                 rows={4}
@@ -360,6 +390,8 @@ export default function JobProgress() {
                 }}
                 value={requestForm.description}
                 onChange={handleChange}
+                error={!error.description ? false : true}
+                helperText={error.description}
               />
             </div>
             <Button
@@ -373,7 +405,7 @@ export default function JobProgress() {
                 marginTop: 5,
                 width: 300,
               }}
-              onClick={() => requestJobChanges()}
+              onClick={handleSubmitClick}
             >
               <Typography style={{ fontSize: 20 }}>Send request</Typography>
             </Button>

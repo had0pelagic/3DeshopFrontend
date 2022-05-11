@@ -322,7 +322,7 @@ export default function Orders() {
                 multiline
                 maxRows={4}
                 value={order.description}
-                InputProps={{ readOnly: true, disableUnderline: true }}
+                InputProps={{ readOnly: true }}
                 sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
               />
               <div className="priceDateContainer">

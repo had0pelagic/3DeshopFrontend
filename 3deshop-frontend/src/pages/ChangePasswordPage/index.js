@@ -22,10 +22,48 @@ export default function ChangePassword() {
   const location = useLocation();
   const navigate = useNavigate();
   const { getToken } = useAuth();
+  const [error, setError] = useState({ password: "", confirmPassword: "" });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   useEffect(() => {
     checkIfUsersPage();
   }, []);
+
+  const tryChangePassword = async () => {
+    let errorExists = false;
+
+    if (state.password.length < 6) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        password: "Password must have atleast 6 symbols",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        password: "",
+      }));
+    }
+
+    if (state.password !== state.confirmPassword) {
+      errorExists = true;
+      setError((prev) => ({
+        ...prev,
+        confirmPassword: "Passwords must match",
+      }));
+    } else {
+      setError((prev) => ({
+        ...prev,
+        confirmPassword: "",
+      }));
+    }
+
+    if (!errorExists) {
+      await updatePassword();
+    }
+
+    return;
+  };
 
   const checkIfUsersPage = () => {
     const token = getToken().data;
@@ -44,18 +82,19 @@ export default function ChangePassword() {
       const origin = location.state?.from?.pathname || "/";
       navigate(origin);
     } else {
-      console.log("error at password change page, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
-  const handleSubmitClick = (e) => {
+  const handleSubmitClick = async (e) => {
     e.preventDefault();
-    updatePassword();
+    await tryChangePassword();
+    setButtonDisabled(false);
   };
 
   const handleChange = (e) => {
-    console.log(e.target);
     const { id, value } = e.target;
+
     setState((prevState) => ({
       ...prevState,
       [id]: value,
@@ -96,6 +135,8 @@ export default function ChangePassword() {
               type="password"
               value={state.password}
               onChange={handleChange}
+              error={!error.password ? false : true}
+              helperText={error.password}
             />
             <TextField
               required
@@ -107,15 +148,20 @@ export default function ChangePassword() {
               type="password"
               value={state.confirmPassword}
               onChange={handleChange}
+              error={!error.confirmPassword ? false : true}
+              helperText={error.confirmPassword}
             />
-
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               style={{ marginTop: 5 }}
-              onClick={handleSubmitClick}
+              onClick={(e) => {
+                setButtonDisabled(true);
+                handleSubmitClick(e);
+              }}
+              disabled={buttonDisabled}
             >
               Change password
             </Button>
