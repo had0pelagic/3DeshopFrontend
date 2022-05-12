@@ -35,8 +35,8 @@ export default function Orders() {
   const [isLoadingOrders, setLoadingOrders] = useState(true);
   const [isLoadingOrder, setLoadingOrder] = useState(true);
   const [order, setOrder] = useState();
-  const [open, setOpen] = useState(false);
   const [isOrderOwner, setIsOrderOwner] = useState();
+  const [open, setOpen] = useState(false);
   const handleOpen = async (id) => {
     await getDisplayOrder(id);
     await checkIfOrderOwner(id);

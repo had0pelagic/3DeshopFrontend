@@ -22,6 +22,7 @@ import FormatHelper from "../../utils/format.helper";
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FileFormatValidation from "../../utils/fileFormatValidation.helper";
+import VideoHelper from "../../utils/video.helper";
 
 export default function Upload() {
   const { getToken } = useAuth();
@@ -36,6 +37,7 @@ export default function Upload() {
     name: "",
     price: 0,
     description: "",
+    videoLink: "",
   });
   const [productSpecification, setProductSpecificationState] = useState({
     data: "",
@@ -52,6 +54,7 @@ export default function Upload() {
     imageFormats: "",
     categories: "",
     formats: "",
+    videoLink: "",
   });
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
@@ -125,6 +128,28 @@ export default function Upload() {
       setError((prev) => ({
         ...prev,
         formats: "",
+      }));
+    }
+
+    if (productAbout.videoLink.length !== 0) {
+      const videoId = VideoHelper.getYoutubeVideoId(productAbout.videoLink);
+
+      if (videoId === null) {
+        errorExists = true;
+        setError((prev) => ({
+          ...prev,
+          videoLink: "Only YouTube video links are accepted",
+        }));
+      } else {
+        setError((prev) => ({
+          ...prev,
+          videoLink: "",
+        }));
+      }
+    } else {
+      setError((prev) => ({
+        ...prev,
+        videoLink: "",
       }));
     }
 
@@ -330,6 +355,20 @@ export default function Upload() {
               sx={{ width: 400 }}
               error={!error.description ? false : true}
               helperText={error.description}
+            />
+
+            <TextField
+              type="text"
+              id="videoLink"
+              label="YouTube video link"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              value={productAbout.videoLink}
+              onChange={handleAboutChange}
+              sx={{ width: 400 }}
+              error={!error.videoLink ? false : true}
+              helperText={error.videoLink}
             />
 
             <SpecificationCheckBoxes

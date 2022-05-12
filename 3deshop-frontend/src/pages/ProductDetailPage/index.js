@@ -12,12 +12,16 @@ import CardMedia from "@mui/material/CardMedia";
 import Loader from "../../components/Loader/index.js";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DownloadingIcon from "@mui/icons-material/Downloading";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import Carousel from "react-material-ui-carousel";
+import Youtube from "react-youtube";
 import TextField from "@mui/material/TextField";
 import { useAuth } from "../../hooks/useAuth";
 import DefaultImage from "../../images/defaultProductImage.png";
 import Divider from "@mui/material/Divider";
 import {
+  Modal,
+  Box,
   Avatar,
   Dialog,
   DialogActions,
@@ -27,6 +31,7 @@ import {
   Grid,
 } from "@mui/material";
 import ReactPaginate from "react-paginate";
+import VideoHelper from "../../utils/video.helper";
 
 export default function ProductDetails() {
   let { id } = useParams();
@@ -39,12 +44,21 @@ export default function ProductDetails() {
   });
   const [isLoadingDetails, setLoadingDetails] = useState(true);
   const [isLoadingComments, setLoadingComments] = useState(true);
+  const [videoId, setVideoId] = useState(null);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [openVideo, setOpenVideo] = useState(false);
+  const handleOpenVideo = (url) => {
+    setOpenVideo(true);
+    setVideoId(VideoHelper.getYoutubeVideoId(url));
+  };
+  const handleCloseVideo = () => setOpenVideo(false);
+
   const [error, setError] = useState({
     comment: "",
   });
@@ -83,14 +97,14 @@ export default function ProductDetails() {
 
     if (response.status === 200) {
       setDetails(response.data);
-
+      console.log(response.data);
       const token = getToken().data;
       const jwtUserId = JwtHelper.getUser(token).userId;
       if (jwtUserId === response.data.user.id) {
         setIsOwner(true);
       }
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingDetails(false);
   };
@@ -101,7 +115,7 @@ export default function ProductDetails() {
     if (response.status === 200) {
       setComments(response.data);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingComments(false);
   };
@@ -119,7 +133,7 @@ export default function ProductDetails() {
       handleClose();
       window.location.reload();
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -129,7 +143,7 @@ export default function ProductDetails() {
     if (response.status === 200) {
       window.location.reload();
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -175,6 +189,22 @@ export default function ProductDetails() {
               <CardMedia component="img" height="300" image={DefaultImage} />
             )}
           </CardContent>
+          {productDetails.about.videoLink && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "right",
+              }}
+            >
+              <Button
+                onClick={() => handleOpenVideo(productDetails.about.videoLink)}
+                style={{ color: "red" }}
+              >
+                <OndemandVideoIcon />
+              </Button>
+            </div>
+          )}
         </Card>
       </div>
     );
@@ -469,6 +499,32 @@ export default function ProductDetails() {
         <div>
           {ProductImages()}
           {ProductAbout()}
+          <Modal
+            open={openVideo}
+            onClose={handleCloseVideo}
+            BackdropProps={{
+              timeout: 600,
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 600,
+                height: 400,
+                p: 4,
+              }}
+            >
+              <div className="flexContainer">
+                <Youtube
+                  videoId={videoId}
+                  opts={{ width: 600, height: 400 }}
+                ></Youtube>
+              </div>
+            </Box>
+          </Modal>
         </div>
       )}
       {isLoadingComments ? (
