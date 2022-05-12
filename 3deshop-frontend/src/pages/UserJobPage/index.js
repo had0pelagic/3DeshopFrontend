@@ -420,7 +420,7 @@ export default function UserJobs() {
           pageRangeDisplayed={5}
           pageCount={pageCount}
           renderOnZeroPageCount={null}
-          containerClassName="pagination"
+          containerClassName="userJobPagination"
           activeClassName="active"
         />
       </>

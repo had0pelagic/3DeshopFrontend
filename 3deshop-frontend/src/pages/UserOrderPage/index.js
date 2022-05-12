@@ -217,7 +217,7 @@ export default function UserOrders() {
           pageRangeDisplayed={5}
           pageCount={pageCount}
           renderOnZeroPageCount={null}
-          containerClassName="pagination"
+          containerClassName="userOrderPagination"
           activeClassName="active"
         />
       </>

@@ -164,7 +164,7 @@ export default function UserProducts() {
           pageRangeDisplayed={5}
           pageCount={pageCount}
           renderOnZeroPageCount={null}
-          containerClassName="pagination"
+          containerClassName="userProductPagination"
           activeClassName="active"
         />
       </>

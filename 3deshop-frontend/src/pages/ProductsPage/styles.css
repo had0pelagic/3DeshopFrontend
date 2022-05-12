@@ -18,11 +18,11 @@
   padding: 50px;
 }
 
-.pagination {
+.productPagination {
   margin-bottom: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   list-style-type: none;
   padding: 0 5rem;
 }

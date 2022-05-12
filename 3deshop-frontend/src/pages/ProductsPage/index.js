@@ -66,22 +66,28 @@ export default function Products() {
   };
 
   const getProductsOrderByPrice = async (ascending) => {
-    const products = await api.products.getProductsOrderByPrice(ascending);
+    const response = await api.products.getProductsOrderByPrice(ascending);
 
     if (products.status === 200) {
-      setProducts(products.data);
+      var filteredProducts = response.data.filter((product) => {
+        return product.isActive === true;
+      });
+      setProducts(filteredProducts);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
   const getProductsOrderByUploadDate = async (ascending) => {
-    const products = await api.products.getProductsOrderByUploadDate(ascending);
+    const response = await api.products.getProductsOrderByUploadDate(ascending);
 
-    if (products.status === 200) {
-      setProducts(products.data);
+    if (response.status === 200) {
+      var filteredProducts = response.data.filter((product) => {
+        return product.isActive === true;
+      });
+      setProducts(filteredProducts);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -96,12 +102,15 @@ export default function Products() {
   };
 
   const getProducts = async () => {
-    const products = await api.products.getProducts();
+    const response = await api.products.getProducts();
 
-    if (products.status === 200) {
-      setProducts(products.data);
+    if (response.status === 200) {
+      var filteredProducts = response.data.filter((product) => {
+        return product.isActive === true;
+      });
+      setProducts(filteredProducts);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -110,18 +119,15 @@ export default function Products() {
       <>
         {currentItems &&
           currentItems.map((product, index) => (
-            <div key={index}>
-              {product.isActive && (
-                <Product
-                  id={product.id}
-                  name={product.name}
-                  categories={product.categories}
-                  creator={product.user}
-                  price={product.price}
-                  image={product.image}
-                />
-              )}
-            </div>
+            <Product
+              key={index}
+              id={product.id}
+              name={product.name}
+              categories={product.categories}
+              creator={product.user}
+              price={product.price}
+              image={product.image}
+            />
           ))}
       </>
     );
@@ -156,7 +162,7 @@ export default function Products() {
           pageRangeDisplayed={5}
           pageCount={pageCount}
           renderOnZeroPageCount={null}
-          containerClassName="pagination"
+          containerClassName="productPagination"
           activeClassName="active"
         />
       </>

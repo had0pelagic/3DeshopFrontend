@@ -13,6 +13,8 @@ import Loader from "../../components/Loader/index.js";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import Carousel from "react-material-ui-carousel";
 import Youtube from "react-youtube";
 import TextField from "@mui/material/TextField";
@@ -97,7 +99,6 @@ export default function ProductDetails() {
 
     if (response.status === 200) {
       setDetails(response.data);
-      console.log(response.data);
       const token = getToken().data;
       const jwtUserId = JwtHelper.getUser(token).userId;
       if (jwtUserId === response.data.user.id) {
@@ -171,15 +172,15 @@ export default function ProductDetails() {
 
   function ProductImages() {
     return (
-      <div style={{ minWidth: 400 }}>
-        <Card>
+      <div>
+        <Card sx={{ width: 800, height: 600 }}>
           <CardContent>
             {productDetails.images.length > 0 ? (
               <Carousel>
                 {productDetails.images.map((image, index) => (
                   <CardMedia
                     component="img"
-                    height="300"
+                    height="500"
                     image={`${image.format},${image.data}`}
                     key={index}
                   />
@@ -213,7 +214,7 @@ export default function ProductDetails() {
   function ProductActions() {
     return (
       <div style={{ paddingTop: "60px" }}>
-        <Card>
+        <Card style={{ width: 800, marginLeft: 15 }}>
           <CardActions
             sx={{
               color: "black",
@@ -302,7 +303,7 @@ export default function ProductDetails() {
   function ProductAbout() {
     return (
       <div style={{ paddingTop: "60px" }}>
-        <Card sx={{ minWidth: 100 }}>
+        <Card sx={{ width: 800 }}>
           <CardContent>
             <Typography sx={{ fontSize: 30 }} color="text.primary" gutterBottom>
               {productDetails.about.name}
@@ -330,10 +331,108 @@ export default function ProductDetails() {
             <Typography
               variant="h6"
               component="div"
-              sx={{ inlineSize: 800, paddingTop: 2 }}
+              sx={{ paddingTop: 2, overflowWrap: "break-word" }}
             >
               {productDetails.about.description}
             </Typography>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  function ProductSpecifications() {
+    return (
+      <div style={{ paddingTop: "60px" }}>
+        <Card sx={{ minWidth: 100 }}>
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography sx={{ fontSize: 25 }} color="text.primary">
+                  Specifications:
+                </Typography>
+                <div style={{ display: "flex" }}>
+                  <Typography sx={{ fontSize: 20 }} color="text.primary">
+                    Animation
+                  </Typography>
+                  {productDetails.specifications.animation === true ? (
+                    <CheckIcon sx={{ color: "green", paddingTop: 0.1 }} />
+                  ) : (
+                    <CloseIcon sx={{ color: "red" }} />
+                  )}
+                </div>
+
+                <div style={{ display: "flex" }}>
+                  <Typography sx={{ fontSize: 20 }} color="text.primary">
+                    Materials
+                  </Typography>
+                  {productDetails.specifications.materials === true ? (
+                    <CheckIcon sx={{ color: "green" }} />
+                  ) : (
+                    <CloseIcon sx={{ color: "red" }} />
+                  )}
+                </div>
+                <div style={{ display: "flex" }}>
+                  <Typography sx={{ fontSize: 20 }} color="text.primary">
+                    Rig
+                  </Typography>
+                  {productDetails.specifications.rig === true ? (
+                    <CheckIcon sx={{ color: "green" }} />
+                  ) : (
+                    <CloseIcon sx={{ color: "red" }} />
+                  )}
+                </div>
+
+                <div style={{ display: "flex" }}>
+                  <Typography sx={{ fontSize: 20 }} color="text.primary">
+                    Textures
+                  </Typography>
+                  {productDetails.specifications.textures === true ? (
+                    <CheckIcon sx={{ color: "green" }} />
+                  ) : (
+                    <CloseIcon sx={{ color: "red" }} />
+                  )}
+                </div>
+
+                <Divider />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <div style={{ paddingTop: 10 }}>
+                  <Typography sx={{ fontSize: 25 }} color="text.primary">
+                    Formats:
+                  </Typography>
+                  {productDetails.formats.map((item, index) => (
+                    <Typography
+                      sx={{ fontSize: 20 }}
+                      color="text.primary"
+                      key={index}
+                    >
+                      {item.name}
+                    </Typography>
+                  ))}
+                </div>
+              </Grid>
+            </Grid>
           </CardContent>
         </Card>
       </div>
@@ -490,7 +589,7 @@ export default function ProductDetails() {
           pageRangeDisplayed={5}
           pageCount={pageCount}
           renderOnZeroPageCount={null}
-          containerClassName="pagination"
+          containerClassName="commentPagination"
           activeClassName="active"
         />
       </>
@@ -505,6 +604,7 @@ export default function ProductDetails() {
         <div>
           {ProductImages()}
           {ProductAbout()}
+          {ProductSpecifications()}
           <Modal
             open={openVideo}
             onClose={handleCloseVideo}

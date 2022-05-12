@@ -29,9 +29,12 @@ export default function ProductsSearch() {
       if (response.data.length === 0) {
         alert("No products were found by given criteria");
       }
-      setProducts(response.data);
+      var filteredProducts = response.data.filter((product) => {
+        return product.isActive === true;
+      });
+      setProducts(filteredProducts);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -83,7 +86,7 @@ export default function ProductsSearch() {
           pageRangeDisplayed={5}
           pageCount={pageCount}
           renderOnZeroPageCount={null}
-          containerClassName="pagination"
+          containerClassName="productSearchPagination"
           activeClassName="active"
         />
       </>
@@ -95,31 +98,38 @@ export default function ProductsSearch() {
       return product.id;
     });
   }
+
   const getProductsOrderByPrice = async (ascending) => {
     const ids = getProductIds();
     const request = { productIds: ids, ascending: ascending };
-    const products = await api.products.getProductsByGivenIdsAndOrderByPrice(
+    const response = await api.products.getProductsByGivenIdsAndOrderByPrice(
       request
     );
 
-    if (products.status === 200) {
-      setProducts(products.data);
+    if (response.status === 200) {
+      var filteredProducts = response.data.filter((product) => {
+        return product.isActive === true;
+      });
+      setProducts(filteredProducts);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
   const getProductsOrderByUploadDate = async (ascending) => {
     const ids = getProductIds();
     const request = { productIds: ids, ascending: ascending };
-    const products = await api.products.getProductsByGivenIdsAndOrderByDate(
+    const response = await api.products.getProductsByGivenIdsAndOrderByDate(
       request
     );
 
-    if (products.status === 200) {
-      setProducts(products.data);
+    if (response.status === 200) {
+      var filteredProducts = response.data.filter((product) => {
+        return product.isActive === true;
+      });
+      setProducts(filteredProducts);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 

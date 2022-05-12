@@ -211,7 +211,7 @@ export default function Orders() {
           pageRangeDisplayed={5}
           pageCount={pageCount}
           renderOnZeroPageCount={null}
-          containerClassName="pagination"
+          containerClassName="orderPagination"
           activeClassName="active"
         />
       </>
