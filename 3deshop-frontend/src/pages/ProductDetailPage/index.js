@@ -230,37 +230,43 @@ export default function ProductDetails() {
               >
                 <DownloadingIcon sx={{ fontSize: 50 }} />
               </Button>
-            ) : productDetails.about.price === 0 ? (
-              <div style={{ display: "flex", flexWrap: "wrap" }}>
-                <div style={{ flex: 2 }}>
-                  <Button
-                    sx={{
-                      color: "black",
-                    }}
-                    onClick={handleOpen}
-                  >
-                    <ShoppingCartIcon sx={{ fontSize: 50 }} />
-                    <Typography style={{ fontSize: 20, marginLeft: 10 }}>
-                      {productDetails.about.price} C
-                    </Typography>
-                  </Button>
+            ) : productDetails.about.isActive ? (
+              productDetails.about.price === 0 ? (
+                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                  <div style={{ flex: 2 }}>
+                    <Button
+                      sx={{
+                        color: "black",
+                      }}
+                      onClick={handleOpen}
+                    >
+                      <ShoppingCartIcon sx={{ fontSize: 50 }} />
+                      <Typography style={{ fontSize: 20, marginLeft: 10 }}>
+                        {productDetails.about.price} C
+                      </Typography>
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                  <div style={{ flex: 2 }}>
+                    <Button
+                      sx={{
+                        color: "black",
+                      }}
+                      onClick={handleOpen}
+                    >
+                      <ShoppingCartIcon sx={{ fontSize: 50 }} />
+                      <Typography style={{ fontSize: 20, marginLeft: 10 }}>
+                        {productDetails.about.price} C
+                      </Typography>
+                    </Button>
+                  </div>
+                </div>
+              )
             ) : (
-              <div style={{ display: "flex", flexWrap: "wrap" }}>
-                <div style={{ flex: 2 }}>
-                  <Button
-                    sx={{
-                      color: "black",
-                    }}
-                    onClick={handleOpen}
-                  >
-                    <ShoppingCartIcon sx={{ fontSize: 50 }} />
-                    <Typography style={{ fontSize: 20, marginLeft: 10 }}>
-                      {productDetails.about.price} C
-                    </Typography>
-                  </Button>
-                </div>
+              <div>
+                <Typography>Product is inactive</Typography>
               </div>
             )}
 

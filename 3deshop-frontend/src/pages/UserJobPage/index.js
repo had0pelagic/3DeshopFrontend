@@ -436,7 +436,7 @@ export default function UserJobs() {
           className="flexContainer"
           style={{ marginLeft: 30, marginRight: 30 }}
         >
-          <h1>Active jobs</h1>
+          <h1>My jobs</h1>
           <PaginatedTable itemsPerPage={6} />
         </div>
       )}

@@ -1,4 +1,7 @@
 export default (axios) => ({
+  async changeProductStatus(id) {
+    return axios.get(`/product/change-product-status/${id}`);
+  },
   async getProducts() {
     return axios.get("/product");
   },

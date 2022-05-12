@@ -115,6 +115,7 @@ export default function PurchasedProducts() {
   return (
     <div className="flexContainer mt40">
       {console.log(products)}
+      <h1>My bought products</h1>
       {isLoading ? (
         <Loader />
       ) : (

@@ -213,7 +213,7 @@ export default function Account() {
               </Avatar>
 
               <Typography component="h1" variant="h5">
-                Account information
+                My information
               </Typography>
 
               <form

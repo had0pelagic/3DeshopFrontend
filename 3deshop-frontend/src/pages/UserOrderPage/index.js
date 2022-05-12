@@ -230,7 +230,7 @@ export default function UserOrders() {
         <Loader />
       ) : (
         <div className="flexContainer">
-          <h1>User orders</h1>
+          <h1>My orders</h1>
           {orders && orders.length > 0 ? (
             <div
               className="flexContainer"

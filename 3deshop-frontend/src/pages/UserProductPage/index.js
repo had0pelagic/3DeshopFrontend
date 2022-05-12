@@ -10,7 +10,14 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
@@ -25,6 +32,15 @@ export default function UserProducts() {
   const [IsLoadingProducts, setLoadingProducts] = useState(true);
   const { getToken } = useAuth();
   const navigate = useNavigate();
+  const [currentProductId, setCurrentProductId] = useState("");
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+  const handleConfirmationDialogOpen = (id) => {
+    setCurrentProductId(id);
+    setOpenConfirmationDialog(true);
+  };
+  const handleConfirmationDialogClose = () => {
+    setOpenConfirmationDialog(false);
+  };
 
   useEffect(async () => {
     checkIfUsersPage();
@@ -34,7 +50,7 @@ export default function UserProducts() {
   const checkIfUsersPage = () => {
     const token = getToken().data;
     const jwtUserId = JwtHelper.getUser(token).userId;
-    
+
     if (id !== jwtUserId) {
       navigate("/");
     }
@@ -45,11 +61,20 @@ export default function UserProducts() {
 
     if (response.status === 200) {
       setProducts(response.data);
-      console.log("Products returned!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingProducts(false);
+  };
+
+  const changeProductStatus = async () => {
+    const response = await api.products.changeProductStatus(currentProductId);
+
+    if (response.status === 200) {
+      window.location.reload();
+    } else {
+      alert(response.errorMessage);
+    }
   };
 
   function Items({ currentItems }) {
@@ -57,11 +82,17 @@ export default function UserProducts() {
       <>
         {currentItems && (
           <TableContainer component={Paper} sx={{ width: "100%" }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table
+              sx={{ minWidth: 650, maxWidth: 1000 }}
+              aria-label="simple table"
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>Name</TableCell>
                   <TableCell align="left"></TableCell>
+                  <TableCell align="left" sx={{ paddingLeft: 4 }}>
+                    Active
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -70,10 +101,31 @@ export default function UserProducts() {
                     <TableCell component="th" scope="row">
                       {item.name}
                     </TableCell>
+
                     <TableCell align="left">
                       <Typography component={Link} to={`/product/${item.id}`}>
                         Product page
                       </Typography>
+                    </TableCell>
+                    {console.log(item)}
+                    <TableCell align="left">
+                      <Button>
+                        {item.isActive === true ? (
+                          <CheckIcon
+                            sx={{ color: "green" }}
+                            onClick={() =>
+                              handleConfirmationDialogOpen(item.id)
+                            }
+                          />
+                        ) : (
+                          <CloseIcon
+                            sx={{ color: "red" }}
+                            onClick={() =>
+                              handleConfirmationDialogOpen(item.id)
+                            }
+                          />
+                        )}
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -125,7 +177,7 @@ export default function UserProducts() {
         <Loader />
       ) : (
         <div className="flexContainer">
-          <h1>User products</h1>
+          <h1>My products</h1>
 
           {products && products.length > 0 ? (
             <div
@@ -186,6 +238,34 @@ export default function UserProducts() {
               </Button>
             </div>
           )}
+
+          <Dialog
+            open={openConfirmationDialog}
+            onClose={handleConfirmationDialogClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Order completion"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                {"Are you sure you want to change this product status?"}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={async () => await changeProductStatus()}
+                color="primary"
+                autoFocus
+              >
+                {"Yes"}
+              </Button>
+              <Button onClick={handleConfirmationDialogClose} color="primary">
+                {"No"}
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       )}
     </div>

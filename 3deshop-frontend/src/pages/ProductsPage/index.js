@@ -110,15 +110,18 @@ export default function Products() {
       <>
         {currentItems &&
           currentItems.map((product, index) => (
-            <Product
-              key={index}
-              id={product.id}
-              name={product.name}
-              categories={product.categories}
-              creator={product.user}
-              price={product.price}
-              image={product.image}
-            />
+            <div key={index}>
+              {product.isActive && (
+                <Product
+                  id={product.id}
+                  name={product.name}
+                  categories={product.categories}
+                  creator={product.user}
+                  price={product.price}
+                  image={product.image}
+                />
+              )}
+            </div>
           ))}
       </>
     );
