@@ -7,18 +7,33 @@ import Loader from "../../components/Loader";
 export default function UserProfile() {
   const { id } = useParams();
   const [user, setUser] = useState();
+  const [completedJobCount, setCompletedJobCount] = useState(0);
   const [isLoading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getUser();
+  useEffect(async () => {
+    await getUser();
+    await getCompletedJobCount();
   }, []);
 
   const getUser = async () => {
     const response = await api.users.getUser(id);
+
     if (response.status === 200) {
       setUser(response.data);
     } else {
+      alert(response.errorMessage);
       console.log("error at account page, didn't return 200");
+    }
+    setLoading(false);
+  };
+
+  const getCompletedJobCount = async () => {
+    const response = await api.orders.getUserCompletedJobCount(id);
+
+    if (response.status === 200) {
+      setCompletedJobCount(response.data);
+    } else {
+      alert(response.errorMessage);
     }
     setLoading(false);
   };
@@ -52,15 +67,9 @@ export default function UserProfile() {
               <Typography variant="h4" sx={{ mt: 1 }}>
                 {user.firstName} {user.lastName}
               </Typography>
-              {/* <Typography variant="h5" sx={{ mt: 1 }}>
-                0 reputation
-              </Typography>
               <Typography variant="h5" sx={{ mt: 1 }}>
-                product count
+                Completed jobs: {completedJobCount}
               </Typography>
-              <Typography variant="h5" sx={{ mt: 1 }}>
-                completed job count
-              </Typography> */}
             </CardContent>
           </Card>
         </div>

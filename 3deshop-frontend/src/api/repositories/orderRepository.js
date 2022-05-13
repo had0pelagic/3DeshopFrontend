@@ -1,4 +1,7 @@
 export default (axios) => ({
+  async getUserCompletedJobCount(id) {
+    return axios.get(`/order/get-user-completed-job-count/${id}`);
+  },
   async postOrder(data) {
     return axios.post(`/order/post-order`, data);
   },

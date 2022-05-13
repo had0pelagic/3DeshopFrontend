@@ -85,6 +85,7 @@ export default function Offer() {
   const handleSubmitClick = async (e) => {
     e.preventDefault();
     await tryUploadOffer();
+    setButtonDisabled(false);
   };
 
   return (
@@ -153,7 +154,10 @@ export default function Offer() {
               color="primary"
               style={{ marginTop: 20 }}
               disabled={buttonDisabled}
-              onClick={(e)=>{handleSubmitClick(e);setButtonDisabled(true)}}
+              onClick={(e) => {
+                handleSubmitClick(e);
+                setButtonDisabled(true);
+              }}
             >
               Make an offer
             </Button>
