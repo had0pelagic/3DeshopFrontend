@@ -68,7 +68,7 @@ export default function Products() {
   const getProductsOrderByPrice = async (ascending) => {
     const response = await api.products.getProductsOrderByPrice(ascending);
 
-    if (products.status === 200) {
+    if (response.status === 200) {
       var filteredProducts = response.data.filter((product) => {
         return product.isActive === true;
       });

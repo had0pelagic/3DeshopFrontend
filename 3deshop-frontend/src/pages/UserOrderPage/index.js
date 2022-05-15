@@ -69,9 +69,8 @@ export default function UserOrders() {
 
     if (response.status === 200) {
       setOrders(response.data);
-      console.log("Orders returned!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage)
     }
     setLoadingOrders(false);
   };
