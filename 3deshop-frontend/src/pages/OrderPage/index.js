@@ -55,9 +55,8 @@ export default function Orders() {
 
     if (response.status === 200) {
       setIsOrderOwner(response.data);
-      console.log("(Is order owner) request complete!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingOrders(false);
   };
@@ -69,7 +68,7 @@ export default function Orders() {
       setOrders(response.data);
       getUserId();
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingOrders(false);
   };

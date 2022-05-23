@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 import JwtHelper from "../../utils/jwt.helper";
 import { useAuth } from "../../hooks/useAuth";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../../api";
 import { Avatar, Container, Typography } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 export default function UserBalanceTopUp() {
+  const { id } = useParams();
   const { getToken } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,6 +22,19 @@ export default function UserBalanceTopUp() {
     amount: "",
   });
   const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  useEffect(async () => {
+    checkIfUsersPage();
+  }, []);
+
+  const checkIfUsersPage = () => {
+    const token = getToken().data;
+    const jwtUserId = JwtHelper.getUser(token).userId;
+    
+    if (id !== jwtUserId) {
+      navigate("/");
+    }
+  };
 
   const tryUserTopUpBalance = async () => {
     let errorExists = false;
@@ -116,7 +130,15 @@ export default function UserBalanceTopUp() {
               fullWidth
               variant="contained"
               color="primary"
-              style={{ marginTop: 15 }}
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+                marginTop: 2,
+              }}
               disabled={buttonDisabled}
               onClick={(e) => {
                 setButtonDisabled(true);

@@ -275,7 +275,15 @@ export default function OrderRegistration() {
               fullWidth
               variant="contained"
               color="primary"
-              style={{ marginTop: 30 }}
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+                marginTop: 3,
+              }}
               disabled={buttonDisabled}
               onClick={(e) => {
                 setButtonDisabled(true);

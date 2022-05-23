@@ -31,10 +31,14 @@ export default function Home() {
           >
             <Typography variant="h4">Get your 3D models here!</Typography>
             <Button
-              style={{
-                backgroundColor: "white",
-                color: "#222831",
-                marginTop: 10,
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+                marginTop: 2,
                 width: 200,
                 borderRadius: 30,
               }}
@@ -62,10 +66,14 @@ export default function Home() {
               Didn't find anything suitable for you? Make an order!
             </Typography>
             <Button
-              style={{
-                backgroundColor: "white",
-                color: "#222831",
-                marginTop: 10,
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+                marginTop: 2,
                 width: 200,
                 borderRadius: 30,
               }}

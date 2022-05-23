@@ -22,7 +22,6 @@ export default function UserProfile() {
       setUser(response.data);
     } else {
       alert(response.errorMessage);
-      console.log("error at account page, didn't return 200");
     }
     setLoading(false);
   };
@@ -55,22 +54,43 @@ export default function UserProfile() {
               justifyContent: "center",
             }}
           >
-            <CardContent>
+            <div
+              style={{
+                width: "100%",
+                height: "30%",
+                backgroundSize: "400% 400%",
+                background:
+                  "linear-gradient(-45deg, rgb(48, 71, 94), rgb(231, 60, 126))",
+              }}
+            >
               <CardMedia
                 component="img"
-                sx={{ height: 200, width: 200, border: 0 }}
+                sx={{
+                  height: 200,
+                  width: 200,
+                  border: 0,
+                  borderRadius: "50%",
+                  borderColor: "#273a4d",
+                  marginLeft: "25%",
+                  marginTop: 1,
+                }}
                 image={`${user.image.format},${user.image.data}`}
               />
-              <Typography variant="h3" sx={{ mt: 1 }}>
-                {user.username}
-              </Typography>
-              <Typography variant="h4" sx={{ mt: 1 }}>
-                {user.firstName} {user.lastName}
-              </Typography>
-              <Typography variant="h5" sx={{ mt: 1 }}>
-                Completed jobs: {completedJobCount}
-              </Typography>
-            </CardContent>
+              <CardContent>
+                <Typography
+                  variant="h3"
+                  sx={{ mt: 1, display: "flex", justifyContent: "center" }}
+                >
+                  {user.username}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{ mt: 3, display: "flex", justifyContent: "center" }}
+                >
+                  Completed jobs: {completedJobCount}
+                </Typography>
+              </CardContent>
+            </div>
           </Card>
         </div>
       )}

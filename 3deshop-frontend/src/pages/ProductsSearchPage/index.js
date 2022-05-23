@@ -143,7 +143,7 @@ export default function ProductsSearch() {
         style={{
           display: "flex",
           flexDirection: "initial",
-          justifyContent: "right",
+          justifyContent: "center",
           width: "80%",
           marginBottom: 20,
         }}

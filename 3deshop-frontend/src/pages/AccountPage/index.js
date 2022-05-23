@@ -172,8 +172,8 @@ export default function Account() {
     const response = await api.users.userUpdate(id, request);
 
     if (response.status === 200) {
-      window.location.reload();
       alert("User information has been updated");
+      window.location.reload();
     } else {
       alert(response.errorMessage);
     }
@@ -213,7 +213,7 @@ export default function Account() {
               </Avatar>
 
               <Typography component="h1" variant="h5">
-                My information
+                My account
               </Typography>
 
               <form
@@ -332,8 +332,18 @@ export default function Account() {
 
                 <div className="mt40 flexContainer">
                   <Button
+                    fullWidth
                     variant="contained"
                     disabled={buttonDisabled}
+                    sx={{
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "#30475E",
+                        color: "#F05454",
+                      },
+                      backgroundColor: "#30475E",
+                      width:350
+                    }}
                     onClick={(e) => {
                       handleSubmitClick(e);
                       setButtonDisabled(true);

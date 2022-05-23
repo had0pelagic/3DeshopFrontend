@@ -50,7 +50,7 @@ const ResponsiveAppBar = () => {
     if (response.status === 200) {
       setUser(response.data);
     } else {
-      console.log("error at account page, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -60,7 +60,7 @@ const ResponsiveAppBar = () => {
     if (response.status === 200) {
       setUserBalance(response.data.balance);
     } else {
-      console.log("error at getting user balance, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -96,7 +96,7 @@ const ResponsiveAppBar = () => {
 
   const Drawer = () => {
     return (
-      <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }} style={{}}>
+      <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -176,7 +176,7 @@ const ResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#262A53" }}>
+    <AppBar position="static" sx={{ backgroundColor: "#273a4d" }}>
       <Container maxWidth="xl" style={{ height: "100%" }}>
         <Toolbar disableGutters>
           <Typography
@@ -228,7 +228,7 @@ const ResponsiveAppBar = () => {
                   to={`/user-balance-top-up/${id}`}
                   sx={{ p: 0, marginLeft: 5 }}
                 >
-                  <Typography style={{ color: "white" }}>
+                  <Typography style={{ color: "white", paddingTop: 2 }}>
                     {userBalance} C
                   </Typography>
                   <AddIcon sx={{ color: "white" }}></AddIcon>
@@ -282,7 +282,11 @@ const ResponsiveAppBar = () => {
                   <Typography>My products</Typography>
                 </MenuItem>
 
-                <MenuItem key={"User jobs"} component={Link} to={`/user-jobs/${id}`}>
+                <MenuItem
+                  key={"User jobs"}
+                  component={Link}
+                  to={`/user-jobs/${id}`}
+                >
                   <Typography>My jobs</Typography>
                 </MenuItem>
 

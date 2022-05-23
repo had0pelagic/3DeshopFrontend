@@ -156,7 +156,15 @@ export default function ChangePassword() {
               fullWidth
               variant="contained"
               color="primary"
-              style={{ marginTop: 5 }}
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+                marginTop: 5,
+              }}
               onClick={(e) => {
                 setButtonDisabled(true);
                 handleSubmitClick(e);

@@ -52,6 +52,7 @@ export default function UserOffers() {
     const response = await api.orders.getOrderOffers(id);
 
     if (response.status === 200) {
+      console.log(response.data);
       setOffers(response.data);
     } else {
       alert(response.errorMessage);

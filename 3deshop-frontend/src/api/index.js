@@ -150,7 +150,6 @@ const repositories = {
   comments: commentRepository(axiosMiddleware),
   productDetails: productDetailRepository(axiosMiddleware),
   balance: balanceRepository(axiosMiddleware),
-  payments: paymentRepository(axiosPaymentMiddleware),
   files: fileRepository(axiosMiddleware),
   orders: orderRepository(axiosMiddleware),
 };

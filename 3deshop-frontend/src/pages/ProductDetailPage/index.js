@@ -476,13 +476,12 @@ export default function ProductDetails() {
               <Button
                 variant="outlined"
                 sx={{
-                  background: "#222831",
-                  color: "white",
-                  borderStyle: "none",
+                  color: "#fff",
                   "&:hover": {
-                    background: "#30475E",
-                    borderStyle: "none",
+                    backgroundColor: "#30475E",
+                    color: "#F05454",
                   },
+                  backgroundColor: "#30475E",
                 }}
                 disabled={buttonDisabled}
                 onClick={(e) => {

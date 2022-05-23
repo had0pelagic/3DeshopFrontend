@@ -31,7 +31,6 @@ export default function Register() {
   const userRegistration = async () => {
     const registerResponse = await api.users.userRegister(state);
 
-    console.log("a");
     if (registerResponse.status === 200) {
       const loginResponse = await api.users.userLogin({
         username: state.username,

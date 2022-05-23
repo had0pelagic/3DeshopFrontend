@@ -268,7 +268,7 @@ export default function UserJobs() {
     const response = await api.orders.workerAbandonJob(request);
 
     if (response.status === 200) {
-      console.log("Job has been abandoned!");
+      alert("Job has been abandoned!");
       window.location.reload();
     } else {
       alert(response.errorMessage);

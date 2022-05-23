@@ -3,12 +3,7 @@ import "./styles.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import {
-  Avatar,
-  Container,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Avatar, Container, Grid, Typography } from "@mui/material";
 import { useAuth } from "../../hooks/useAuth";
 import api from "../../api";
 import { Link } from "react-router-dom";
@@ -22,7 +17,7 @@ export default function Login() {
 
   const userLogin = async () => {
     const response = await api.users.userLogin(state);
-    
+
     if (response.status === 200) {
       await onLogin(response.data);
     } else {
@@ -94,7 +89,14 @@ export default function Login() {
               fullWidth
               variant="contained"
               color="primary"
-              style={{ marginTop: 5 }}
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+              }}
               onClick={handleSubmitClick}
             >
               Sign In

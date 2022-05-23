@@ -32,14 +32,12 @@ export default function ProductDownload() {
     const response = await api.files.getFiles(id, jwtUserId);
 
     if (response.status === 200) {
-      // console.log(response.data);
       const files = response.data.map((file) => {
         return DownloadHelper.getFileData(file);
       });
-      // console.log(files);
       setFiles(files);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoading(false);
   };

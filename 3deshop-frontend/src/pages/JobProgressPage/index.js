@@ -28,6 +28,7 @@ import JwtHelper from "../../utils/jwt.helper";
 import moment from "moment";
 import LinearProgress from "@mui/material/LinearProgress";
 import { AlignVerticalCenterTwoTone } from "@mui/icons-material";
+import ReactPaginate from "react-paginate";
 
 export default function JobProgress() {
   const { id } = useParams();
@@ -186,6 +187,127 @@ export default function JobProgress() {
     await tryRequestJobChanges();
   };
 
+  function Items({ currentItems }) {
+    return (
+      <>
+        {currentItems && currentItems.length > 0 ? (
+          <div className="flexContainer">
+            <Box sx={{ width: "100%" }}>
+              <LinearProgressWithLabel value={lastProgressValue} />
+            </Box>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Note</TableCell>
+                    <TableCell align="left">Progress</TableCell>
+                    <TableCell align="left">Date</TableCell>
+                    <TableCell align="left">By</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {currentItems.map((progress, index) => (
+                    <TableRow
+                      hover
+                      key={index}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{ wordWrap: "break-word", maxWidth: 400 }}
+                      >
+                        {progress.description}
+                      </TableCell>
+                      <TableCell align="left">{progress.progress}%</TableCell>
+                      <TableCell align="left">
+                        {moment(progress.created).format(
+                          "YYYY-MM-DD h:mm:ss a"
+                        )}
+                      </TableCell>
+                      <TableCell align="left">
+                        <Typography
+                          component={Link}
+                          to={`/user-profile/${progress.user.id}`}
+                        >
+                          {progress.user.username}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <div>
+              {isOwner && lastProgressValue === 100 ? (
+                <div>
+                  <Button
+                    sx={{
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "#30475E",
+                        color: "#F05454",
+                      },
+                      backgroundColor: "#30475E",
+                      marginTop: 5,
+                      width: 400,
+                    }}
+                    onClick={() => handleOpen()}
+                  >
+                    <Typography>Check completed job</Typography>
+                  </Button>
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="flexContainer">
+            <h2>No progress yet</h2>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  function PaginatedTable({ itemsPerPage }) {
+    const [currentItems, setCurrentItems] = useState(null);
+    const [pageCount, setPageCount] = useState(0);
+    const [itemOffset, setItemOffset] = useState(0);
+
+    useEffect(() => {
+      const endOffset = itemOffset + itemsPerPage;
+      setCurrentItems(progresses.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(progresses.length / itemsPerPage));
+    }, [itemOffset, itemsPerPage]);
+
+    const handlePageClick = (event) => {
+      const newOffset = (event.selected * itemsPerPage) % progresses.length;
+      setItemOffset(newOffset);
+    };
+
+    return (
+      <>
+        <Items currentItems={currentItems} />
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel=" >"
+          previousLabel="< "
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          renderOnZeroPageCount={null}
+          containerClassName="progressPagination"
+          activeClassName="active"
+        />
+      </>
+    );
+  }
+
   return (
     <div className="flexContainer">
       {isLoading ? (
@@ -198,82 +320,7 @@ export default function JobProgress() {
           ) : (
             <div></div>
           )}
-
-          {progresses && progresses.length > 0 ? (
-            <div className="flexContainer">
-              <Box sx={{ width: "100%" }}>
-                <LinearProgressWithLabel value={lastProgressValue} />
-              </Box>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Note</TableCell>
-                      <TableCell align="left">Progress</TableCell>
-                      <TableCell align="left">Date</TableCell>
-                      <TableCell align="left">User</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {progresses.map((progress, index) => (
-                      <TableRow
-                        hover
-                        key={index}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {progress.description}
-                        </TableCell>
-                        <TableCell align="left">{progress.progress}%</TableCell>
-                        <TableCell align="left">
-                          {moment(progress.created).format(
-                            "YYYY-MM-DD h:mm:ss a"
-                          )}
-                        </TableCell>
-                        <TableCell align="left">
-                          <Typography
-                            component={Link}
-                            to={`/user-profile/${progress.user.id}`}
-                          >
-                            {progress.user.username}
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <div>
-                {isOwner && lastProgressValue === 100 ? (
-                  <div>
-                    <Button
-                      sx={{
-                        color: "#fff",
-                        "&:hover": {
-                          backgroundColor: "#30475E",
-                          color: "#F05454",
-                        },
-                        backgroundColor: "#30475E",
-                        marginTop: 5,
-                        width: 400,
-                      }}
-                      onClick={() => handleOpen()}
-                    >
-                      <Typography>Check completed job</Typography>
-                    </Button>
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="flexContainer">
-              <h2>No progress yet</h2>
-            </div>
-          )}
+          <PaginatedTable itemsPerPage={3} />
         </div>
       )}
 

@@ -153,6 +153,15 @@ export default function Offer() {
               variant="contained"
               color="primary"
               style={{ marginTop: 20 }}
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+                marginTop: 20,
+              }}
               disabled={buttonDisabled}
               onClick={(e) => {
                 handleSubmitClick(e);
