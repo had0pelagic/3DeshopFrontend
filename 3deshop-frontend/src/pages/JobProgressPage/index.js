@@ -27,7 +27,6 @@ import { useAuth } from "../../hooks/useAuth";
 import JwtHelper from "../../utils/jwt.helper";
 import moment from "moment";
 import LinearProgress from "@mui/material/LinearProgress";
-import { AlignVerticalCenterTwoTone } from "@mui/icons-material";
 import ReactPaginate from "react-paginate";
 
 export default function JobProgress() {

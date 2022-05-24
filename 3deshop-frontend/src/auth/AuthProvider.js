@@ -24,10 +24,6 @@ const AuthProvider = ({ children }) => {
       "tokenExpiresInMilliseconds",
       response.expirationDate
     );
-    // localStorage.setItem(
-    //   "tokenExpiresInMilliseconds",
-    //   Date.now() + response.expiresIn * 1000
-    // );
   };
 
   const removeTokenFromStorage = () => {

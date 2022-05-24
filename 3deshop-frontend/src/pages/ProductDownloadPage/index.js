@@ -8,7 +8,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Box,
 } from "@mui/material";
 import api from "../../api";
 import DownloadHelper from "../../utils/download.helper";

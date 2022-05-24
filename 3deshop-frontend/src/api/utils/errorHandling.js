@@ -1,7 +1,7 @@
 const ErrorHandling = async (apiError, path = "Not given") => {
   let error = {
-    errorMessage: getErrorMessage(apiError),
-    status: getStatus(apiError),
+    status: returnStatus(apiError),
+    errorMessage: returnErrorMessage(apiError),
     path,
     error: apiError,
   };
@@ -10,62 +10,65 @@ const ErrorHandling = async (apiError, path = "Not given") => {
     error.errorMessage = apiError.response.data.Message;
   }
 
-  console.log("Error", error);
-  
+  console.log("Error has been found: ", error);
+
   return error;
 };
 
-const getStatus = (error) => {
-  const errorText = error.toString();
-  if (errorText.includes("400")) {
+const returnErrorMessage = (error) => {
+  const errorVal = error.toString();
+
+  if (errorVal.includes("400")) {
+    return "Bad request";
+  } else if (errorVal.includes("401")) {
+    return "Unauthorized";
+  } else if (errorVal.includes("403")) {
+    return "Forbidden";
+  } else if (errorVal.includes("404")) {
+    return "Not found";
+  } else if (errorVal.includes("405")) {
+    return "Method not allowed";
+  } else if (errorVal.includes("409")) {
+    return "Conflict";
+  } else if (errorVal.includes("411")) {
+    return "Length required";
+  } else if (errorVal.includes("412")) {
+    return "Precondition failed";
+  } else if (errorVal.includes("429")) {
+    return "Too many requests";
+  } else if (errorVal.includes("500")) {
+    return "Internal server error";
+  } else if (errorVal.includes("503")) {
+    return "Service unavailable";
+  }
+};
+
+const returnStatus = (error) => {
+  const errorVal = error.toString();
+
+  if (errorVal.includes("400")) {
     return 400;
-  } else if (errorText.includes("401")) {
+  } else if (errorVal.includes("401")) {
     return 401;
-  } else if (errorText.includes("403")) {
+  } else if (errorVal.includes("403")) {
     return 403;
-  } else if (errorText.includes("404")) {
+  } else if (errorVal.includes("404")) {
     return 404;
-  } else if (errorText.includes("405")) {
+  } else if (errorVal.includes("405")) {
     return 405;
-  } else if (errorText.includes("409")) {
+  } else if (errorVal.includes("409")) {
     return 409;
-  } else if (errorText.includes("411")) {
+  } else if (errorVal.includes("411")) {
     return 411;
-  } else if (errorText.includes("412")) {
+  } else if (errorVal.includes("412")) {
     return 412;
-  } else if (errorText.includes("429")) {
+  } else if (errorVal.includes("429")) {
     return 429;
-  } else if (errorText.includes("500")) {
+  } else if (errorVal.includes("500")) {
     return 500;
-  } else if (errorText.includes("503")) {
+  } else if (errorVal.includes("503")) {
     return 503;
   }
 };
 
-const getErrorMessage = (error) => {
-  const errorText = error.toString();
-  if (errorText.includes("400")) {
-    return "Bad Request";
-  } else if (errorText.includes("401")) {
-    return "Unauthorized";
-  } else if (errorText.includes("403")) {
-    return "Forbidden";
-  } else if (errorText.includes("404")) {
-    return "Not Found";
-  } else if (errorText.includes("405")) {
-    return "Method Not Allowed";
-  } else if (errorText.includes("409")) {
-    return "Conflict";
-  } else if (errorText.includes("411")) {
-    return "Length Required";
-  } else if (errorText.includes("412")) {
-    return "Precondition Failed";
-  } else if (errorText.includes("429")) {
-    return "Too Many Requests";
-  } else if (errorText.includes("500")) {
-    return "Internal Server Error";
-  } else if (errorText.includes("503")) {
-    return "Service Unavailable";
-  }
-};
 export default ErrorHandling;

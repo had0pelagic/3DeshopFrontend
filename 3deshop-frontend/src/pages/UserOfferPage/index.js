@@ -5,9 +5,6 @@ import {
   Button,
   Modal,
   Box,
-  Card,
-  CardContent,
-  CardMedia,
   TextField,
   Table,
   TableBody,
@@ -16,9 +13,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Dialog,
-  DialogTitle,
-  DialogActions,
 } from "@mui/material";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
@@ -52,7 +46,6 @@ export default function UserOffers() {
     const response = await api.orders.getOrderOffers(id);
 
     if (response.status === 200) {
-      console.log(response.data);
       setOffers(response.data);
     } else {
       alert(response.errorMessage);

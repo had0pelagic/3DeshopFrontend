@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
+import api from "../../api";
 import JwtHelper from "../../utils/jwt.helper";
 import { useAuth } from "../../hooks/useAuth";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import api from "../../api";
-import { Avatar, Container, Typography } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import { Avatar, Container, Typography } from "@mui/material";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export default function UserBalanceTopUp() {
   const { id } = useParams();
@@ -30,7 +30,7 @@ export default function UserBalanceTopUp() {
   const checkIfUsersPage = () => {
     const token = getToken().data;
     const jwtUserId = JwtHelper.getUser(token).userId;
-    
+
     if (id !== jwtUserId) {
       navigate("/");
     }

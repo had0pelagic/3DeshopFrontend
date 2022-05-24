@@ -192,7 +192,7 @@ export default function Upload() {
     if (response.status === 200) {
       setCategories(response.data);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -202,7 +202,7 @@ export default function Upload() {
     if (response.status === 200) {
       setFormats(response.data);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 

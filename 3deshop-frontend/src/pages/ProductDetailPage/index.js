@@ -15,12 +15,6 @@ import DownloadingIcon from "@mui/icons-material/Downloading";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import Carousel from "react-material-ui-carousel";
-import Youtube from "react-youtube";
-import TextField from "@mui/material/TextField";
-import { useAuth } from "../../hooks/useAuth";
-import DefaultImage from "../../images/defaultProductImage.png";
-import Divider from "@mui/material/Divider";
 import {
   Modal,
   Box,
@@ -32,6 +26,12 @@ import {
   DialogTitle,
   Grid,
 } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import Divider from "@mui/material/Divider";
+import Carousel from "react-material-ui-carousel";
+import Youtube from "react-youtube";
+import { useAuth } from "../../hooks/useAuth";
+import DefaultImage from "../../images/defaultProductImage.png";
 import ReactPaginate from "react-paginate";
 import VideoHelper from "../../utils/video.helper";
 

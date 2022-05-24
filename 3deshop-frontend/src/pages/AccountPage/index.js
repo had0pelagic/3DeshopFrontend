@@ -43,11 +43,11 @@ export default function Account() {
   const tryUpdate = async () => {
     let errorExists = false;
 
-    if (user.username.length < 6 || user.username.length > 60) {
+    if (user.username.length < 6 || user.username.length > 15) {
       errorExists = true;
       setError((prev) => ({
         ...prev,
-        username: "Name must have atleast 6 symbols",
+        username: "Name must be between 6 and 15 symbols",
       }));
     } else {
       setError((prev) => ({
@@ -155,7 +155,7 @@ export default function Account() {
     if (response.status === 200) {
       setUser(response.data);
     } else {
-      console.log("error at account page, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoading(false);
   };

@@ -34,10 +34,9 @@ export default function OrderDownload() {
       const files = response.data.map((file) => {
         return DownloadHelper.getFileData(file);
       });
-      console.log(response.data);
       setFiles(files);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoading(false);
   };

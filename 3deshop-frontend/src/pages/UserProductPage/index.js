@@ -21,10 +21,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
-import "filepond/dist/filepond.min.css";
 import ReactPaginate from "react-paginate";
 import JwtHelper from "../../utils/jwt.helper";
 import { useAuth } from "../../hooks/useAuth";
+import "filepond/dist/filepond.min.css";
 
 export default function UserProducts() {
   const { id } = useParams();
@@ -107,7 +107,6 @@ export default function UserProducts() {
                         Product page
                       </Typography>
                     </TableCell>
-                    {console.log(item)}
                     <TableCell align="left">
                       <Button>
                         {item.isActive === true ? (

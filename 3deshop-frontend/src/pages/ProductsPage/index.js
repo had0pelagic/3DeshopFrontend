@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import Product from "../../components/Product";
 import "./styles.css";
 import api from "../../api";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import { Tiles } from "@rebass/layout";
 import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import {
   Box,
   Checkbox,
@@ -61,7 +61,7 @@ export default function Products() {
     if (response.status === 200) {
       setCategories(response.data);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 
@@ -97,7 +97,7 @@ export default function Products() {
     if (response.status === 200) {
       setFormats(response.data);
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
   };
 

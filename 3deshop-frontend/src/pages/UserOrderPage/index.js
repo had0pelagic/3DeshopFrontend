@@ -19,8 +19,8 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
+import { Link } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
 import "filepond/dist/filepond.min.css";
@@ -80,9 +80,8 @@ export default function UserOrders() {
 
     if (response.status === 200) {
       setIsJobActive(response.data);
-      console.log("Orders returned!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingOrders(false);
   };
@@ -91,11 +90,9 @@ export default function UserOrders() {
     const response = await api.orders.getDisplayOrder(id);
 
     if (response.status === 200) {
-      console.log(response.data);
       setOrder(response.data);
-      console.log("Order returned!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingOrder(false);
   };
@@ -107,10 +104,9 @@ export default function UserOrders() {
 
     if (response.status === 200) {
       alert("Order has been removed");
-      console.log("Order removed!");
       window.location.reload();
     } else {
-      console.log("error at orders, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingOrders(false);
   };

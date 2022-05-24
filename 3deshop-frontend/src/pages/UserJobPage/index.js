@@ -22,6 +22,8 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import Slider from "@mui/material/Slider";
+import LinearProgress from "@mui/material/LinearProgress";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/index.js";
 import api from "../../api";
@@ -33,8 +35,6 @@ import FormatHelper from "../../utils/format.helper";
 import Carousel from "react-material-ui-carousel";
 import DefaultImage from "../../images/defaultProductImage.png";
 import moment from "moment";
-import Slider from "@mui/material/Slider";
-import LinearProgress from "@mui/material/LinearProgress";
 import ReactPaginate from "react-paginate";
 import FileFormatValidation from "../../utils/fileFormatValidation.helper";
 
@@ -160,7 +160,7 @@ export default function UserJobs() {
     if (response.status === 200) {
       setJobs(response.data);
     } else {
-      console.log("error at user jobs, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingJobs(false);
   };
@@ -178,7 +178,6 @@ export default function UserJobs() {
     const response = await api.orders.setJobProgress(request);
 
     if (response.status === 200) {
-      console.log("Job has been updated!");
       alert("Progress has been set");
       handleProgressClose();
       window.location.reload();
@@ -254,9 +253,8 @@ export default function UserJobs() {
       );
       setOrder(response.data);
       setJob(job);
-      console.log("Order returned!");
     } else {
-      console.log("error at products, didn't return 200");
+      alert(response.errorMessage);
     }
     setLoadingOrder(false);
   };

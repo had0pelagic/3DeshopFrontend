@@ -1,8 +1,8 @@
 const ResponseHandling = async (apiResponse) => {
   return {
+    status: 200,
     data: apiResponse.data,
     headers: apiResponse.headers,
-    status: 200,
   };
 };
 export default ResponseHandling;
