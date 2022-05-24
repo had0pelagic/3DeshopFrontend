@@ -102,16 +102,7 @@ export default function Login() {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Typography
-                  component={Link}
-                  to={`/register`}
-                  variant="body2"
-                  style={{ textDecoration: "none" }}
-                >
-                  Forgot password?
-                </Typography>
-              </Grid>
+              <Grid item xs></Grid>
               <Grid item>
                 <Typography
                   component={Link}

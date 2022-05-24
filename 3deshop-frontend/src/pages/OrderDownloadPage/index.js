@@ -8,6 +8,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
 } from "@mui/material";
 import api from "../../api";
 import DownloadHelper from "../../utils/download.helper";
@@ -47,6 +48,19 @@ export default function OrderDownload() {
         <Loader />
       ) : (
         <div style={{ marginLeft: 30, marginRight: 30 }}>
+          <div
+            style={{
+              width: "100%",
+            }}
+          >
+            <Typography
+              variant="h4"
+              align="center"
+              style={{ width: "100%", alignItems: "center", paddingBottom: 20 }}
+            >
+              File downloads
+            </Typography>
+          </div>
           <TableContainer component={Paper} sx={{ width: "100%" }}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>

@@ -212,9 +212,27 @@ export default function Account() {
                 <PersonOutlineIcon />
               </Avatar>
 
-              <Typography component="h1" variant="h5">
-                My account
-              </Typography>
+              <div
+                style={{
+                  marginTop: 20,
+                  width: "100%",
+                }}
+              >
+                <Typography
+                  variant="h3"
+                  align="center"
+                  style={{ width: "100%", alignItems: "center" }}
+                >
+                  My account
+                </Typography>
+                <Typography
+                  variant="h6"
+                  align="center"
+                  style={{ width: "100%", alignItems: "center" }}
+                >
+                  Here you can change your personal information
+                </Typography>
+              </div>
 
               <form
                 style={{
@@ -342,7 +360,8 @@ export default function Account() {
                         color: "#F05454",
                       },
                       backgroundColor: "#30475E",
-                      width:350
+                      width: 350,
+                      marginBottom: 5,
                     }}
                     onClick={(e) => {
                       handleSubmitClick(e);

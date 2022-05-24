@@ -163,7 +163,6 @@ export default function ChangePassword() {
                   color: "#F05454",
                 },
                 backgroundColor: "#30475E",
-                marginTop: 5,
               }}
               onClick={(e) => {
                 setButtonDisabled(true);

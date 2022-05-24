@@ -133,7 +133,7 @@ export default function Offer() {
               <DesktopDatePicker
                 required
                 id="completeTill"
-                label="completeTill"
+                label="Completion till"
                 value={offerForm.completeTill}
                 minDate={new Date(new Date())}
                 onChange={(offerForm) =>

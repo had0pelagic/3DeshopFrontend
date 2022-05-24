@@ -182,21 +182,33 @@ const ResponsiveAppBar = () => {
           <Typography
             variant="h6"
             noWrap
-            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex", textDecoration: "none" },
+            }}
             component={Link}
             to={`/`}
           >
             <ViewInArIcon sx={{ fontSize: 50, color: "white" }} />
+            <Typography style={{ color: "white", fontSize: 35 }}>
+              3Dshop
+            </Typography>
           </Typography>
           <Drawer />
           <Typography
             variant="h6"
             noWrap
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "flex", md: "none", textDecoration: "none" },
+            }}
             component={Link}
             to={`/`}
           >
             <ViewInArIcon sx={{ fontSize: 50, color: "white" }} />
+            <Typography style={{ color: "white", fontSize: 35 }}>
+              3Dshop
+            </Typography>
           </Typography>
           <NavItems />
           {user ? (

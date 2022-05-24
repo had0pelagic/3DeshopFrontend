@@ -309,6 +309,7 @@ export default function Upload() {
             style={{
               width: "100%",
               marginTop: 10,
+              marginBottom: 20,
             }}
             noValidate
           >
@@ -467,7 +468,15 @@ export default function Upload() {
               fullWidth
               variant="contained"
               color="primary"
-              style={{ marginTop: 30 }}
+              sx={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+                marginTop: 2,
+              }}
               disabled={buttonDisabled}
               onClick={(e) => {
                 setButtonDisabled(true);

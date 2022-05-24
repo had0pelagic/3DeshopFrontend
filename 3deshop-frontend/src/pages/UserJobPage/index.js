@@ -335,7 +335,10 @@ export default function UserJobs() {
     return (
       <>
         {currentItems && (
-          <TableContainer component={Paper} sx={{ width: "100%" }}>
+          <TableContainer
+            component={Paper}
+            sx={{ width: "100%", marginTop: 5 }}
+          >
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -434,7 +437,27 @@ export default function UserJobs() {
           className="flexContainer"
           style={{ marginLeft: 30, marginRight: 30 }}
         >
-          <h1>My jobs</h1>
+          <div
+            style={{
+              marginTop: 20,
+              width: "100%",
+            }}
+          >
+            <Typography
+              variant="h3"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              My jobs
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Here you can find all of your jobs/executing orders
+            </Typography>
+          </div>
           <PaginatedTable itemsPerPage={6} />
         </div>
       )}

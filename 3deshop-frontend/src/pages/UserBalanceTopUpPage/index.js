@@ -105,6 +105,7 @@ export default function UserBalanceTopUp() {
           <Typography component="h1" variant="h5">
             Add credits to balance
           </Typography>
+
           <form
             style={{
               width: "100%",

@@ -222,7 +222,27 @@ export default function Orders() {
         <Loader />
       ) : (
         <div className="flexContainer">
-          <h1>Orders</h1>
+          <div
+            style={{
+              marginTop: 20,
+              width: "100%",
+            }}
+          >
+            <Typography
+              variant="h3"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Orders
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Didn't find anything suitable for you? Try creating an order!
+            </Typography>
+          </div>
 
           {orders && orders.length > 0 ? (
             <div
@@ -264,7 +284,14 @@ export default function Orders() {
             </div>
           ) : (
             <div className="flexContainer">
-              <h2>No orders yet</h2>
+              <Typography
+                variant="h5"
+                align="center"
+                style={{ width: "100%", alignItems: "center", paddingTop: 10 }}
+              >
+                No orders yet
+              </Typography>
+
               <Button
                 sx={{
                   color: "#fff",

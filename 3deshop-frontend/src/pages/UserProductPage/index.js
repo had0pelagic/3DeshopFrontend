@@ -176,8 +176,27 @@ export default function UserProducts() {
         <Loader />
       ) : (
         <div className="flexContainer">
-          <h1>My products</h1>
-
+          <div
+            style={{
+              marginTop: 20,
+              width: "100%",
+            }}
+          >
+            <Typography
+              variant="h3"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              My products
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Here you can find your uploaded products
+            </Typography>
+          </div>
           {products && products.length > 0 ? (
             <div
               className="flexContainer"
@@ -216,7 +235,13 @@ export default function UserProducts() {
             </div>
           ) : (
             <div className="flexContainer">
-              <h2>You don't have any uploaded products</h2>
+              <Typography
+              variant="h3"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              You don't have any uploaded products
+            </Typography>
               <Button
                 sx={{
                   color: "#fff",

@@ -56,7 +56,7 @@ export default function UserOrders() {
   const checkIfUsersPage = () => {
     const token = getToken().data;
     const jwtUserId = JwtHelper.getUser(token).userId;
-    
+
     if (id !== jwtUserId) {
       navigate("/");
     }
@@ -70,7 +70,7 @@ export default function UserOrders() {
     if (response.status === 200) {
       setOrders(response.data);
     } else {
-      alert(response.errorMessage)
+      alert(response.errorMessage);
     }
     setLoadingOrders(false);
   };
@@ -225,7 +225,27 @@ export default function UserOrders() {
         <Loader />
       ) : (
         <div className="flexContainer">
-          <h1>My orders</h1>
+          <div
+            style={{
+              marginTop: 20,
+              width: "100%",
+            }}
+          >
+            <Typography
+              variant="h3"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              My orders
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Here you can find your orders
+            </Typography>
+          </div>{" "}
           {orders && orders.length > 0 ? (
             <div
               className="flexContainer"
@@ -264,7 +284,13 @@ export default function UserOrders() {
             </div>
           ) : (
             <div className="flexContainer">
-              <h2>No orders yet</h2>
+              <Typography
+                variant="h3"
+                align="center"
+                style={{ width: "100%", alignItems: "center" }}
+              >
+                No orders yet
+              </Typography>
               <Button
                 sx={{
                   color: "#fff",

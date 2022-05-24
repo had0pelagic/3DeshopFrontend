@@ -103,8 +103,28 @@ export default function UserOffers() {
           className="flexContainer"
           style={{ marginLeft: 30, marginRight: 30 }}
         >
-          <h1>Offers</h1>
-
+          <div
+            style={{
+              marginTop: 20,
+              width: "100%",
+              marginBottom: 15,
+            }}
+          >
+            <Typography
+              variant="h3"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Offers for selected order
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Here you can accept or decline offers for your order
+            </Typography>
+          </div>
           <TableContainer component={Paper} sx={{ width: "100%" }}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -175,7 +195,21 @@ export default function UserOffers() {
             }}
           >
             <div className="flexContainer">
-              <Typography style={{ fontSize: 30 }}>Offer</Typography>
+              <Typography
+                variant="h4"
+                align="center"
+                style={{ width: "100%", alignItems: "center" }}
+              >
+                Offer
+              </Typography>
+              <Typography
+                variant="h6"
+                align="center"
+                style={{ width: "100%", alignItems: "center" }}
+              >
+                by {offer.user.username}
+              </Typography>
+
               <TextField
                 id="description"
                 variant="outlined"
@@ -183,7 +217,7 @@ export default function UserOffers() {
                 maxRows={4}
                 value={offer.description}
                 InputProps={{ readOnly: true }}
-                sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
+                sx={{ marginTop: 2, width: 400, backgroundColor: "white" }}
               />
               <div className="priceDateContainer">
                 <Typography sx={{ fontSize: 20 }} variant="h5">
@@ -199,7 +233,7 @@ export default function UserOffers() {
                     color: "#191A19",
                   },
                   backgroundColor: "#4E9F3D",
-                  marginTop: 5,
+                  marginTop: 2,
                   width: 400,
                 }}
                 onClick={() => acceptOffer(offer.id)}
@@ -214,7 +248,7 @@ export default function UserOffers() {
                     color: "#191A19",
                   },
                   backgroundColor: "#B33030",
-                  marginTop: 5,
+                  marginTop: 2,
                   width: 400,
                 }}
                 onClick={() => declineOffer(offer.id)}

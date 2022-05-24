@@ -191,7 +191,7 @@ export default function JobProgress() {
       <>
         {currentItems && currentItems.length > 0 ? (
           <div className="flexContainer">
-            <Box sx={{ width: "100%" }}>
+            <Box sx={{ width: "100%", paddingTop:3 }}>
               <LinearProgressWithLabel value={lastProgressValue} />
             </Box>
             <TableContainer component={Paper}>
@@ -266,7 +266,13 @@ export default function JobProgress() {
           </div>
         ) : (
           <div className="flexContainer">
-            <h2>No progress yet</h2>
+            <Typography
+              variant="h5"
+              align="center"
+              style={{ width: "100%", alignItems: "center", paddingTop: 10 }}
+            >
+              No progress was made yet
+            </Typography>
           </div>
         )}
       </>
@@ -313,13 +319,39 @@ export default function JobProgress() {
         <Loader />
       ) : (
         <div className="flexContainer">
-          <h1>Order progress</h1>
+          <div
+            style={{
+              marginTop: 20,
+              width: "100%",
+            }}
+          >
+            <Typography
+              variant="h3"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Order progress
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Didn't find anything suitable for you? Try creating an order!
+            </Typography>
+          </div>
           {order && order.approved ? (
-            <h1>Approved & completed</h1>
+            <Typography
+              variant="h6"
+              align="center"
+              style={{ width: "100%", alignItems: "center" }}
+            >
+              Approved & completed
+            </Typography>
           ) : (
             <div></div>
           )}
-          <PaginatedTable itemsPerPage={3} />
+          <PaginatedTable itemsPerPage={5} />
         </div>
       )}
 

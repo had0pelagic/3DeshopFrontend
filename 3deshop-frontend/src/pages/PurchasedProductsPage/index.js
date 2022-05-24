@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
 } from "@mui/material";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import api from "../../api";
@@ -138,7 +139,27 @@ export default function PurchasedProducts() {
 
   return (
     <div className="flexContainer mt40">
-      <h1>My bought products</h1>
+      <div
+        style={{
+          marginTop: 20,
+          width: "100%",
+        }}
+      >
+        <Typography
+          variant="h3"
+          align="center"
+          style={{ width: "100%", alignItems: "center" }}
+        >
+          My bought products
+        </Typography>
+        <Typography
+          variant="h6"
+          align="center"
+          style={{ width: "100%", alignItems: "center" }}
+        >
+          Here you can find all of your bought products for download
+        </Typography>
+      </div>
       {isLoading ? (
         <Loader />
       ) : (
@@ -149,7 +170,13 @@ export default function PurchasedProducts() {
             </div>
           ) : (
             <div className="flexContainer">
-              <h2>No bought products</h2>
+              <Typography
+                variant="h5"
+                align="center"
+                style={{ width: "100%", alignItems: "center", paddingTop: 10 }}
+              >
+                No bought products are available
+              </Typography>
             </div>
           )}
         </div>
