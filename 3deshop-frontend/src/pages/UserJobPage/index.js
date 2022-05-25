@@ -469,9 +469,122 @@ export default function UserJobs() {
           timeout: 600,
         }}
       >
-        {isLoadingOrder ? (
-          <Loader />
-        ) : (
+        <div>
+          {isLoadingOrder ? (
+            <Loader />
+          ) : (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                backgroundColor: "#DDDDDD",
+                border: "1px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <div className="flexContainer">
+                <Typography style={{ fontSize: 30 }}>{order.name}</Typography>
+                {OrderImages()}
+                <TextField
+                  id="description"
+                  variant="outlined"
+                  multiline
+                  maxRows={4}
+                  value={order.description}
+                  InputProps={{ readOnly: true }}
+                  sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
+                />
+                <div className="priceDateContainer">
+                  <Typography sx={{ fontSize: 20 }} variant="h5" gutterBottom>
+                    {order.price}C
+                  </Typography>
+                  <Box sx={{ width: "100%" }}>
+                    <LinearProgressWithLabel value={job.progress} />
+                  </Box>
+                  <Typography sx={{ fontSize: 20 }} variant="h5">
+                    Order completion date: {orderFormattedDate}
+                  </Typography>
+                  <Typography sx={{ fontSize: 20 }} variant="h5">
+                    Offer completion date: {offerFormattedDate}
+                  </Typography>
+                </div>
+                {job.progress === 100 ? (
+                  <div></div>
+                ) : (
+                  <div>
+                    {job && job.active ? (
+                      <Button
+                        sx={{
+                          color: "#fff",
+                          "&:hover": {
+                            backgroundColor: "#30475E",
+                            color: "#F05454",
+                          },
+                          backgroundColor: "#30475E",
+                          marginTop: 5,
+                          width: 400,
+                        }}
+                        disabled={buttonDisabled}
+                        onClick={handleConfirmationDialogOpen}
+                      >
+                        <Typography>Abandon job</Typography>
+                      </Button>
+                    ) : (
+                      <div></div>
+                    )}
+                    <Button
+                      sx={{
+                        color: "#fff",
+                        "&:hover": {
+                          backgroundColor: "#30475E",
+                          color: "#F05454",
+                        },
+                        backgroundColor: "#30475E",
+                        marginTop: 5,
+                        width: 400,
+                      }}
+                      disabled={buttonDisabled}
+                      onClick={() => handleProgressOpen()}
+                    >
+                      <Typography>Set progress</Typography>
+                    </Button>
+                  </div>
+                )}
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#30475E",
+                      color: "#F05454",
+                    },
+                    backgroundColor: "#30475E",
+                    marginTop: 5,
+                    width: 400,
+                  }}
+                  disabled={buttonDisabled}
+                  component={Link}
+                  to={`/job-progress/${job.order.id}`}
+                >
+                  <Typography>Progress</Typography>
+                </Button>
+              </div>
+            </Box>
+          )}
+        </div>
+      </Modal>
+
+      <Modal
+        open={progressOpen}
+        onClose={handleProgressClose}
+        BackdropProps={{
+          timeout: 600,
+        }}
+      >
+        <div>
           <Box
             sx={{
               position: "absolute",
@@ -486,55 +599,63 @@ export default function UserJobs() {
             }}
           >
             <div className="flexContainer">
-              <Typography style={{ fontSize: 30 }}>{order.name}</Typography>
-              {OrderImages()}
-              <TextField
-                id="description"
-                variant="outlined"
-                multiline
-                maxRows={4}
-                value={order.description}
-                InputProps={{ readOnly: true }}
-                sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
+              <Typography style={{ fontSize: 30 }}>Progress</Typography>
+              <Slider
+                id={"Progress"}
+                aria-label="Progress"
+                defaultValue={30}
+                valueLabelDisplay="auto"
+                step={10}
+                marks
+                min={0}
+                max={100}
+                value={form.progress}
+                onChange={handleProgressChange}
               />
-              <div className="priceDateContainer">
-                <Typography sx={{ fontSize: 20 }} variant="h5" gutterBottom>
-                  {order.price}C
-                </Typography>
-                <Box sx={{ width: "100%" }}>
-                  <LinearProgressWithLabel value={job.progress} />
-                </Box>
-                <Typography sx={{ fontSize: 20 }} variant="h5">
-                  Order completion date: {orderFormattedDate}
-                </Typography>
-                <Typography sx={{ fontSize: 20 }} variant="h5">
-                  Offer completion date: {offerFormattedDate}
-                </Typography>
+
+              <div style={{ marginTop: 20 }}>
+                <TextField
+                  id="comment"
+                  label="Comment"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  sx={{
+                    width: 400,
+                  }}
+                  value={form.comment}
+                  onChange={handleNoteChange}
+                  error={!error.comment ? false : true}
+                  helperText={error.comment}
+                />
               </div>
-              {job.progress === 100 ? (
-                <div></div>
-              ) : (
+              {form.progress === 100 ? (
                 <div>
-                  {job && job.active ? (
-                    <Button
-                      sx={{
-                        color: "#fff",
-                        "&:hover": {
-                          backgroundColor: "#30475E",
-                          color: "#F05454",
-                        },
-                        backgroundColor: "#30475E",
-                        marginTop: 5,
-                        width: 400,
-                      }}
-                      disabled={buttonDisabled}
-                      onClick={handleConfirmationDialogOpen}
-                    >
-                      <Typography>Abandon job</Typography>
-                    </Button>
-                  ) : (
-                    <div></div>
-                  )}
+                  <div style={{ marginTop: 20, height: "100%" }}>
+                    <FilePond
+                      stylePanelLayout="compact"
+                      files={files}
+                      credits
+                      allowMultiple={true}
+                      onupdatefiles={setFiles}
+                      labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                    />
+                    {error.file ? (
+                      <Typography
+                        sx={{
+                          color: "red",
+                          display: "flex",
+                          justifyContent: "center",
+                          marginTop: 2,
+                          marginBottom: 2,
+                        }}
+                      >
+                        {error.file}
+                      </Typography>
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
                   <Button
                     sx={{
                       color: "#fff",
@@ -547,112 +668,12 @@ export default function UserJobs() {
                       width: 400,
                     }}
                     disabled={buttonDisabled}
-                    onClick={() => handleProgressOpen()}
+                    onClick={handleJobCompletion}
                   >
-                    <Typography>Set progress</Typography>
+                    <Typography>Set progress & upload files</Typography>
                   </Button>
                 </div>
-              )}
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#30475E",
-                    color: "#F05454",
-                  },
-                  backgroundColor: "#30475E",
-                  marginTop: 5,
-                  width: 400,
-                }}
-                disabled={buttonDisabled}
-                component={Link}
-                to={`/job-progress/${job.order.id}`}
-              >
-                <Typography>Progress</Typography>
-              </Button>
-            </div>
-          </Box>
-        )}
-      </Modal>
-
-      <Modal
-        open={progressOpen}
-        onClose={handleProgressClose}
-        BackdropProps={{
-          timeout: 600,
-        }}
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            backgroundColor: "#DDDDDD",
-            border: "1px solid #000",
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <div className="flexContainer">
-            <Typography style={{ fontSize: 30 }}>Progress</Typography>
-            <Slider
-              id={"Progress"}
-              aria-label="Progress"
-              defaultValue={30}
-              valueLabelDisplay="auto"
-              step={10}
-              marks
-              min={0}
-              max={100}
-              value={form.progress}
-              onChange={handleProgressChange}
-            />
-
-            <div style={{ marginTop: 20 }}>
-              <TextField
-                id="comment"
-                label="Comment"
-                variant="outlined"
-                multiline
-                rows={4}
-                sx={{
-                  width: 400,
-                }}
-                value={form.comment}
-                onChange={handleNoteChange}
-                error={!error.comment ? false : true}
-                helperText={error.comment}
-              />
-            </div>
-            {form.progress === 100 ? (
-              <div>
-                <div style={{ marginTop: 20, height: "100%" }}>
-                  <FilePond
-                    stylePanelLayout="compact"
-                    files={files}
-                    credits
-                    allowMultiple={true}
-                    onupdatefiles={setFiles}
-                    labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
-                  />
-                  {error.file ? (
-                    <Typography
-                      sx={{
-                        color: "red",
-                        display: "flex",
-                        justifyContent: "center",
-                        marginTop: 2,
-                        marginBottom: 2,
-                      }}
-                    >
-                      {error.file}
-                    </Typography>
-                  ) : (
-                    <div></div>
-                  )}
-                </div>
+              ) : (
                 <Button
                   sx={{
                     color: "#fff",
@@ -665,31 +686,14 @@ export default function UserJobs() {
                     width: 400,
                   }}
                   disabled={buttonDisabled}
-                  onClick={handleJobCompletion}
+                  onClick={handleSubmitClick}
                 >
-                  <Typography>Set progress & upload files</Typography>
+                  <Typography>Set progress</Typography>
                 </Button>
-              </div>
-            ) : (
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#30475E",
-                    color: "#F05454",
-                  },
-                  backgroundColor: "#30475E",
-                  marginTop: 5,
-                  width: 400,
-                }}
-                disabled={buttonDisabled}
-                onClick={handleSubmitClick}
-              >
-                <Typography>Set progress</Typography>
-              </Button>
-            )}
-          </div>
-        </Box>
+              )}
+            </div>
+          </Box>
+        </div>
       </Modal>
 
       <Dialog

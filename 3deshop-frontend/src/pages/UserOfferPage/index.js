@@ -178,86 +178,88 @@ export default function UserOffers() {
           timeout: 600,
         }}
       >
-        {isLoadingOffer ? (
-          <Loader />
-        ) : (
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              backgroundColor: "#DDDDDD",
-              border: "1px solid #000",
-              boxShadow: 24,
-              p: 4,
-            }}
-          >
-            <div className="flexContainer">
-              <Typography
-                variant="h4"
-                align="center"
-                style={{ width: "100%", alignItems: "center" }}
-              >
-                Offer
-              </Typography>
-              <Typography
-                variant="h6"
-                align="center"
-                style={{ width: "100%", alignItems: "center" }}
-              >
-                by {offer.user.username}
-              </Typography>
-
-              <TextField
-                id="description"
-                variant="outlined"
-                multiline
-                maxRows={4}
-                value={offer.description}
-                InputProps={{ readOnly: true }}
-                sx={{ marginTop: 2, width: 400, backgroundColor: "white" }}
-              />
-              <div className="priceDateContainer">
-                <Typography sx={{ fontSize: 20 }} variant="h5">
-                  Completion till:{" "}
-                  {moment(offer.completeTill).format("YYYY-MM-DD")}
+        <div>
+          {isLoadingOffer ? (
+            <Loader />
+          ) : (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                backgroundColor: "#DDDDDD",
+                border: "1px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <div className="flexContainer">
+                <Typography
+                  variant="h4"
+                  align="center"
+                  style={{ width: "100%", alignItems: "center" }}
+                >
+                  Offer
                 </Typography>
-              </div>
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
+                <Typography
+                  variant="h6"
+                  align="center"
+                  style={{ width: "100%", alignItems: "center" }}
+                >
+                  by {offer.user.username}
+                </Typography>
+
+                <TextField
+                  id="description"
+                  variant="outlined"
+                  multiline
+                  maxRows={4}
+                  value={offer.description}
+                  InputProps={{ readOnly: true }}
+                  sx={{ marginTop: 2, width: 400, backgroundColor: "white" }}
+                />
+                <div className="priceDateContainer">
+                  <Typography sx={{ fontSize: 20 }} variant="h5">
+                    Completion till:{" "}
+                    {moment(offer.completeTill).format("YYYY-MM-DD")}
+                  </Typography>
+                </div>
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#4E9F3D",
+                      color: "#191A19",
+                    },
                     backgroundColor: "#4E9F3D",
-                    color: "#191A19",
-                  },
-                  backgroundColor: "#4E9F3D",
-                  marginTop: 2,
-                  width: 400,
-                }}
-                onClick={() => acceptOffer(offer.id)}
-              >
-                <Typography>Accept</Typography>
-              </Button>
-              <Button
-                sx={{
-                  color: "#fff",
-                  "&:hover": {
+                    marginTop: 2,
+                    width: 400,
+                  }}
+                  onClick={() => acceptOffer(offer.id)}
+                >
+                  <Typography>Accept</Typography>
+                </Button>
+                <Button
+                  sx={{
+                    color: "#fff",
+                    "&:hover": {
+                      backgroundColor: "#B33030",
+                      color: "#191A19",
+                    },
                     backgroundColor: "#B33030",
-                    color: "#191A19",
-                  },
-                  backgroundColor: "#B33030",
-                  marginTop: 2,
-                  width: 400,
-                }}
-                onClick={() => declineOffer(offer.id)}
-              >
-                <Typography>Decline</Typography>
-              </Button>
-            </div>
-          </Box>
-        )}
+                    marginTop: 2,
+                    width: 400,
+                  }}
+                  onClick={() => declineOffer(offer.id)}
+                >
+                  <Typography>Decline</Typography>
+                </Button>
+              </div>
+            </Box>
+          )}
+        </div>
       </Modal>
     </div>
   );

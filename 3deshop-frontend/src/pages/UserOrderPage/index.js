@@ -321,95 +321,97 @@ export default function UserOrders() {
           timeout: 600,
         }}
       >
-        {isLoadingOrder ? (
-          <Loader />
-        ) : (
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              backgroundColor: "#DDDDDD",
-              border: "1px solid #000",
-              boxShadow: 24,
-              p: 4,
-            }}
-          >
-            <div className="flexContainer">
-              <Typography style={{ fontSize: 30 }}>{order.name}</Typography>
-              <OrderImages />
-              <TextField
-                id="description"
-                variant="outlined"
-                multiline
-                maxRows={4}
-                value={order.description}
-                InputProps={{ readOnly: true, disableUnderline: true }}
-                sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
-              />
-              <div className="priceDateContainer">
-                <Typography sx={{ fontSize: 20 }} variant="h5" gutterBottom>
-                  {order.price} C
-                </Typography>
-                <Typography sx={{ fontSize: 20 }} variant="h5">
-                  Completion till:{" "}
-                  {moment(order.completeTill).format("YYYY-MM-DD")}
-                </Typography>
-              </div>
+        <div>
+          {isLoadingOrder ? (
+            <Loader />
+          ) : (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                backgroundColor: "#DDDDDD",
+                border: "1px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <div className="flexContainer">
+                <Typography style={{ fontSize: 30 }}>{order.name}</Typography>
+                <OrderImages />
+                <TextField
+                  id="description"
+                  variant="outlined"
+                  multiline
+                  maxRows={4}
+                  value={order.description}
+                  InputProps={{ readOnly: true }}
+                  sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
+                />
+                <div className="priceDateContainer">
+                  <Typography sx={{ fontSize: 20 }} variant="h5" gutterBottom>
+                    {order.price} C
+                  </Typography>
+                  <Typography sx={{ fontSize: 20 }} variant="h5">
+                    Completion till:{" "}
+                    {moment(order.completeTill).format("YYYY-MM-DD")}
+                  </Typography>
+                </div>
 
-              {isJobActive ? (
-                <div>
-                  <Button
-                    sx={{
-                      color: "#fff",
-                      "&:hover": {
+                {isJobActive ? (
+                  <div>
+                    <Button
+                      sx={{
+                        color: "#fff",
+                        "&:hover": {
+                          backgroundColor: "#30475E",
+                          color: "#F05454",
+                        },
                         backgroundColor: "#30475E",
-                        color: "#F05454",
-                      },
-                      backgroundColor: "#30475E",
-                      marginTop: 5,
-                      width: 400,
-                    }}
-                    component={Link}
-                    to={`/job-progress/${order.id}`}
-                  >
-                    <Typography>Progress</Typography>
-                  </Button>
-                </div>
-              ) : (
-                <div>
-                  <Button
-                    sx={{
-                      color: "#fff",
-                      "&:hover": {
+                        marginTop: 5,
+                        width: 400,
+                      }}
+                      component={Link}
+                      to={`/job-progress/${order.id}`}
+                    >
+                      <Typography>Progress</Typography>
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    <Button
+                      sx={{
+                        color: "#fff",
+                        "&:hover": {
+                          backgroundColor: "#30475E",
+                          color: "#F05454",
+                        },
                         backgroundColor: "#30475E",
-                        color: "#F05454",
-                      },
-                      backgroundColor: "#30475E",
-                      marginTop: 5,
-                      width: 400,
-                    }}
-                    component={Link}
-                    to={`/user-offers/${order.id}`}
-                    state={{ name: order.name }}
-                  >
-                    <Typography>Offers</Typography>
-                  </Button>
-                  <ConfirmationDialog
-                    buttonText="Remove"
-                    mainText="Order will be removed"
-                    questionText="Are you sure?"
-                    agreeText="Yes"
-                    disagreeText="No"
-                    action={removeOrder}
-                  />
-                </div>
-              )}
-            </div>
-          </Box>
-        )}
+                        marginTop: 5,
+                        width: 400,
+                      }}
+                      component={Link}
+                      to={`/user-offers/${order.id}`}
+                      state={{ name: order.name }}
+                    >
+                      <Typography>Offers</Typography>
+                    </Button>
+                    <ConfirmationDialog
+                      buttonText="Remove"
+                      mainText="Order will be removed"
+                      questionText="Are you sure?"
+                      agreeText="Yes"
+                      disagreeText="No"
+                      action={removeOrder}
+                    />
+                  </div>
+                )}
+              </div>
+            </Box>
+          )}
+        </div>
       </Modal>
     </div>
   );

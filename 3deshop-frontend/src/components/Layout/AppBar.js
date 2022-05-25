@@ -190,7 +190,7 @@ const ResponsiveAppBar = () => {
             to={`/`}
           >
             <ViewInArIcon sx={{ fontSize: 50, color: "white" }} />
-            <Typography style={{ color: "white", fontSize: 35 }}>
+            <Typography style={{ color: "white", fontSize: 25, paddingTop: 6 }}>
               3Dshop
             </Typography>
           </Typography>
@@ -206,7 +206,7 @@ const ResponsiveAppBar = () => {
             to={`/`}
           >
             <ViewInArIcon sx={{ fontSize: 50, color: "white" }} />
-            <Typography style={{ color: "white", fontSize: 35 }}>
+            <Typography style={{ color: "white", fontSize: 25, paddingTop: 6 }}>
               3Dshop
             </Typography>
           </Typography>

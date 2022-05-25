@@ -322,67 +322,69 @@ export default function Orders() {
           timeout: 600,
         }}
       >
-        {isLoadingOrder ? (
-          <Loader />
-        ) : (
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              backgroundColor: "#DDDDDD",
-              border: "1px solid #000",
-              boxShadow: 24,
-              p: 4,
-            }}
-          >
-            <div className="flexContainer">
-              <Typography style={{ fontSize: 30 }}>{order.name}</Typography>
-              {OrderImages()}
-              <TextField
-                id="description"
-                variant="outlined"
-                multiline
-                maxRows={4}
-                value={order.description}
-                InputProps={{ readOnly: true }}
-                sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
-              />
-              <div className="priceDateContainer">
-                <Typography sx={{ fontSize: 20 }} variant="h5" gutterBottom>
-                  {order.price} C
-                </Typography>
-                <Typography sx={{ fontSize: 20 }} variant="h5">
-                  Completion till:{" "}
-                  {moment(order.completeTill).format("YYYY-MM-DD")}
-                </Typography>
-              </div>
-              {isOrderOwner ? (
-                <div></div>
-              ) : (
-                <Button
-                  sx={{
-                    color: "#fff",
-                    "&:hover": {
+        <div>
+          {isLoadingOrder ? (
+            <Loader />
+          ) : (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                backgroundColor: "#DDDDDD",
+                border: "1px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <div className="flexContainer">
+                <Typography style={{ fontSize: 30 }}>{order.name}</Typography>
+                {OrderImages()}
+                <TextField
+                  id="description"
+                  variant="outlined"
+                  multiline
+                  maxRows={4}
+                  value={order.description}
+                  InputProps={{ readOnly: true }}
+                  sx={{ marginTop: 5, width: 400, backgroundColor: "white" }}
+                />
+                <div className="priceDateContainer">
+                  <Typography sx={{ fontSize: 20 }} variant="h5" gutterBottom>
+                    {order.price} C
+                  </Typography>
+                  <Typography sx={{ fontSize: 20 }} variant="h5">
+                    Completion till:{" "}
+                    {moment(order.completeTill).format("YYYY-MM-DD")}
+                  </Typography>
+                </div>
+                {isOrderOwner ? (
+                  <div></div>
+                ) : (
+                  <Button
+                    sx={{
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "#30475E",
+                        color: "#F05454",
+                      },
                       backgroundColor: "#30475E",
-                      color: "#F05454",
-                    },
-                    backgroundColor: "#30475E",
-                    marginTop: 5,
-                    width: 400,
-                  }}
-                  component={Link}
-                  to={`/offer/${order.id}`}
-                  state={{ name: order.name }}
-                >
-                  <Typography>Offer</Typography>
-                </Button>
-              )}
-            </div>
-          </Box>
-        )}
+                      marginTop: 5,
+                      width: 400,
+                    }}
+                    component={Link}
+                    to={`/offer/${order.id}`}
+                    state={{ name: order.name }}
+                  >
+                    <Typography>Offer</Typography>
+                  </Button>
+                )}
+              </div>
+            </Box>
+          )}
+        </div>
       </Modal>
     </div>
   );
