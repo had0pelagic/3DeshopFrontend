@@ -103,7 +103,10 @@ export default function Offer() {
             <CreateIcon />
           </Avatar>
           <Typography component="h1" variant="h5" style={{ mt: 3 }}>
-            Create offer for: {state.name}
+            Create offer for:
+          </Typography>
+          <Typography component="h1" variant="h6" style={{ mt: 3 }}>
+            {state.name}
           </Typography>
           <form
             style={{

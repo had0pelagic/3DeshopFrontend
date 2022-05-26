@@ -18,7 +18,6 @@ const AuthProvider = ({ children }) => {
   }
 
   const saveTokenToStorage = async (response) => {
-    console.log("saving token to storage");
     await localStorage.setItem("jwtToken", response.token);
     await localStorage.setItem(
       "tokenExpiresInMilliseconds",
