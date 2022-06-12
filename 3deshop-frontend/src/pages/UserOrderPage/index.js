@@ -245,7 +245,7 @@ export default function UserOrders() {
             >
               Here you can find your orders
             </Typography>
-          </div>{" "}
+          </div>
           {orders && orders.length > 0 ? (
             <div
               className="flexContainer"
@@ -285,9 +285,9 @@ export default function UserOrders() {
           ) : (
             <div className="flexContainer">
               <Typography
-                variant="h3"
+                variant="h5"
                 align="center"
-                style={{ width: "100%", alignItems: "center" }}
+                style={{ width: "100%", alignItems: "center", paddingTop: 10 }}
               >
                 No orders yet
               </Typography>

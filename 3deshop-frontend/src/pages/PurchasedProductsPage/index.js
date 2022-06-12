@@ -141,7 +141,7 @@ export default function PurchasedProducts() {
     <div className="flexContainer mt40">
       <div
         style={{
-          marginTop: 20,
+          marginTop: 0,
           width: "100%",
         }}
       >

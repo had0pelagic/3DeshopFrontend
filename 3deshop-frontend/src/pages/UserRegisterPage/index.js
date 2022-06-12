@@ -139,18 +139,8 @@ export default function Register() {
 
     if (!errorExists) {
       await userRegistration();
-    } else {
-      var allErrors = Object.keys(error)
-        .map((item) => {
-          return error[item].length > 0 ? error[item] : null;
-        })
-        .map((i) => {
-          if (i) return `*${i} \n`;
-        })
-        .join("");
-      alert(allErrors);
     }
-
+    
     return;
   };
 
@@ -263,7 +253,15 @@ export default function Register() {
               fullWidth
               variant="contained"
               color="primary"
-              style={{ marginTop: 5 }}
+              style={{
+                color: "#fff",
+                "&:hover": {
+                  backgroundColor: "#30475E",
+                  color: "#F05454",
+                },
+                backgroundColor: "#30475E",
+                marginTop: 5,
+              }}
               onClick={handleSubmitClick}
             >
               Sign Up

@@ -332,13 +332,6 @@ export default function JobProgress() {
             >
               Order progress
             </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              style={{ width: "100%", alignItems: "center" }}
-            >
-              Didn't find anything suitable for you? Try creating an order!
-            </Typography>
           </div>
           {order && order.approved ? (
             <Typography

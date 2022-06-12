@@ -236,12 +236,12 @@ export default function UserProducts() {
           ) : (
             <div className="flexContainer">
               <Typography
-              variant="h3"
-              align="center"
-              style={{ width: "100%", alignItems: "center" }}
-            >
-              You don't have any uploaded products
-            </Typography>
+                variant="h5"
+                align="center"
+                style={{ width: "100%", alignItems: "center", paddingTop: 10 }}
+              >
+                You don't have any uploaded products
+              </Typography>
               <Button
                 sx={{
                   color: "#fff",
@@ -270,7 +270,7 @@ export default function UserProducts() {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              {"Order completion"}
+              {"Product status"}
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">

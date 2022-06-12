@@ -458,7 +458,21 @@ export default function UserJobs() {
               Here you can find all of your jobs/executing orders
             </Typography>
           </div>
-          <PaginatedTable itemsPerPage={6} />
+          {jobs && jobs.length > 0 ? (
+            <div>
+              <PaginatedTable itemsPerPage={6} />
+            </div>
+          ) : (
+            <div className="flexContainer">
+              <Typography
+                variant="h5"
+                align="center"
+                style={{ width: "100%", alignItems: "center", paddingTop: 10 }}
+              >
+                You don't have any jobs yet
+              </Typography>
+            </div>
+          )}
         </div>
       )}
 

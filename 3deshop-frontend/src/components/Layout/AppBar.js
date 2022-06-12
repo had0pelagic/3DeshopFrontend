@@ -179,37 +179,27 @@ const ResponsiveAppBar = () => {
     <AppBar position="static" sx={{ backgroundColor: "#273a4d" }}>
       <Container maxWidth="xl" style={{ height: "100%" }}>
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex", textDecoration: "none" },
-            }}
-            component={Link}
-            to={`/`}
-          >
-            <ViewInArIcon sx={{ fontSize: 50, color: "white" }} />
-            <Typography style={{ color: "white", fontSize: 25, paddingTop: 6 }}>
-              3Dshop
-            </Typography>
-          </Typography>
+          <Link to={`/`} style={{ textDecoration: "none" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <Typography
+                style={{
+                  color: "white",
+                  fontSize: 25,
+                  paddingRight: 15
+                }}
+              >
+                3Dshop
+              </Typography>
+            </div>
+          </Link>
+
           <Drawer />
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{
-              flexGrow: 1,
-              display: { xs: "flex", md: "none", textDecoration: "none" },
-            }}
-            component={Link}
-            to={`/`}
-          >
-            <ViewInArIcon sx={{ fontSize: 50, color: "white" }} />
-            <Typography style={{ color: "white", fontSize: 25, paddingTop: 6 }}>
-              3Dshop
-            </Typography>
-          </Typography>
+
           <NavItems />
           {user ? (
             <Box sx={{ flexGrow: 0 }}>
@@ -240,7 +230,7 @@ const ResponsiveAppBar = () => {
                   to={`/user-balance-top-up/${id}`}
                   sx={{ p: 0, marginLeft: 5 }}
                 >
-                  <Typography style={{ color: "white", paddingTop: 2 }}>
+                  <Typography style={{ color: "white", paddingTop: 0 }}>
                     {userBalance} C
                   </Typography>
                   <AddIcon sx={{ color: "white" }}></AddIcon>
@@ -267,7 +257,7 @@ const ResponsiveAppBar = () => {
                   component={Link}
                   to={`/account/${id}`}
                 >
-                  <Typography> My account</Typography>
+                  <Typography>My account</Typography>
                 </MenuItem>
 
                 <MenuItem
